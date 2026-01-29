@@ -45,7 +45,7 @@
         <ng-container *ngIf="panelId === 'manufacturer-model-picker'">
           <div *ngIf="!isPanelPoppedOut('manufacturer-model-picker'); else pickerPoppedOut">
             <app-base-picker
-              [configId]="'manufacturer-model-picker'"
+              [configId]="pickerConfigId"
               (selectionChange)="onPickerSelectionChangeAndUpdateUrl($event)">
             </app-base-picker>
           </div>

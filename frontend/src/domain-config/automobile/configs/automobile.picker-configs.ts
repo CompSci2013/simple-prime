@@ -41,13 +41,15 @@ export interface ManufacturerModelRow {
  * Allows selection of manufacturer-model combinations for filtering.
  *
  * @param apiService - Injected API service
+ * @param configId - Unique config ID for this picker instance
  * @returns Configured picker
  */
 export function createManufacturerModelPickerConfig(
-  apiService: ApiService
+  apiService: ApiService,
+  configId: string = 'manufacturer-model-picker'
 ): PickerConfig<ManufacturerModelRow> {
   return {
-    id: 'manufacturer-model-picker',
+    id: configId,
     displayName: 'Select Manufacturer & Model',
 
     // Column definitions (PrimeNGColumn format)
@@ -153,13 +155,17 @@ export function createManufacturerModelPickerConfig(
  * Register all automobile picker configurations
  *
  * @param injector - Angular injector for dependency resolution
+ * @param configIdPrefix - Optional prefix to make config IDs unique per page
  * @returns Array of picker configurations
  */
-export function createAutomobilePickerConfigs(injector: Injector): PickerConfig<any>[] {
+export function createAutomobilePickerConfigs(injector: Injector, configIdPrefix?: string): PickerConfig<any>[] {
   const apiService = injector.get(ApiService);
+  const pickerId = configIdPrefix
+    ? `${configIdPrefix}-manufacturer-model-picker`
+    : 'manufacturer-model-picker';
 
   return [
-    createManufacturerModelPickerConfig(apiService)
+    createManufacturerModelPickerConfig(apiService, pickerId)
     // Add more pickers here as needed
   ];
 }

@@ -9,9 +9,7 @@ import {
 } from '../models/popout.interface';
 import { PopOutContextService } from './popout-context.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class PopOutManagerService implements OnDestroy {
   private gridId = '';
   private poppedOutPanels = new Set<string>();

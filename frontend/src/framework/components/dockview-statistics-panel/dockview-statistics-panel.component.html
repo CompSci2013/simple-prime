@@ -1,0 +1,21 @@
+<div class="dockview-statistics-container">
+  <!-- Dockview container -->
+  <div #dockviewContainer class="dockview-wrapper"></div>
+
+  <!-- Chart components rendered in hidden container, moved into dockview panels via DOM manipulation -->
+  <div class="charts-hidden-container">
+    <ng-container *ngFor="let chartId of chartIds">
+      <div #chartElement [attr.data-chart-id]="chartId" class="chart-wrapper" style="display: none;">
+        <app-base-chart
+          *ngIf="getDataSource(chartId) as dataSource"
+          [dataSource]="dataSource"
+          [statistics]="statistics"
+          [highlights]="highlights"
+          [selectedValue]="null"
+          [hideTitle]="true"
+          (chartClick)="onChartClick($event, chartId)">
+        </app-base-chart>
+      </div>
+    </ng-container>
+  </div>
+</div>

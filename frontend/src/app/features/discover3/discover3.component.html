@@ -73,6 +73,21 @@
             </div>
           </ng-template>
         </ng-container>
+        <!-- Dockview Statistics Panel (Manufacturer & Top Models in tabs) -->
+        <ng-container *ngIf="panelId === 'dockview-statistics'">
+          <div *ngIf="!isPanelPoppedOut('dockview-statistics'); else dockviewPoppedOut">
+            <app-dockview-statistics-panel
+              [domainConfig]="domainConfig"
+              [chartIds]="['manufacturer', 'top-models']">
+            </app-dockview-statistics-panel>
+          </div>
+          <ng-template #dockviewPoppedOut>
+            <div class="popout-placeholder">
+              <i class="pi pi-external-link"></i>
+              <span>Dockview Statistics is open in a separate window</span>
+            </div>
+          </ng-template>
+        </ng-container>
         <!-- Body Class Chart (standalone) -->
         <ng-container *ngIf="panelId === 'chart-body-class'">
           <div *ngIf="!isPanelPoppedOut('chart-body-class') && getChartDataSource('body-class') as bodyClassDataSource; else bodyClassPoppedOut">

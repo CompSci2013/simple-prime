@@ -34,7 +34,7 @@ import { ButtonModule } from 'primeng/button';
     templateUrl: './discover2.component.html',
     styleUrls: ['./discover2.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [ResourceManagementService],
+    providers: [ResourceManagementService, PopOutManagerService],
     imports: [CommonModule, DragDropModule, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component, BaseChartComponent]
 })
 export class Discover2Component<TFilters = any, TData = any, TStatistics = any>
@@ -43,6 +43,9 @@ export class Discover2Component<TFilters = any, TData = any, TStatistics = any>
   domainConfig: DomainConfig<TFilters, TData, TStatistics>;
   collapsedPanels = new Map<string, boolean>();
   panelOrder: string[] = ['manufacturer-model-picker', 'statistics-1', 'chart-body-class', 'chart-year'];
+
+  // Unique picker config ID for this page instance
+  readonly pickerConfigId = 'discover2-manufacturer-model-picker';
 
   private destroy$ = new Subject<void>();
   private readonly gridId = 'discover2';
@@ -64,7 +67,8 @@ export class Discover2Component<TFilters = any, TData = any, TStatistics = any>
   ngOnInit(): void {
     // Discover2 uses its own fixed panel order, not user preferences
 
-    const pickerConfigs = createAutomobilePickerConfigs(this.injector);
+    // Register picker configs with unique ID for this page
+    const pickerConfigs = createAutomobilePickerConfigs(this.injector, 'discover2');
     this.pickerRegistry.registerMultiple(pickerConfigs);
 
     this.popOutManager.initialize(this.gridId);

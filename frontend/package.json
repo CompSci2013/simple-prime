@@ -32,6 +32,7 @@
     "@angular/router": "^14.3.0",
     "cytoscape": "^3.33.1",
     "cytoscape-dagre": "^2.5.0",
+    "dockview": "^4.13.1",
     "katex": "^0.16.27",
     "plotly.js-dist-min": "^2.27.0",
     "primeicons": "^6.0.1",

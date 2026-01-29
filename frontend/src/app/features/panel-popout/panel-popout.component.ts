@@ -60,13 +60,14 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const pickerConfigs = createAutomobilePickerConfigs(this.injector);
-    this.pickerRegistry.registerMultiple(pickerConfigs);
-
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.gridId = params['gridId'];
       this.panelId = params['panelId'];
       this.panelType = params['type'];
+
+      // Register picker configs with the same prefix as the parent page
+      const pickerConfigs = createAutomobilePickerConfigs(this.injector, this.gridId);
+      this.pickerRegistry.registerMultiple(pickerConfigs);
 
       this.popOutContext.initializeAsPopOut(this.panelId);
 
@@ -114,7 +115,8 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
   }
 
   getPickerConfigId(): string {
-    return this.panelId;
+    // Return the properly prefixed picker config ID based on the parent gridId
+    return `${this.gridId}-manufacturer-model-picker`;
   }
 
   getChartIdsForPanel(): string[] {

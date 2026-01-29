@@ -23,6 +23,7 @@ import { ResourceManagementService } from '../../../framework/services/resource-
 import { UrlStateService } from '../../../framework/services/url-state.service';
 import { UserPreferencesService } from '../../../framework/services/user-preferences.service';
 import { StatisticsPanel2Component } from '../../../framework/components/statistics-panel-2/statistics-panel-2.component';
+import { DockviewStatisticsPanelComponent } from '../../../framework/components/dockview-statistics-panel/dockview-statistics-panel.component';
 import { BasePickerComponent } from '../../../framework/components/base-picker/base-picker.component';
 import { BaseChartComponent, ChartDataSource } from '../../../framework/components/base-chart/base-chart.component';
 import { TooltipModule } from 'primeng/tooltip';
@@ -35,14 +36,14 @@ import { ButtonModule } from 'primeng/button';
     styleUrls: ['./discover3.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ResourceManagementService, PopOutManagerService],
-    imports: [CommonModule, DragDropModule, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component, BaseChartComponent]
+    imports: [CommonModule, DragDropModule, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component, DockviewStatisticsPanelComponent, BaseChartComponent]
 })
 export class Discover3Component<TFilters = any, TData = any, TStatistics = any>
   implements OnInit, OnDestroy {
 
   domainConfig: DomainConfig<TFilters, TData, TStatistics>;
   collapsedPanels = new Map<string, boolean>([['manufacturer-model-picker', true]]);
-  panelOrder: string[] = ['statistics-1', 'chart-body-class', 'chart-year', 'manufacturer-model-picker'];
+  panelOrder: string[] = ['statistics-1', 'dockview-statistics', 'chart-body-class', 'chart-year', 'manufacturer-model-picker'];
 
   // Unique picker config ID for this page instance
   readonly pickerConfigId = 'discover3-manufacturer-model-picker';
@@ -137,6 +138,7 @@ export class Discover3Component<TFilters = any, TData = any, TStatistics = any>
     const titleMap: { [key: string]: string } = {
       'manufacturer-model-picker': 'Manufacturer-Model Picker',
       'statistics-1': 'Statistics',
+      'dockview-statistics': 'Dockview Statistics',
       'chart-body-class': 'Vehicles by Body Class',
       'chart-year': 'Vehicles by Year'
     };
@@ -147,6 +149,7 @@ export class Discover3Component<TFilters = any, TData = any, TStatistics = any>
     const typeMap: { [key: string]: string } = {
       'manufacturer-model-picker': 'picker',
       'statistics-1': 'statistics-2',
+      'dockview-statistics': 'dockview-statistics',
       'chart-body-class': 'chart',
       'chart-year': 'chart'
     };
