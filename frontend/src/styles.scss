@@ -1,5 +1,6 @@
-/* PrimeNG 19 - Styles loaded via providePrimeNG() in app.config.ts */
-/* Only primeicons CSS needs to be imported here */
+/* PrimeNG 14 Theme and Component Styles */
+@import "primeng/resources/themes/lara-dark-teal/theme.css";
+@import "primeng/resources/primeng.min.css";
 @import "primeicons/primeicons.css";
 
 /* KaTeX CSS for LaTeX rendering in AI chat */

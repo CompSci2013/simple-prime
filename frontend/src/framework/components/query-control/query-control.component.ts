@@ -2,16 +2,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DestroyRef,
   EventEmitter,
-  inject,
   Input,
+  OnDestroy,
   OnInit,
   Output,
   ViewChild
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs/operators';
+import { Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { DomainConfig } from '../../models/domain-config.interface';
 import {
@@ -34,7 +33,8 @@ import { ChipModule } from 'primeng/chip';
 
 import { ButtonModule } from 'primeng/button';
 import { FormsModule } from '@angular/forms';
-import { Select, SelectModule } from 'primeng/select';
+import { CommonModule } from '@angular/common';
+import { Dropdown, DropdownModule } from 'primeng/dropdown';
 
 /**
  * Active filter representation
@@ -98,19 +98,19 @@ interface ActiveFilter {
     styleUrls: ['./query-control.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [SelectModule, FormsModule, ButtonModule, ChipModule, TooltipModule, DialogModule, SharedModule, InputTextModule, ProgressSpinnerModule, CheckboxModule, InputNumberModule]
+    imports: [CommonModule, DropdownModule, FormsModule, ButtonModule, ChipModule, TooltipModule, DialogModule, SharedModule, InputTextModule, ProgressSpinnerModule, CheckboxModule, InputNumberModule]
 })
 export class QueryControlComponent<TFilters = any, TData = any, TStatistics = any>
-  implements OnInit {
+  implements OnInit, OnDestroy {
 
-  // ============================================================================
-  // Dependency Injection (Angular 17 inject() pattern)
-  // ============================================================================
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly apiService = inject(ApiService);
-  private readonly urlState = inject(UrlStateService);
-  private readonly popOutContext = inject(PopOutContextService);
-  private readonly destroyRef = inject(DestroyRef);
+  private readonly destroy$ = new Subject<void>();
+
+  constructor(
+    private readonly cdr: ChangeDetectorRef,
+    private readonly apiService: ApiService,
+    private readonly urlState: UrlStateService,
+    private readonly popOutContext: PopOutContextService
+  ) {}
 
   // ============================================================================
   // Configuration
@@ -124,7 +124,7 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
   @Output() clearAllFilters = new EventEmitter<void>();
 
   @ViewChild('searchInput') searchInput: any;
-  @ViewChild('filterFieldDropdown') filterFieldDropdown!: Select;
+  @ViewChild('filterFieldDropdown') filterFieldDropdown!: Dropdown;
 
   // ==================== Dropdown State ====================
 
@@ -180,7 +180,7 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
         .getMessages$()
         .pipe(
           filter(msg => msg.type === PopOutMessageType.STATE_UPDATE),
-          takeUntilDestroyed(this.destroyRef)
+          takeUntil(this.destroy$)
         )
         .subscribe((message: any) => {
           if (message.payload && message.payload.state) {
@@ -191,11 +191,16 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
         });
     } else {
       // In main window: Sync from URL state on init and on changes
-      this.urlState.params$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
+      this.urlState.params$.pipe(takeUntil(this.destroy$)).subscribe(params => {
         this.syncFiltersFromUrl(params);
         this.cdr.markForCheck();
       });
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
   
   /**
@@ -210,8 +215,9 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
     this.selectedField = null;
     // BUG-004 Fix: Call clear() to reset PrimeNG's internal selection state
     // This ensures clicking the same option will trigger onChange next time
+    // PrimeNG 14 clear() requires an Event argument
     if (this.filterFieldDropdown) {
-      this.filterFieldDropdown.clear();
+      this.filterFieldDropdown.clear(new Event('clear'));
     }
     this.cdr.markForCheck();
   }
@@ -571,10 +577,11 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
 
   /**
    * Get the number of decimal places for range inputs
+   * Returns 0 for non-decimal types, actual decimal places for decimal type
    */
-  getRangeDecimalPlaces(): number | undefined {
+  getRangeDecimalPlaces(): number {
     if (!this.currentRangeConfig || this.currentRangeConfig.valueType !== 'decimal') {
-      return undefined;
+      return 0;
     }
     return this.currentRangeConfig.decimalPlaces ?? 2;
   }

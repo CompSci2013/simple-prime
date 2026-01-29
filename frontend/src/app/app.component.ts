@@ -1,6 +1,9 @@
-import { Component, inject, Injector } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { CommonModule } from '@angular/common';
+import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { RouterOutlet, RouterLink, ActivatedRoute } from '@angular/router';
+import { TieredMenu } from 'primeng/tieredmenu';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { MenuItem } from 'primeng/api';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ToastModule } from 'primeng/toast';
@@ -43,47 +46,26 @@ import packageJson from '../../package.json';
 @Component({
     selector: 'app-root',
     standalone: true,
-    imports: [RouterOutlet, RouterLink, TieredMenuModule, ToastModule],
+    imports: [CommonModule, RouterOutlet, RouterLink, TieredMenuModule, ToastModule],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
-  /**
-   * Application title identifier
-   * @type {string}
-   */
+export class AppComponent implements OnInit, OnDestroy {
+  private readonly destroy$ = new Subject<void>();
+
+  @ViewChild('menu') menu!: TieredMenu;
+
   title = 'generic-prime';
-
-  /**
-   * Application version from package.json
-   * @type {string}
-   */
   version = packageJson.version;
-
-  /**
-   * Whether this window is a pop-out (detected from ?popout=panelId query param)
-   * When true, the header is hidden and only the router-outlet is shown
-   * @type {boolean}
-   */
   isPopOut = false;
 
-  /**
-   * Domain navigation menu items with TieredMenu structure (nested items with flyout submenus)
-   *
-   * Organized hierarchically:
-   * - Top level: Domain category (Automobiles, Agriculture, etc.)
-   * - Sub-level: Domain-specific actions (Home, Discover, View Reports)
-   * - Actions: Navigation (routerLink) or command execution (command function)
-   *
-   * @type {MenuItem[]}
-   */
   domainMenuItems: MenuItem[] = [
     {
       label: 'Automobiles',
       icon: '🚗',
       items: [
-        { label: 'Autos Home', icon: '🏠', routerLink: '/automobiles' },
-        { label: 'Autos Discover', icon: '🔍', routerLink: '/automobiles/discover' },
+        { label: 'Autos Home', icon: '🏠', routerLink: ['/automobiles'] },
+        { label: 'Autos Discover', icon: '🔍', routerLink: ['/automobiles/discover'] },
         { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
       ]
     },
@@ -91,8 +73,8 @@ export class AppComponent {
       label: 'Agriculture',
       icon: '🌾',
       items: [
-        { label: 'Agriculture Home', icon: '🏠', routerLink: '/agriculture' },
-        { label: 'Agriculture Discover', icon: '🔍', routerLink: '/agriculture/discover' },
+        { label: 'Agriculture Home', icon: '🏠', routerLink: ['/agriculture'] },
+        { label: 'Agriculture Discover', icon: '🔍', routerLink: ['/agriculture/discover'] },
         { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
       ]
     },
@@ -100,27 +82,35 @@ export class AppComponent {
       label: 'Developer',
       icon: '⚙️',
       items: [
-        { label: 'Dependency Graph', icon: '🔗', routerLink: '/dependencies' },
         { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
       ]
     }
   ];
 
-  // ============================================================================
-  // Dependency Injection (Angular 17+ inject() pattern)
-  // ============================================================================
-  private readonly domainConfigRegistry = inject(DomainConfigRegistry);
-  private readonly injector = inject(Injector);
-  private readonly route = inject(ActivatedRoute);
+  constructor(
+    private readonly domainConfigRegistry: DomainConfigRegistry,
+    private readonly injector: Injector,
+    private readonly route: ActivatedRoute
+  ) {}
 
-  constructor() {
+  ngOnInit(): void {
     this.domainConfigRegistry.registerDomainProviders(DOMAIN_PROVIDERS, this.injector);
 
-    // Detect if this is a pop-out window by checking for ?popout query parameter
-    // Pop-out windows hide the header and show only the router-outlet with panel content
-    this.route.queryParams.pipe(takeUntilDestroyed()).subscribe(params => {
+    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
       this.isPopOut = !!params['popout'];
     });
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  /**
+   * Toggle the domains menu popup
+   */
+  toggleMenu(event: Event): void {
+    this.menu.toggle(event);
   }
 
   /**

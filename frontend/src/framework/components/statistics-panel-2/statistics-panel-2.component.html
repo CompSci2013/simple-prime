@@ -6,11 +6,11 @@
     <p>No statistics available. Add filters or select data to view distributions.</p>
   </div>
 
-  <!-- Chart Grid with CDK Mixed Orientation -->
+  <!-- Chart Grid with CDK Drag-Drop -->
   <div
     *ngIf="statistics$ | async"
     cdkDropList
-    cdkDropListOrientation="mixed"
+    cdkDropListOrientation="horizontal"
     (cdkDropListDropped)="onChartDrop($event)"
     class="chart-grid">
     <ng-container *ngFor="let chartId of chartOrder">

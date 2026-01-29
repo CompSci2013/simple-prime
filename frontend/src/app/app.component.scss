@@ -30,69 +30,67 @@
     }
   }
 
-  ::ng-deep .domain-menu {
-    .p-tieredmenu {
-      background-color: transparent;
-      border: none;
-      padding: 0;
+}
 
-      .p-tieredmenu-root-list {
-        display: flex;
-        gap: 0;
-        background-color: transparent;
-        padding: 0;
+// PrimeNG 14 TieredMenu popup styling (global since appendTo="body")
+::ng-deep .domain-menu.p-tieredmenu {
+  background-color: #3c3c3c;
+  border: 1px solid #64c8ff;
+  border-radius: 4px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+  padding: 0;
 
-        > .p-menuitem {
-          > .p-menuitem-content {
-            background-color: transparent;
-            border: none;
-            padding: 0.5rem 1rem;
-            color: #ffffff;
+  .p-tieredmenu-root-list,
+  .p-submenu-list {
+    background-color: #3c3c3c;
+    padding: 0;
+    margin: 0;
+    list-style: none;
+  }
 
-            .p-menuitem-text {
-              color: #ffffff;
-              font-size: 1.2rem;
-              font-weight: bold;
-            }
+  .p-menuitem {
+    margin: 0;
 
-            &:hover {
-              background-color: transparent;
-              color: #64c8ff;
-            }
-          }
+    > .p-menuitem-link {
+      padding: 0.75rem 1rem;
+      color: #ffffff;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      border-bottom: 1px solid #444;
 
-          &.p-menuitem-active > .p-menuitem-content {
-            background-color: transparent;
-            color: #64c8ff;
-          }
-        }
+      .p-menuitem-text {
+        color: #ffffff;
       }
 
-      // Submenu styling (flyout overlays)
-      .p-submenu-list {
-        background-color: #3c3c3c;
-        border: 1px solid #64c8ff;
-        border-radius: 4px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+      .p-menuitem-icon,
+      .p-submenu-icon {
+        color: #ffffff;
+      }
 
-        .p-menuitem {
-          .p-menuitem-content {
-            padding: 0.75rem 1rem;
-            color: #ffffff;
-            border-bottom: 1px solid #444;
+      &:hover {
+        background-color: #4a4a4a;
 
-            &:hover {
-              background-color: #4a4a4a;
-              color: #64c8ff;
-            }
-          }
-
-          &:last-child .p-menuitem-content {
-            border-bottom: none;
-          }
+        .p-menuitem-text,
+        .p-menuitem-icon,
+        .p-submenu-icon {
+          color: #64c8ff;
         }
       }
     }
+
+    &:last-child > .p-menuitem-link {
+      border-bottom: none;
+    }
+  }
+
+  // Nested submenu panels
+  .p-submenu-list {
+    background-color: #3c3c3c;
+    border: 1px solid #64c8ff;
+    border-radius: 4px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
   }
 }
 

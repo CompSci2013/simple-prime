@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,7 +20,7 @@ import { PopOutMessageType } from '../../models/popout.interface';
 import { CheckboxModule } from 'primeng/checkbox';
 import { AutoCompleteModule } from 'primeng/autocomplete';
 import { MultiSelectModule } from 'primeng/multiselect';
-import { SelectModule } from 'primeng/select';
+import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { InputTextModule } from 'primeng/inputtext';
@@ -61,7 +62,7 @@ import { FormsModule } from '@angular/forms';
     styleUrls: ['./query-panel.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     standalone: true,
-    imports: [FormsModule, InputTextModule, InputNumberModule, ButtonModule, SelectModule, MultiSelectModule, AutoCompleteModule, CheckboxModule]
+    imports: [CommonModule, FormsModule, InputTextModule, InputNumberModule, ButtonModule, DropdownModule, MultiSelectModule, AutoCompleteModule, CheckboxModule]
 })
 export class QueryPanelComponent<TFilters = any, TData = any, TStatistics = any>
   implements OnInit, OnDestroy {

@@ -33,7 +33,7 @@ import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
-import { NgStyle } from '@angular/common';
+import { CommonModule } from '@angular/common';
 
 /**
  * Base Picker Component
@@ -64,7 +64,7 @@ import { NgStyle } from '@angular/common';
     templateUrl: './base-picker.component.html',
     styleUrls: ['./base-picker.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TableModule, SharedModule, InputTextModule, ButtonModule, CheckboxModule, FormsModule, NgStyle, SkeletonModule, MessageModule]
+    imports: [CommonModule, TableModule, SharedModule, InputTextModule, ButtonModule, CheckboxModule, FormsModule, SkeletonModule, MessageModule]
 })
 export class BasePickerComponent<T> implements OnInit, OnDestroy, AfterViewInit {
   /**

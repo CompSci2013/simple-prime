@@ -23,6 +23,7 @@ import {
   ViewChild,
   HostListener
 } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { Subject } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 
@@ -208,7 +209,7 @@ export abstract class ChartDataSource<TStatistics = any> {
     templateUrl: './base-chart.component.html',
     styleUrls: ['./base-chart.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ButtonModule]
+    imports: [CommonModule, ButtonModule]
 })
 export class BaseChartComponent implements OnInit, AfterViewInit, OnDestroy, OnChanges {
   /**

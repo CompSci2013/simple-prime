@@ -109,18 +109,25 @@
     }
   }
 
-  // PrimeNG 19 checkbox styling for dark theme visibility
+  // PrimeNG 14 checkbox styling for dark theme visibility
   .p-checkbox {
     .p-checkbox-box {
       border: 2px solid #6b7280; // Gray-500, visible on dark backgrounds
+      width: 20px;
+      height: 20px;
 
       &.p-highlight {
-        border-color: var(--p-primary-color, #34d399);
-        background: var(--p-primary-color, #34d399);
+        border-color: var(--primary-color, #34d399);
+        background: var(--primary-color, #34d399);
       }
 
       &:not(.p-disabled):hover {
-        border-color: var(--p-primary-color, #34d399);
+        border-color: var(--primary-color, #34d399);
+      }
+
+      .p-checkbox-icon {
+        color: #fff;
+        font-size: 14px;
       }
     }
   }

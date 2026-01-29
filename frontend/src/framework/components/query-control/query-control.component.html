@@ -1,7 +1,7 @@
 <div class="query-control-panel" [attr.data-testid]="environment.includeTestIds ? 'query-control-panel' : null">
   <!-- Compact Header Bar with Dropdown and Actions -->
   <div class="control-header">
-    <p-select
+    <p-dropdown
       #filterFieldDropdown
       [options]="filterFieldOptions"
       [(ngModel)]="selectedField"
@@ -16,7 +16,7 @@
       optionValue="value"
       styleClass="filter-field-dropdown"
       [attr.data-testid]="environment.includeTestIds ? 'filter-field-dropdown' : null">
-    </p-select>
+    </p-dropdown>
     <p-button
       label="Clear All"
       icon="pi pi-times"
@@ -27,52 +27,46 @@
   </div>
 
   <!-- Active Filters -->
-  @if (activeFilters.length > 0) {
-    <div class="active-filters">
-      <label class="active-filters-label">Active Filters:</label>
-      <div class="filter-chips">
-        @for (filter of activeFilters; track filter) {
-          <p-chip
-            [label]="getChipLabel(filter)"
-            [removable]="true"
-            (onRemove)="removeFilter(filter); $event.stopPropagation()"
-            (click)="onChipClick($event, filter)"
-            styleClass="filter-chip"
-            [pTooltip]="getChipTooltip(filter)"
-            tooltipPosition="top">
-          </p-chip>
-        }
-      </div>
+  <div *ngIf="activeFilters.length > 0" class="active-filters">
+    <label class="active-filters-label">Active Filters:</label>
+    <div class="filter-chips">
+      <p-chip
+        *ngFor="let filter of activeFilters"
+        [label]="getChipLabel(filter)"
+        [removable]="true"
+        (onRemove)="removeFilter(filter); $event.stopPropagation()"
+        (click)="onChipClick($event, filter)"
+        styleClass="filter-chip"
+        [pTooltip]="getChipTooltip(filter)"
+        tooltipPosition="top">
+      </p-chip>
     </div>
-  }
+  </div>
 
   <!-- Active Highlights -->
-  @if (activeHighlights.length > 0) {
-    <div class="active-highlights">
-      <div class="highlights-header">
-        <label class="active-highlights-label">Active Highlights:</label>
-        <a
-          href="javascript:void(0)"
-          class="clear-highlights-link"
-          (click)="clearAllHighlights()">
-          Clear All Highlights
-        </a>
-      </div>
-      <div class="highlight-chips">
-        @for (highlight of activeHighlights; track highlight) {
-          <p-chip
-            [label]="getChipLabel(highlight)"
-            [removable]="true"
-            (onRemove)="removeHighlight(highlight); $event.stopPropagation()"
-            (click)="onHighlightChipClick($event, highlight)"
-            styleClass="highlight-chip"
-            [pTooltip]="getChipTooltip(highlight)"
-            tooltipPosition="top">
-          </p-chip>
-        }
-      </div>
+  <div *ngIf="activeHighlights.length > 0" class="active-highlights">
+    <div class="highlights-header">
+      <label class="active-highlights-label">Active Highlights:</label>
+      <a
+        href="javascript:void(0)"
+        class="clear-highlights-link"
+        (click)="clearAllHighlights()">
+        Clear All Highlights
+      </a>
     </div>
-  }
+    <div class="highlight-chips">
+      <p-chip
+        *ngFor="let highlight of activeHighlights"
+        [label]="getChipLabel(highlight)"
+        [removable]="true"
+        (onRemove)="removeHighlight(highlight); $event.stopPropagation()"
+        (click)="onHighlightChipClick($event, highlight)"
+        styleClass="highlight-chip"
+        [pTooltip]="getChipTooltip(highlight)"
+        tooltipPosition="top">
+      </p-chip>
+    </div>
+  </div>
 
   <!-- Multiselect Filter Dialog -->
   <p-dialog
@@ -95,71 +89,57 @@
     <p class="dialog-subtitle">{{ multiselectDialogSubtitle }}</p>
 
     <!-- Search Box -->
-    @if (!loadingOptions && !optionsError) {
-      <div class="p-input-icon-left search-box">
-        <i class="pi pi-search"></i>
-        <input
-          #searchInput
-          type="text"
-          pInputText
-          [(ngModel)]="searchQuery"
-          [placeholder]="currentFilterDef?.searchPlaceholder || 'Search...'"
-          (ngModelChange)="onSearchChange($event)"
-          class="w-full"
-          />
-      </div>
-    }
+    <div *ngIf="!loadingOptions && !optionsError" class="p-input-icon-left search-box">
+      <i class="pi pi-search"></i>
+      <input
+        #searchInput
+        type="text"
+        pInputText
+        [(ngModel)]="searchQuery"
+        [placeholder]="currentFilterDef?.searchPlaceholder || 'Search...'"
+        (ngModelChange)="onSearchChange($event)"
+        class="w-full"
+        />
+    </div>
 
     <!-- Loading State -->
-    @if (loadingOptions) {
-      <div class="loading-state">
-        <p-progressSpinner [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
-        <p>Loading options...</p>
-      </div>
-    }
+    <div *ngIf="loadingOptions" class="loading-state">
+      <p-progressSpinner [style]="{width: '50px', height: '50px'}"></p-progressSpinner>
+      <p>Loading options...</p>
+    </div>
 
     <!-- Error State -->
-    @if (optionsError) {
-      <div class="error-state">
-        <i class="pi pi-exclamation-triangle"></i>
-        <p>{{ optionsError }}</p>
-        <p-button
-          label="Retry"
-          icon="pi pi-refresh"
-          (onClick)="retryLoadOptions()"
-          styleClass="p-button-sm">
-        </p-button>
-      </div>
-    }
+    <div *ngIf="optionsError" class="error-state">
+      <i class="pi pi-exclamation-triangle"></i>
+      <p>{{ optionsError }}</p>
+      <p-button
+        label="Retry"
+        icon="pi pi-refresh"
+        (onClick)="retryLoadOptions()"
+        styleClass="p-button-sm">
+      </p-button>
+    </div>
 
     <!-- Options List -->
-    @if (!loadingOptions && !optionsError) {
-      <div class="options-list">
-        @for (option of filteredOptions; track option; let i = $index) {
-          <div class="option-item">
-            <p-checkbox
-              [(ngModel)]="selectedOptions"
-              [value]="option.value"
-              [binary]="false"
-              [inputId]="'option-' + i">
-            </p-checkbox>
-            <label [for]="'option-' + i">{{ option.label }}</label>
-          </div>
-        }
-        @if (filteredOptions.length === 0) {
-          <div class="no-results">
-            <p>No options found</p>
-          </div>
-        }
+    <div *ngIf="!loadingOptions && !optionsError" class="options-list">
+      <div *ngFor="let option of filteredOptions; let i = index" class="option-item">
+        <p-checkbox
+          [(ngModel)]="selectedOptions"
+          [value]="option.value"
+          [binary]="false"
+          [inputId]="'option-' + i">
+        </p-checkbox>
+        <label [for]="'option-' + i">{{ option.label }}</label>
       </div>
-    }
+      <div *ngIf="filteredOptions.length === 0" class="no-results">
+        <p>No options found</p>
+      </div>
+    </div>
 
     <!-- Selection Summary -->
-    @if (selectedOptions.length > 0 && !loadingOptions) {
-      <div class="selection-summary">
-        <span>Selected ({{ selectedOptions.length }}): {{ getSelectionSummary() }}</span>
-      </div>
-    }
+    <div *ngIf="selectedOptions.length > 0 && !loadingOptions" class="selection-summary">
+      <span>Selected ({{ selectedOptions.length }}): {{ getSelectionSummary() }}</span>
+    </div>
 
     <ng-template pTemplate="footer">
       <p-button

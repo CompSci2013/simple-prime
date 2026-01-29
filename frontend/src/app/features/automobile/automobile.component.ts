@@ -28,6 +28,7 @@ import { RouterLink } from '@angular/router';
     selector: 'app-automobile',
     templateUrl: './automobile.component.html',
     styleUrls: ['./automobile.component.scss'],
+    standalone: true,
     imports: [RouterLink]
 })
 export class AutomobileComponent {

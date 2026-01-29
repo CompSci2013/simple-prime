@@ -37,10 +37,6 @@ export const routes: Routes = [
     loadComponent: () => import('./features/agriculture/agriculture.component').then(m => m.AgricultureComponent)
   },
   {
-    path: 'dependencies',
-    loadComponent: () => import('./features/dependency-graph/dependency-graph.component').then(m => m.DependencyGraphComponent)
-  },
-  {
     path: 'report',
     loadComponent: () => import('./features/report/report.component').then(m => m.ReportComponent)
   },

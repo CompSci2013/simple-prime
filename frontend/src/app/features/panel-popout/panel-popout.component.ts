@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -36,7 +37,7 @@ import { BaseChartComponent } from '../../../framework/components/base-chart/bas
         ResourceManagementService,
         { provide: IS_POPOUT_TOKEN, useValue: true }
     ],
-    imports: [BasePickerComponent, StatisticsPanel2Component, BaseChartComponent]
+    imports: [CommonModule, BasePickerComponent, StatisticsPanel2Component, BaseChartComponent]
 })
 export class PanelPopoutComponent implements OnInit, OnDestroy {
   gridId: string = '';

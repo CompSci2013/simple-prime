@@ -12,13 +12,15 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  inject,
   Input,
+  OnDestroy,
   OnInit,
-  Output,
-  Signal
+  Output
 } from '@angular/core';
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import { Observable, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { CommonModule } from '@angular/common';
+import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { environment } from '../../../environments/environment';
 import { ChartConfig, DomainConfig } from '../../models/domain-config.interface';
 import { PopOutMessageType } from '../../models/popout.interface';
@@ -49,17 +51,18 @@ import { ChartDataSource, BaseChartComponent } from '../base-chart/base-chart.co
     templateUrl: './statistics-panel-2.component.html',
     styleUrls: ['./statistics-panel-2.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [BaseChartComponent, CdkDropList, CdkDrag, CdkDragHandle]
+    imports: [CommonModule, DragDropModule, BaseChartComponent]
 })
-export class StatisticsPanel2Component implements OnInit {
+export class StatisticsPanel2Component implements OnInit, OnDestroy {
 
-  // ============================================================================
-  // Dependency Injection
-  // ============================================================================
-  private readonly resourceService = inject<ResourceManagementService<any, any, any>>(ResourceManagementService);
-  private readonly urlState = inject(UrlStateService);
-  private readonly popOutContext = inject(PopOutContextService);
-  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroy$ = new Subject<void>();
+
+  constructor(
+    private readonly resourceService: ResourceManagementService<any, any, any>,
+    private readonly urlState: UrlStateService,
+    private readonly popOutContext: PopOutContextService,
+    private readonly cdr: ChangeDetectorRef
+  ) {}
 
   // ============================================================================
   // Configuration
@@ -83,15 +86,15 @@ export class StatisticsPanel2Component implements OnInit {
   @Output() chartClicked = new EventEmitter<{ event: { value: string; isHighlightMode: boolean }; dataSource: ChartDataSource }>();
 
   // ============================================================================
-  // Signal-Based State
+  // Observable Streams
   // ============================================================================
 
-  get statistics(): Signal<any | undefined> {
-    return this.resourceService.statistics;
+  get statistics$(): Observable<any | undefined> {
+    return this.resourceService.statistics$;
   }
 
-  get highlights(): Signal<any> {
-    return this.resourceService.highlights;
+  get highlights$(): Observable<any> {
+    return this.resourceService.highlights$;
   }
 
   /**
@@ -125,6 +128,11 @@ export class StatisticsPanel2Component implements OnInit {
     if (this.domainConfig.chartDataSources) {
       this.chartOrder = Object.keys(this.domainConfig.chartDataSources);
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   // ============================================================================

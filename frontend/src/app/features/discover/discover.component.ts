@@ -8,7 +8,8 @@ import {
   OnInit
 } from '@angular/core';
 import { Params } from '@angular/router';
-import { CdkDragDrop, moveItemInArray, CdkDropList, CdkDrag, CdkDragHandle } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
+import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { MessageService } from 'primeng/api';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -34,7 +35,7 @@ import { ButtonModule } from 'primeng/button';
     styleUrls: ['./discover.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ResourceManagementService],
-    imports: [CdkDropList, CdkDrag, CdkDragHandle, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component]
+    imports: [CommonModule, DragDropModule, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component]
 })
 export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   implements OnInit, OnDestroy {
@@ -137,6 +138,10 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
     moveItemInArray(this.panelOrder, event.previousIndex, event.currentIndex);
     this.userPreferences.savePanelOrder(this.panelOrder);
     this.cdr.markForCheck();
+  }
+
+  trackByPanelId(index: number, panelId: string): string {
+    return panelId;
   }
 
   getPanelTitle(panelId: string): string {

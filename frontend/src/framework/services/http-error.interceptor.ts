@@ -1,39 +1,27 @@
+import { Injectable } from '@angular/core';
 import {
   HttpErrorResponse,
-  HttpHandlerFn,
-  HttpInterceptorFn,
+  HttpEvent,
+  HttpHandler,
+  HttpInterceptor,
   HttpRequest
 } from '@angular/common/http';
-import { throwError } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 
 /**
  * Configuration for error interceptor retry behavior
  */
 export interface RetryConfig {
-  /**
-   * Maximum number of retry attempts
-   */
   maxRetries: number;
-
-  /**
-   * HTTP status codes that should trigger a retry
-   * Default: 5xx errors and 429 (too many requests)
-   */
   retryableStatusCodes: number[];
 }
 
-/**
- * Default retry configuration
- */
 const DEFAULT_RETRY_CONFIG: RetryConfig = {
   maxRetries: 2,
   retryableStatusCodes: [429, 500, 502, 503, 504]
 };
 
-/**
- * Get error code based on HTTP status
- */
 function getErrorCode(status: number): string {
   switch (status) {
     case 400:
@@ -63,21 +51,15 @@ function getErrorCode(status: number): string {
   }
 }
 
-/**
- * Extract error message from response
- */
 function getErrorMessage(error: HttpErrorResponse): string {
-  // Try to extract message from structured error response
   if (error.error?.error?.message) {
     return error.error.error.message;
   }
 
-  // Try to extract message from simple error response
   if (error.error?.message) {
     return error.error.message;
   }
 
-  // Fallback to generic messages based on status
   switch (error.status) {
     case 0:
       return 'Unable to connect to server. Please check your network connection.';
@@ -108,9 +90,6 @@ function getErrorMessage(error: HttpErrorResponse): string {
   }
 }
 
-/**
- * Log error details for debugging
- */
 function logError(
   error: HttpErrorResponse,
   request: HttpRequest<unknown>,
@@ -129,33 +108,25 @@ function logError(
 
   console.error('HTTP Error:', logDetails);
 
-  // Log full error in development
   if (error.error) {
     console.error('Error details:', error.error);
   }
 }
 
-/**
- * Handle HTTP errors with appropriate logging and formatting
- */
 function handleError(error: HttpErrorResponse, request: HttpRequest<unknown>) {
   let errorMessage: string;
   let errorCode: string;
 
   if (error.error instanceof ErrorEvent) {
-    // Client-side or network error
     errorCode = 'CLIENT_ERROR';
     errorMessage = `Network error: ${error.error.message}`;
   } else {
-    // Backend error
     errorCode = getErrorCode(error.status);
     errorMessage = getErrorMessage(error);
   }
 
-  // Log error details
   logError(error, request, errorCode, errorMessage);
 
-  // Return formatted error
   return throwError(() => ({
     code: errorCode,
     message: errorMessage,
@@ -167,52 +138,26 @@ function handleError(error: HttpErrorResponse, request: HttpRequest<unknown>) {
 }
 
 /**
- * HTTP error interceptor (Functional - Angular 17+)
+ * HTTP error interceptor (Class-based - Angular 14)
  *
  * Handles global error processing for all HTTP requests:
  * - Automatic retry for transient errors (5xx, 429)
  * - Consistent error formatting
  * - Error logging
- *
- * @example
- * ```typescript
- * // In app.config.ts
- * import { httpErrorInterceptor } from './framework/services/http-error.interceptor';
- *
- * provideHttpClient(withInterceptors([httpErrorInterceptor]))
- * ```
  */
-export const httpErrorInterceptor: HttpInterceptorFn = (
-  request: HttpRequest<unknown>,
-  next: HttpHandlerFn
-) => {
-  const retryConfig = DEFAULT_RETRY_CONFIG;
+@Injectable()
+export class HttpErrorInterceptor implements HttpInterceptor {
+  intercept(
+    request: HttpRequest<unknown>,
+    next: HttpHandler
+  ): Observable<HttpEvent<unknown>> {
+    const retryConfig = DEFAULT_RETRY_CONFIG;
 
-  return next(request).pipe(
-    // Retry on transient errors
-    retry({
-      count: retryConfig.maxRetries,
-      delay: (error: HttpErrorResponse, retryCount: number) => {
-        // Only retry on specific status codes
-        if (
-          error instanceof HttpErrorResponse &&
-          retryConfig.retryableStatusCodes.includes(error.status)
-        ) {
-          console.warn(
-            `Retrying request (attempt ${retryCount + 1}/${
-              retryConfig.maxRetries + 1
-            }): ${request.method} ${request.url}`
-          );
-          return throwError(() => error);
-        }
-        // Don't retry - throw immediately
-        throw error;
-      }
-    }),
-
-    // Handle errors
-    catchError((error: HttpErrorResponse) => {
-      return handleError(error, request);
-    })
-  );
-};
+    return next.handle(request).pipe(
+      retry(retryConfig.maxRetries),
+      catchError((error: HttpErrorResponse) => {
+        return handleError(error, request);
+      })
+    );
+  }
+}

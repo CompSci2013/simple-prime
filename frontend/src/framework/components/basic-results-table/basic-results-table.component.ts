@@ -3,17 +3,15 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  DestroyRef,
   ElementRef,
   EventEmitter,
-  inject,
   Input,
+  OnDestroy,
   OnInit,
-  Output,
-  Signal
+  Output
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { filter } from 'rxjs/operators';
+import { Observable, Subject } from 'rxjs';
+import { filter, takeUntil } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 import { DomainConfig } from '../../models/domain-config.interface';
 import { ResourceManagementService } from '../../services/resource-management.service';
@@ -22,20 +20,14 @@ import { PopOutMessageType } from '../../models/popout.interface';
 import { SkeletonModule } from 'primeng/skeleton';
 import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
-import { NgStyle } from '@angular/common';
 import { SharedModule } from 'primeng/api';
 import { TableModule } from 'primeng/table';
+import { CommonModule } from '@angular/common';
 
 /**
- * Basic Results Table Component - Angular 17 Signals Architecture
+ * Basic Results Table Component
  *
  * Pure display component for showing tabular data with pagination and sorting.
- * Uses Angular Signals for reactive state management.
- *
- * **Angular 17 Patterns**:
- * - `inject()` for dependency injection
- * - Direct Signal access from ResourceManagementService
- * - `DestroyRef` + `takeUntilDestroyed()` for cleanup
  *
  * @template TFilters - Domain-specific filter model type
  * @template TData - Domain-specific data model type
@@ -47,19 +39,19 @@ import { TableModule } from 'primeng/table';
     templateUrl: './basic-results-table.component.html',
     styleUrls: ['./basic-results-table.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [TableModule, SharedModule, NgStyle, ButtonModule, RippleModule, SkeletonModule]
+    imports: [CommonModule, TableModule, SharedModule, ButtonModule, RippleModule, SkeletonModule]
 })
 export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics = any>
-  implements OnInit, AfterViewInit {
+  implements OnInit, AfterViewInit, OnDestroy {
 
-  // ============================================================================
-  // Dependency Injection (Angular 17 inject() pattern)
-  // ============================================================================
-  private readonly resourceService = inject<ResourceManagementService<TFilters, TData, TStatistics>>(ResourceManagementService);
-  private readonly cdr = inject(ChangeDetectorRef);
-  private readonly popOutContext = inject(PopOutContextService);
-  private readonly destroyRef = inject(DestroyRef);
-  private readonly elementRef = inject(ElementRef);
+  private readonly destroy$ = new Subject<void>();
+
+  constructor(
+    private readonly resourceService: ResourceManagementService<TFilters, TData, TStatistics>,
+    private readonly cdr: ChangeDetectorRef,
+    private readonly popOutContext: PopOutContextService,
+    private readonly elementRef: ElementRef
+  ) {}
 
   // ============================================================================
   // Configuration
@@ -69,29 +61,26 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
 
   @Input() domainConfig!: DomainConfig<TFilters, TData, TStatistics>;
 
-  /**
-   * Emits when URL parameters should be updated (sort, page, size)
-   */
   @Output() urlParamsChange = new EventEmitter<{ [key: string]: any }>();
 
   // ============================================================================
-  // Signal-Based State (Direct from ResourceManagementService)
+  // Observable Streams (from ResourceManagementService)
   // ============================================================================
 
-  get filters(): Signal<TFilters> {
-    return this.resourceService.filters;
+  get filters$(): Observable<TFilters> {
+    return this.resourceService.filters$;
   }
 
-  get results(): Signal<TData[]> {
-    return this.resourceService.results;
+  get results$(): Observable<TData[]> {
+    return this.resourceService.results$;
   }
 
-  get totalResults(): Signal<number> {
-    return this.resourceService.totalResults;
+  get totalResults$(): Observable<number> {
+    return this.resourceService.totalResults$;
   }
 
-  get loading(): Signal<boolean> {
-    return this.resourceService.loading;
+  get loading$(): Observable<boolean> {
+    return this.resourceService.loading$;
   }
 
   // ============================================================================
@@ -106,14 +95,22 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
   // ============================================================================
 
   get paginatorFirst(): number {
-    const filters = this.filters() as Record<string, any>;
+    const filters = this.resourceService.getCurrentFilters() as Record<string, any>;
     const page = filters['page'] || 1;
     const size = filters['size'] || 20;
     return (page - 1) * size;
   }
 
   get currentFilters(): Record<string, any> {
-    return this.filters() as Record<string, any>;
+    return this.resourceService.getCurrentFilters() as Record<string, any>;
+  }
+
+  // ============================================================================
+  // Template Helpers
+  // ============================================================================
+
+  getObjectKeys(obj: any): string[] {
+    return Object.keys(obj);
   }
 
   // ============================================================================
@@ -131,7 +128,7 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
         .getMessages$()
         .pipe(
           filter(msg => msg.type === PopOutMessageType.STATE_UPDATE),
-          takeUntilDestroyed(this.destroyRef)
+          takeUntil(this.destroy$)
         )
         .subscribe(message => {
           if (message.payload && message.payload.state) {
@@ -142,13 +139,15 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
     }
   }
 
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
   // ============================================================================
   // Event Handlers
   // ============================================================================
 
-  /**
-   * Handle pagination events from PrimeNG Table
-   */
   onPageChange(event: any): void {
     const page = event.first / event.rows + 1;
     const size = event.rows;
@@ -156,7 +155,7 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
     if (this.popOutContext.isInPopOut()) {
       this.urlParamsChange.emit({ page, size });
     } else {
-      const currentFilters = this.filters() as Record<string, any>;
+      const currentFilters = this.resourceService.getCurrentFilters() as Record<string, any>;
       const newFilters = {
         ...currentFilters,
         page,
@@ -166,9 +165,6 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
     }
   }
 
-  /**
-   * Handle sort events from PrimeNG Table
-   */
   onSort(event: any): void {
     const sort = event.field;
     const sortDirection = event.order === 1 ? 'asc' : 'desc';
@@ -181,7 +177,7 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
       this.urlParamsChange.emit({ sort, sortDirection });
     } else {
       console.log('[BasicResultsTable] Calling updateFilters directly');
-      const currentFilters = this.filters() as Record<string, any>;
+      const currentFilters = this.resourceService.getCurrentFilters() as Record<string, any>;
       const newFilters = {
         ...currentFilters,
         sort,
@@ -191,9 +187,6 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
     }
   }
 
-  /**
-   * Refresh data
-   */
   refresh(): void {
     this.resourceService.refresh();
   }
@@ -203,7 +196,6 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
   // ============================================================================
 
   ngAfterViewInit(): void {
-    // Initial sync of paginator width to table width
     this.syncPaginatorWidth();
   }
 
@@ -211,10 +203,6 @@ export class BasicResultsTableComponent<TFilters = any, TData = any, TStatistics
   // Private Methods
   // ============================================================================
 
-  /**
-   * Sync paginator width to match table width
-   * This ensures the paginator stays aligned with the table when columns are resized
-   */
   private syncPaginatorWidth(): void {
     const nativeEl = this.elementRef.nativeElement;
     const table = nativeEl.querySelector('.p-datatable-table') as HTMLElement;
