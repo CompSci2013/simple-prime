@@ -16,6 +16,13 @@
         [chartIds]="getChartIdsForPanel()">
       </app-statistics-panel-2>
     </ng-container>
+    <!-- Dockview Statistics Panel -->
+    <ng-container *ngSwitchCase="'dockview-statistics'">
+      <app-dockview-statistics-panel
+        [domainConfig]="domainConfig"
+        [chartIds]="['manufacturer', 'top-models']">
+      </app-dockview-statistics-panel>
+    </ng-container>
     <!-- Individual Chart -->
     <ng-container *ngSwitchCase="'chart'">
       <app-base-chart

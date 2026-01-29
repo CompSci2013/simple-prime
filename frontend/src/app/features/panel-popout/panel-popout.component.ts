@@ -24,6 +24,7 @@ import { PopOutContextService } from '../../../framework/services/popout-context
 import { ResourceManagementService } from '../../../framework/services/resource-management.service';
 import { IS_POPOUT_TOKEN } from '../../../framework/tokens/popout.token';
 import { StatisticsPanel2Component } from '../../../framework/components/statistics-panel-2/statistics-panel-2.component';
+import { DockviewStatisticsPanelComponent } from '../../../framework/components/dockview-statistics-panel/dockview-statistics-panel.component';
 import { BasePickerComponent } from '../../../framework/components/base-picker/base-picker.component';
 import { BaseChartComponent } from '../../../framework/components/base-chart/base-chart.component';
 
@@ -37,7 +38,7 @@ import { BaseChartComponent } from '../../../framework/components/base-chart/bas
         ResourceManagementService,
         { provide: IS_POPOUT_TOKEN, useValue: true }
     ],
-    imports: [CommonModule, BasePickerComponent, StatisticsPanel2Component, BaseChartComponent]
+    imports: [CommonModule, BasePickerComponent, StatisticsPanel2Component, DockviewStatisticsPanelComponent, BaseChartComponent]
 })
 export class PanelPopoutComponent implements OnInit, OnDestroy {
   gridId: string = '';

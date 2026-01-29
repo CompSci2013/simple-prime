@@ -21,12 +21,13 @@ import {
   Output,
   ViewChild,
   ViewChildren,
+  ViewEncapsulation,
   QueryList
 } from '@angular/core';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonModule } from '@angular/common';
-import { createDockview, DockviewApi, IContentRenderer } from 'dockview-core';
+import { createDockview, DockviewApi, IContentRenderer, themeDark } from 'dockview-core';
 import { DomainConfig } from '../../models/domain-config.interface';
 import { PopOutMessageType } from '../../models/popout.interface';
 import { PopOutContextService } from '../../services/popout-context.service';
@@ -53,6 +54,7 @@ import { ChartDataSource, BaseChartComponent } from '../base-chart/base-chart.co
   templateUrl: './dockview-statistics-panel.component.html',
   styleUrls: ['./dockview-statistics-panel.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
   imports: [CommonModule, BaseChartComponent]
 })
 export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -123,9 +125,14 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
       return;
     }
 
+    console.log('[DockviewStats] ngOnInit - domainConfig:', this.domainConfig);
+    console.log('[DockviewStats] ngOnInit - chartDataSources:', this.domainConfig.chartDataSources);
+    console.log('[DockviewStats] ngOnInit - chartIds:', this.chartIds);
+
     // Initialize chart titles
     this.chartIds.forEach(chartId => {
       const dataSource = this.domainConfig.chartDataSources?.[chartId];
+      console.log('[DockviewStats] Chart', chartId, 'dataSource:', dataSource);
       if (dataSource) {
         this.chartTitles.set(chartId, dataSource.getTitle());
       }
@@ -150,9 +157,10 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
 
   ngAfterViewInit(): void {
     // Give Angular time to render chart components
+    // Using a longer delay to ensure charts are fully initialized
     setTimeout(() => {
       this.initializeDockview();
-    }, 0);
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -172,12 +180,18 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
   private initializeDockview(): void {
     const container = this.dockviewContainer.nativeElement;
 
+    console.log('[DockviewStats] Initializing dockview');
+    console.log('[DockviewStats] Container:', container);
+    console.log('[DockviewStats] chartIds:', this.chartIds);
+    console.log('[DockviewStats] chartElements count:', this.chartElements?.length);
+
     // Map to store chart elements by their ID
     const chartElementsMap = new Map<string, HTMLElement>();
 
     // Find all chart wrapper elements
     this.chartElements.forEach(el => {
       const chartId = el.nativeElement.getAttribute('data-chart-id');
+      console.log('[DockviewStats] Found chart element:', chartId);
       if (chartId) {
         chartElementsMap.set(chartId, el.nativeElement);
       }
@@ -188,6 +202,7 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
     // See popout-considerations.md for details
     this.dockviewApi = createDockview(container, {
       disableFloatingGroups: true,
+      theme: themeDark,
       createComponent: (options): IContentRenderer => {
         const chartId = options.id;
         const chartElement = chartElementsMap.get(chartId);
@@ -222,7 +237,7 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
       }
     });
 
-    // Add panels for each chart
+    // Add panels for each chart - side by side layout
     this.chartIds.forEach((chartId, index) => {
       const title = this.chartTitles.get(chartId) || chartId;
 
@@ -234,17 +249,24 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
           component: 'chart'
         });
       } else {
-        // Subsequent panels - add as tabs to the same group
+        // Subsequent panels - add to the right of the first panel
         this.dockviewApi!.addPanel({
           id: chartId,
           title: title,
           component: 'chart',
           position: {
-            referencePanel: this.chartIds[0]
+            referencePanel: this.chartIds[0],
+            direction: 'right'
           }
         });
       }
     });
+
+    // Force layout calculation after panels are added
+    const rect = container.getBoundingClientRect();
+    if (rect.width > 0 && rect.height > 0) {
+      this.dockviewApi!.layout(rect.width, rect.height);
+    }
 
     this.cdr.markForCheck();
   }
