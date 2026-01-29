@@ -22,8 +22,7 @@
  * 4. **Framework Components** (5): Reusable UI components
  * 5. **Automobile Domain** (15): Domain-specific adapters and configurations
  * 6. **Feature Components** (14): Page and route components
- * 7. **Physics Domain Data** (3): Physics curriculum data structures
- * 8. **Build & Test Tools** (16): Development infrastructure
+ * 7. **Build & Test Tools** (16): Development infrastructure
  *
  * **Edge Organization**:
  * The 300+ edges represent 9 types of relationships:
@@ -34,7 +33,6 @@
  * - Feature dependencies (features → components and services)
  * - Build tool dependencies (CLI → DevKit → Compiler → TypeScript)
  * - Testing dependencies (Karma → Jasmine, Playwright → test runner)
- * - Physics dependencies (graph components → Cytoscape)
  *
  * **Usage Example**:
  * ```typescript
@@ -456,10 +454,6 @@ const FEATURE_COMPONENTS: DependencyNode[] = [
     description: 'Automobile domain landing page', color: '#B4A7D6' },
   { id: 'comp-agriculture', label: 'AgricultureComponent', category: 'feature-component',
     description: 'Agriculture domain landing page (stub)', color: '#B4A7D6' },
-  { id: 'comp-physics', label: 'PhysicsComponent', category: 'feature-component',
-    description: 'Physics domain landing page', color: '#B4A7D6' },
-  { id: 'comp-chemistry', label: 'ChemistryComponent', category: 'feature-component',
-    description: 'Chemistry domain landing page (stub)', color: '#B4A7D6' },
 
   // Discovery & Data Pages
   { id: 'comp-discover', label: 'DiscoverComponent', category: 'feature-component',
@@ -467,31 +461,9 @@ const FEATURE_COMPONENTS: DependencyNode[] = [
   { id: 'comp-panel-popout', label: 'PanelPopoutComponent', category: 'feature-component',
     description: 'Pop-out window for panels with state sync', color: '#B4A7D6' },
 
-  // Physics Visualizations
-  { id: 'comp-physics-concept-graph', label: 'PhysicsConceptGraphComponent', category: 'feature-component',
-    description: 'Interactive concept graph visualization', color: '#B4A7D6' },
-  { id: 'comp-knowledge-graph', label: 'KnowledgeGraphComponent', category: 'framework-component',
-    description: 'Generic Cytoscape-based knowledge graph', color: '#F8B195' },
-  { id: 'comp-classical-mech-graph', label: 'ClassicalMechanicsGraphComponent', category: 'feature-component',
-    description: 'Classical mechanics knowledge graph wrapper', color: '#B4A7D6' },
-  { id: 'comp-physics-syllabus', label: 'PhysicsSyllabusComponent', category: 'feature-component',
-    description: 'Physics course syllabus display', color: '#B4A7D6' },
-
   // Reporting
   { id: 'comp-report', label: 'ReportComponent', category: 'feature-component',
     description: 'Playwright test results display', color: '#B4A7D6' },
-];
-
-/**
- * DATA MODELS - Physics Domain
- */
-const PHYSICS_DATA: DependencyNode[] = [
-  { id: 'physics-knowledge-path', label: 'PhysicsKnowledgePath', category: 'domain-config',
-    description: 'Physics 3-tier curriculum structure', color: '#FFD93D' },
-  { id: 'physics-concept-data', label: 'PhysicsConceptGraph', category: 'domain-config',
-    description: '14-concept physics foundation graph', color: '#FFD93D' },
-  { id: 'mechanics-graph-data', label: 'ClassicalMechanicsGraph', category: 'domain-config',
-    description: '18-topic classical mechanics knowledge graph', color: '#FFD93D' },
 ];
 
 /**
@@ -567,7 +539,6 @@ export const ALL_DEPENDENCY_NODES: DependencyNode[] = [
   ...FRAMEWORK_COMPONENTS,
   ...AUTOMOBILE_DOMAIN,
   ...FEATURE_COMPONENTS,
-  ...PHYSICS_DATA,
   ...BUILD_TOOLS,
   ...TEST_TOOLS,
   ...LINTING_TOOLS,
@@ -687,22 +658,6 @@ export const ALL_DEPENDENCY_EDGES: DependencyEdge[] = [
   { source: 'comp-discover', target: 'svc-popout-context', type: 'uses' },
   { source: 'comp-panel-popout', target: 'svc-popout-context', type: 'uses' },
   { source: 'comp-panel-popout', target: 'svc-resource-mgmt', type: 'uses' },
-
-  // Physics Components
-  { source: 'comp-physics-concept-graph', target: 'npm-cytoscape', type: 'uses' },
-  { source: 'comp-physics-concept-graph', target: 'npm-cytoscape-dagre', type: 'uses' },
-  { source: 'comp-classical-mech-graph', target: 'comp-knowledge-graph', type: 'uses' },
-  { source: 'comp-knowledge-graph', target: 'npm-cytoscape', type: 'uses' },
-  { source: 'comp-knowledge-graph', target: 'npm-cytoscape-dagre', type: 'uses' },
-  { source: 'comp-classical-mech-graph', target: 'mechanics-graph-data', type: 'uses' },
-  { source: 'comp-physics-concept-graph', target: 'physics-concept-data', type: 'uses' },
-  { source: 'comp-physics-syllabus', target: 'physics-knowledge-path', type: 'uses' },
-
-  // Physics Feature Components → Framework & Angular
-  { source: 'comp-physics', target: 'npm-angular-core', type: 'uses' },
-  { source: 'comp-physics', target: 'physics-knowledge-path', type: 'uses' },
-  { source: 'comp-physics-concept-graph', target: 'npm-angular-core', type: 'uses' },
-  { source: 'comp-physics-syllabus', target: 'npm-angular-core', type: 'uses' },
 
   // Build Tools → Angular Framework
   { source: 'tool-ng-cli', target: 'tool-ng-devkit', type: 'uses' },

@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
  *
  * Serves as the main entry point and domain selector for the Generic-Prime application.
  * This component provides navigation to various domain-specific modules including
- * Automobile, Physics, Agriculture, and Chemistry.
+ * Automobile and Agriculture.
  *
  * The home page acts as a hub allowing users to select their desired domain of interest
  * and navigate to the corresponding feature modules for data exploration and visualization.

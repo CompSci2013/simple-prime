@@ -15,7 +15,7 @@ import { catchError, timeout } from 'rxjs/operators';
  * **Architecture**:
  * - Uses BehaviorSubject for reactive state management
  * - localStorage for cross-session persistence
- * - Domain-aware keys to support multiple domains (automobiles, physics, etc.)
+ * - Domain-aware keys to support multiple domains (automobiles, agriculture, etc.)
  * - Graceful degradation when storage unavailable (private browsing, quota exceeded)
  *
  * **Storage Format**:
@@ -67,7 +67,7 @@ export class UserPreferencesService {
 
   /**
    * Current domain for key namespacing
-   * Extracted from current route (e.g., 'automobiles', 'physics')
+   * Extracted from current route (e.g., 'automobiles', 'agriculture')
    * @private
    */
   private currentDomain = this.extractCurrentDomain();
@@ -379,7 +379,7 @@ export class UserPreferencesService {
     const prefs: any = {};
 
     // Try to load preferences for each domain
-    ['automobiles', 'physics', 'agriculture', 'chemistry'].forEach(domain => {
+    ['automobiles', 'agriculture'].forEach(domain => {
       const orderKey = this.getPrefKey('panelOrder', domain);
       const collapsedKey = this.getPrefKey('collapsedPanels', domain);
 
@@ -500,7 +500,7 @@ export class UserPreferencesService {
   /**
    * Extract current domain from URL or route
    * Returns 'automobiles' from '/automobiles/discover'
-   * Returns 'physics' from '/physics/discover'
+   * Returns 'agriculture' from '/agriculture/discover'
    *
    * @private
    * @returns Current domain name
@@ -509,7 +509,7 @@ export class UserPreferencesService {
     // Get domain from current URL path
     const path = window.location.pathname;
 
-    // Match patterns like /automobiles/, /physics/, etc.
+    // Match patterns like /automobiles/, /agriculture/, etc.
     const match = path.match(/\/([a-z]+)\//);
     if (match && match[1]) {
       return match[1];

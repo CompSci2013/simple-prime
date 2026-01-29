@@ -31,7 +31,6 @@ import { FormsModule } from '@angular/forms';
  * - **Framework Components** (5): Reusable UI widgets (picker, table, chart, etc.)
  * - **Domain Adapters** (9): Domain-specific API integrations and configurations
  * - **Feature Components** (13): Pages and route components
- * - **Data Structures** (3): Physics curriculum graphs
  * - **Build & Test Tools** (13): Webpack, Karma, Jasmine, Playwright, ESLint
  * - **External Libraries** (2): Type definitions, utilities
  *

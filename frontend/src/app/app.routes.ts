@@ -11,10 +11,6 @@ import { Routes } from '@angular/router';
  * - Root & Home: '', 'home' -> HomeComponent (domain selector landing page)
  * - Automobile: 'automobiles' -> AutomobileComponent, 'automobiles/discover' -> DiscoverComponent
  * - Agriculture: 'agriculture' -> AgricultureComponent
- * - Physics: 'physics' -> PhysicsComponent
- *   - Sub-routes: 'physics/syllabus/:nodeId' -> PhysicsSyllabusComponent
- *   - Visualization: 'physics/concept-graph', 'physics/classical-mechanics-graph'
- * - Chemistry: 'chemistry' -> ChemistryComponent
  * - Developer: 'dependencies' -> DependencyGraphComponent (architecture visualization)
  * - Pop-out: 'panel/:gridId/:panelId/:type' -> PanelPopoutComponent (window synchronization)
  * - Reporting: 'report' -> ReportComponent (test results)
@@ -39,26 +35,6 @@ export const routes: Routes = [
   {
     path: 'agriculture',
     loadComponent: () => import('./features/agriculture/agriculture.component').then(m => m.AgricultureComponent)
-  },
-  {
-    path: 'physics',
-    loadComponent: () => import('./features/physics/physics.component').then(m => m.PhysicsComponent)
-  },
-  {
-    path: 'physics/syllabus/:nodeId',
-    loadComponent: () => import('./features/physics/physics-syllabus.component').then(m => m.PhysicsSyllabusComponent)
-  },
-  {
-    path: 'physics/concept-graph',
-    loadComponent: () => import('./features/physics/physics-concept-graph.component').then(m => m.PhysicsConceptGraphComponent)
-  },
-  {
-    path: 'physics/classical-mechanics-graph',
-    loadComponent: () => import('./features/physics/classical-mechanics-graph.component').then(m => m.ClassicalMechanicsGraphComponent)
-  },
-  {
-    path: 'chemistry',
-    loadComponent: () => import('./features/chemistry/chemistry.component').then(m => m.ChemistryComponent)
   },
   {
     path: 'dependencies',

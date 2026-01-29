@@ -18,14 +18,12 @@ import packageJson from '../../package.json';
  * Responsibilities:
  * - Renders the application shell with PrimeNG TieredMenu navigation
  * - Registers all domain configuration providers during initialization
- * - Manages domain-specific navigation across 4 domains
+ * - Manages domain-specific navigation across 2 domains
  * - Provides access to developer tools (dependency graph, test reports)
  *
  * Navigation Structure:
  * - Automobiles: Home and Discovery interface for vehicle data
  * - Agriculture: Domain entry point for agricultural data (stub)
- * - Physics: Concept graphs, syllabus, classical mechanics visualization
- * - Chemistry: Domain entry point for chemistry data (stub)
  * - Developer: Tools for architecture analysis (dependency graph, reports)
  *
  * Domain Integration:
@@ -73,7 +71,7 @@ export class AppComponent {
    * Domain navigation menu items with TieredMenu structure (nested items with flyout submenus)
    *
    * Organized hierarchically:
-   * - Top level: Domain category (Automobiles, Physics, etc.)
+   * - Top level: Domain category (Automobiles, Agriculture, etc.)
    * - Sub-level: Domain-specific actions (Home, Discover, View Reports)
    * - Actions: Navigation (routerLink) or command execution (command function)
    *
@@ -95,24 +93,6 @@ export class AppComponent {
       items: [
         { label: 'Agriculture Home', icon: '🏠', routerLink: '/agriculture' },
         { label: 'Agriculture Discover', icon: '🔍', routerLink: '/agriculture/discover' },
-        { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
-      ]
-    },
-    {
-      label: 'Physics',
-      icon: '⚛️',
-      items: [
-        { label: 'Physics Home', icon: '🏠', routerLink: '/physics' },
-        { label: 'Physics Discover', icon: '🔍', routerLink: '/physics/discover' },
-        { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
-      ]
-    },
-    {
-      label: 'Chemistry',
-      icon: '🧪',
-      items: [
-        { label: 'Chemistry Home', icon: '🏠', routerLink: '/chemistry' },
-        { label: 'Chemistry Discover', icon: '🔍', routerLink: '/chemistry/discover' },
         { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
       ]
     },

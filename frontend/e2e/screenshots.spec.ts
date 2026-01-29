@@ -22,7 +22,7 @@ function ensureDirectories() {
       fs.mkdirSync(dir, { recursive: true });
     }
     // Create subdirectories
-    const subdirs = ['home', 'automobile', 'discover', 'physics', 'components'];
+    const subdirs = ['home', 'automobile', 'discover', 'components'];
     for (const subdir of subdirs) {
       const fullPath = path.join(dir, subdir);
       if (!fs.existsSync(fullPath)) {
@@ -178,42 +178,12 @@ test.describe('Application Screenshots', () => {
     });
   });
 
-  test.describe('Physics Domain', () => {
-    test('capture physics landing page', async ({ page }) => {
-      await page.goto(`${BASE_URL}/physics`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(1000);
-      await saveScreenshot(page, 'physics', '01-physics-landing');
-    });
-
-    test('capture physics concept graph', async ({ page }) => {
-      await page.goto(`${BASE_URL}/physics/concept-graph`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(2000); // Wait for graph to render
-      await saveScreenshot(page, 'physics', '02-physics-concept-graph');
-    });
-
-    test('capture classical mechanics graph', async ({ page }) => {
-      await page.goto(`${BASE_URL}/physics/classical-mechanics-graph`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(2000);
-      await saveScreenshot(page, 'physics', '03-classical-mechanics-graph');
-    });
-  });
-
   test.describe('Other Domains', () => {
-    test('capture chemistry landing', async ({ page }) => {
-      await page.goto(`${BASE_URL}/chemistry`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(1000);
-      await saveScreenshot(page, 'home', '03-chemistry-landing');
-    });
-
     test('capture agriculture landing', async ({ page }) => {
       await page.goto(`${BASE_URL}/agriculture`);
       await page.waitForLoadState('networkidle');
       await page.waitForTimeout(1000);
-      await saveScreenshot(page, 'home', '04-agriculture-landing');
+      await saveScreenshot(page, 'home', '03-agriculture-landing');
     });
   });
 

@@ -86,7 +86,7 @@ import { ButtonModule } from 'primeng/button';
  * - **Cleanup**: Closes all pop-outs on beforeunload (page refresh/close)
  *
  * **Configuration**: Injected via DOMAIN_CONFIG token
- * - Works with any domain (Automobile, Agriculture, Physics, etc.)
+ * - Works with any domain (Automobile, Agriculture, etc.)
  * - Domain config defines: filters, adapters, table columns, charts
  * - No hardcoded domain logic - all driven by config
  *
