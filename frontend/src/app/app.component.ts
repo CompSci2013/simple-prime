@@ -18,7 +18,7 @@ import packageJson from '../../package.json';
  * Responsibilities:
  * - Renders the application shell with PrimeNG TieredMenu navigation
  * - Registers all domain configuration providers during initialization
- * - Manages domain-specific navigation across 5 domains
+ * - Manages domain-specific navigation across 4 domains
  * - Provides access to developer tools (dependency graph, test reports)
  *
  * Navigation Structure:
@@ -26,7 +26,6 @@ import packageJson from '../../package.json';
  * - Agriculture: Domain entry point for agricultural data (stub)
  * - Physics: Concept graphs, syllabus, classical mechanics visualization
  * - Chemistry: Domain entry point for chemistry data (stub)
- * - Mathematics: Domain entry point for math data (stub)
  * - Developer: Tools for architecture analysis (dependency graph, reports)
  *
  * Domain Integration:
@@ -114,15 +113,6 @@ export class AppComponent {
       items: [
         { label: 'Chemistry Home', icon: '🏠', routerLink: '/chemistry' },
         { label: 'Chemistry Discover', icon: '🔍', routerLink: '/chemistry/discover' },
-        { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
-      ]
-    },
-    {
-      label: 'Mathematics',
-      icon: '📐',
-      items: [
-        { label: 'Math Home', icon: '🏠', routerLink: '/math' },
-        { label: 'Math Discover', icon: '🔍', routerLink: '/math/discover' },
         { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
       ]
     },

@@ -215,13 +215,6 @@ test.describe('Application Screenshots', () => {
       await page.waitForTimeout(1000);
       await saveScreenshot(page, 'home', '04-agriculture-landing');
     });
-
-    test('capture math landing', async ({ page }) => {
-      await page.goto(`${BASE_URL}/math`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(1000);
-      await saveScreenshot(page, 'home', '05-math-landing');
-    });
   });
 
   test.describe('Responsive Views', () => {

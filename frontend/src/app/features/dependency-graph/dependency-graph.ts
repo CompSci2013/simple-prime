@@ -460,8 +460,6 @@ const FEATURE_COMPONENTS: DependencyNode[] = [
     description: 'Physics domain landing page', color: '#B4A7D6' },
   { id: 'comp-chemistry', label: 'ChemistryComponent', category: 'feature-component',
     description: 'Chemistry domain landing page (stub)', color: '#B4A7D6' },
-  { id: 'comp-math', label: 'MathComponent', category: 'feature-component',
-    description: 'Mathematics domain landing page (stub)', color: '#B4A7D6' },
 
   // Discovery & Data Pages
   { id: 'comp-discover', label: 'DiscoverComponent', category: 'feature-component',

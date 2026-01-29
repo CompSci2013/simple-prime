@@ -15,7 +15,6 @@ import { Routes } from '@angular/router';
  *   - Sub-routes: 'physics/syllabus/:nodeId' -> PhysicsSyllabusComponent
  *   - Visualization: 'physics/concept-graph', 'physics/classical-mechanics-graph'
  * - Chemistry: 'chemistry' -> ChemistryComponent
- * - Math: 'math' -> MathComponent
  * - Developer: 'dependencies' -> DependencyGraphComponent (architecture visualization)
  * - Pop-out: 'panel/:gridId/:panelId/:type' -> PanelPopoutComponent (window synchronization)
  * - Reporting: 'report' -> ReportComponent (test results)
@@ -60,10 +59,6 @@ export const routes: Routes = [
   {
     path: 'chemistry',
     loadComponent: () => import('./features/chemistry/chemistry.component').then(m => m.ChemistryComponent)
-  },
-  {
-    path: 'math',
-    loadComponent: () => import('./features/math/math.component').then(m => m.MathComponent)
   },
   {
     path: 'dependencies',

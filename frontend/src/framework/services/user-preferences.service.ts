@@ -379,7 +379,7 @@ export class UserPreferencesService {
     const prefs: any = {};
 
     // Try to load preferences for each domain
-    ['automobiles', 'physics', 'agriculture', 'chemistry', 'math'].forEach(domain => {
+    ['automobiles', 'physics', 'agriculture', 'chemistry'].forEach(domain => {
       const orderKey = this.getPrefKey('panelOrder', domain);
       const collapsedKey = this.getPrefKey('collapsedPanels', domain);
 
