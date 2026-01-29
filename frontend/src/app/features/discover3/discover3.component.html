@@ -79,6 +79,7 @@
             <app-dockview-statistics-panel
               [domainConfig]="domainConfig"
               [chartIds]="['manufacturer', 'top-models']"
+              [isPanelPoppedOut]="isPanelPoppedOut.bind(this)"
               (chartPopOut)="onDockviewChartPopOut($event)">
             </app-dockview-statistics-panel>
           </div>

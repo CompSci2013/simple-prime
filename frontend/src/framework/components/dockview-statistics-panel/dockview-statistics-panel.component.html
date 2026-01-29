@@ -6,17 +6,26 @@
   <div class="charts-hidden-container">
     <ng-container *ngFor="let chartId of chartIds">
       <div #chartElement [attr.data-chart-id]="chartId" class="chart-wrapper" style="display: none;">
-        <app-base-chart
-          *ngIf="getDataSource(chartId) as dataSource"
-          [dataSource]="dataSource"
-          [statistics]="statistics"
-          [highlights]="highlights"
-          [selectedValue]="null"
-          [hideTitle]="true"
-          [canPopOut]="true"
-          (chartClick)="onChartClick($event, chartId)"
-          (popOutClick)="onChartPopOut(chartId)">
-        </app-base-chart>
+        <!-- Show chart or placeholder based on pop-out state -->
+        <ng-container *ngIf="!isChartPoppedOut(chartId); else chartPoppedOutPlaceholder">
+          <app-base-chart
+            *ngIf="getDataSource(chartId) as dataSource"
+            [dataSource]="dataSource"
+            [statistics]="statistics"
+            [highlights]="highlights"
+            [selectedValue]="null"
+            [hideTitle]="true"
+            [canPopOut]="true"
+            (chartClick)="onChartClick($event, chartId)"
+            (popOutClick)="onChartPopOut(chartId)">
+          </app-base-chart>
+        </ng-container>
+        <ng-template #chartPoppedOutPlaceholder>
+          <div class="popout-placeholder">
+            <i class="pi pi-external-link"></i>
+            <span>Chart is open in a separate window</span>
+          </div>
+        </ng-template>
       </div>
     </ng-container>
   </div>

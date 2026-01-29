@@ -79,6 +79,12 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
    */
   @Input() chartIds: string[] = ['manufacturer', 'top-models'];
 
+  /**
+   * Function to check if a panel is popped out.
+   * Uses dockview-chart- prefix for chart panel IDs.
+   */
+  @Input() isPanelPoppedOut: (panelId: string) => boolean = () => false;
+
   // ============================================================================
   // Outputs
   // ============================================================================
@@ -311,5 +317,12 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
    */
   getDataSource(chartId: string): ChartDataSource | undefined {
     return this.domainConfig.chartDataSources?.[chartId];
+  }
+
+  /**
+   * Check if a chart is popped out (uses dockview-chart- prefix)
+   */
+  isChartPoppedOut(chartId: string): boolean {
+    return this.isPanelPoppedOut(`dockview-chart-${chartId}`);
   }
 }
