@@ -72,6 +72,24 @@
             </div>
           </ng-template>
         </ng-container>
+        <!-- Individual Chart Panel -->
+        <ng-container *ngIf="panelId.startsWith('chart-') && getChartDataSource(panelId) as chartDataSource">
+          <div *ngIf="!isPanelPoppedOut(panelId); else chartPoppedOut" class="chart-panel-content">
+            <app-base-chart
+              [dataSource]="chartDataSource"
+              [statistics]="resourceService.statistics$ | async"
+              [highlights]="resourceService.highlights$ | async"
+              [selectedValue]="null"
+              (chartClick)="onStandaloneChartClick($event, chartDataSource)">
+            </app-base-chart>
+          </div>
+          <ng-template #chartPoppedOut>
+            <div class="popout-placeholder">
+              <i class="pi pi-external-link"></i>
+              <span>{{ getPanelTitle(panelId) }} is open in a separate window</span>
+            </div>
+          </ng-template>
+        </ng-container>
       </div>
     </div>
   </div>
