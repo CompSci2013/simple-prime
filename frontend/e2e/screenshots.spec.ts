@@ -22,7 +22,7 @@ function ensureDirectories() {
       fs.mkdirSync(dir, { recursive: true });
     }
     // Create subdirectories
-    const subdirs = ['home', 'automobile', 'discover', 'physics', 'ai-chat', 'components'];
+    const subdirs = ['home', 'automobile', 'discover', 'physics', 'components'];
     for (const subdir of subdirs) {
       const fullPath = path.join(dir, subdir);
       if (!fs.existsSync(fullPath)) {
@@ -175,49 +175,6 @@ test.describe('Application Screenshots', () => {
         await page.waitForTimeout(300);
       }
       await saveScreenshot(page, 'components', '05-picker');
-    });
-  });
-
-  test.describe('AI Chat', () => {
-    test('capture AI chat closed state', async ({ page }) => {
-      await page.goto(`${BASE_URL}/automobiles/discover`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(1000);
-      await saveScreenshot(page, 'ai-chat', '01-ai-chat-toggle');
-    });
-
-    test('capture AI chat open', async ({ page }) => {
-      await page.goto(`${BASE_URL}/automobiles/discover`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(1000);
-
-      // Click AI chat toggle button
-      const aiToggle = page.locator('button:has-text("AI"), .ai-toggle-btn, [ptooltip*="AI"]').first();
-      if (await aiToggle.isVisible()) {
-        await aiToggle.click();
-        await page.waitForTimeout(1000);
-      }
-      await saveScreenshot(page, 'ai-chat', '02-ai-chat-open');
-    });
-
-    test('capture AI chat with welcome message', async ({ page }) => {
-      await page.goto(`${BASE_URL}/automobiles/discover`);
-      await page.waitForLoadState('networkidle');
-      await page.waitForTimeout(1000);
-
-      // Open AI chat
-      const aiToggle = page.locator('button:has-text("AI"), .ai-toggle-btn, [ptooltip*="AI"]').first();
-      if (await aiToggle.isVisible()) {
-        await aiToggle.click();
-        await page.waitForTimeout(1500);
-      }
-
-      // Focus on the chat panel
-      const chatPanel = page.locator('app-ai-chat, .ai-chat-container').first();
-      if (await chatPanel.isVisible()) {
-        await chatPanel.scrollIntoViewIfNeeded();
-      }
-      await saveScreenshot(page, 'ai-chat', '03-ai-chat-welcome');
     });
   });
 

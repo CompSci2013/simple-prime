@@ -1,16 +1,11 @@
-import { Component, inject, Injector, signal } from '@angular/core';
+import { Component, inject, Injector } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { RouterOutlet, RouterLink, ActivatedRoute, Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs/operators';
+import { RouterOutlet, RouterLink, ActivatedRoute } from '@angular/router';
 import { MenuItem } from 'primeng/api';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ToastModule } from 'primeng/toast';
-import { TooltipModule } from 'primeng/tooltip';
-import { ButtonModule } from 'primeng/button';
 import { DomainConfigRegistry } from '../framework/services';
 import { DOMAIN_PROVIDERS } from '../domain-config/domain-providers';
-import { AiChatComponent } from '../framework/components/ai-chat/ai-chat.component';
-import { AiService, createAutomobileApiContext } from '../framework/services/ai.service';
 import packageJson from '../../package.json';
 
 /**
@@ -50,7 +45,8 @@ import packageJson from '../../package.json';
  */
 @Component({
     selector: 'app-root',
-    imports: [RouterOutlet, RouterLink, TieredMenuModule, ToastModule, TooltipModule, ButtonModule, AiChatComponent],
+    standalone: true,
+    imports: [RouterOutlet, RouterLink, TieredMenuModule, ToastModule],
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.scss']
 })
@@ -73,19 +69,6 @@ export class AppComponent {
    * @type {boolean}
    */
   isPopOut = false;
-
-  /**
-   * Whether the AI chat panel is visible
-   * @type {Signal<boolean>}
-   */
-  aiChatVisible = signal(false);
-
-  /**
-   * Currently active domain based on URL path
-   * Used to determine if API context should be enabled for AI chat
-   * @type {Signal<string | null>}
-   */
-  activeDomain = signal<string | null>(null);
 
   /**
    * Domain navigation menu items with TieredMenu structure (nested items with flyout submenus)
@@ -159,8 +142,6 @@ export class AppComponent {
   private readonly domainConfigRegistry = inject(DomainConfigRegistry);
   private readonly injector = inject(Injector);
   private readonly route = inject(ActivatedRoute);
-  private readonly router = inject(Router);
-  private readonly aiService = inject(AiService);
 
   constructor() {
     this.domainConfigRegistry.registerDomainProviders(DOMAIN_PROVIDERS, this.injector);
@@ -170,53 +151,6 @@ export class AppComponent {
     this.route.queryParams.pipe(takeUntilDestroyed()).subscribe(params => {
       this.isPopOut = !!params['popout'];
     });
-
-    // Track active domain from URL path for AI context
-    this.router.events.pipe(
-      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
-      takeUntilDestroyed()
-    ).subscribe(event => {
-      this.updateActiveDomain(event.urlAfterRedirects);
-    });
-
-    // Set initial domain from current URL
-    this.updateActiveDomain(this.router.url);
-  }
-
-  /**
-   * Update the active domain based on URL path
-   * Also configures AI context based on domain
-   *
-   * @param url - Current URL path
-   */
-  private updateActiveDomain(url: string): void {
-    const path = url.split('?')[0]; // Remove query params
-    const segments = path.split('/').filter(s => s);
-    const domain = segments[0] || null;
-
-    this.activeDomain.set(domain);
-
-    // Configure AI context based on domain
-    // Only Automobiles domain gets API-aware context for query generation
-    if (domain === 'automobiles') {
-      this.aiService.setApiContext(createAutomobileApiContext());
-    } else {
-      this.aiService.clearApiContext();
-    }
-  }
-
-  /**
-   * Toggle AI chat panel visibility
-   */
-  toggleAiChat(): void {
-    this.aiChatVisible.update(v => !v);
-  }
-
-  /**
-   * Close AI chat panel
-   */
-  onAiChatClose(): void {
-    this.aiChatVisible.set(false);
   }
 
   /**

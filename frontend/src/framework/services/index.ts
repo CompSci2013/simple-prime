@@ -1,7 +1,6 @@
 /**
  * Framework Services - Barrel Exports
  */
-export * from './ai.service';
 export * from './api.service';
 export * from './domain-config-registry.service';
 export * from './domain-config-validator.service';
