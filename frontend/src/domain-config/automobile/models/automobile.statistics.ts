@@ -221,7 +221,8 @@ export class VehicleStatistics {
    */
   static fromApiResponse(data: any): VehicleStatistics {
     // Check if this is the segmented statistics format from /vehicles/details
-    if (data.byManufacturer || data.modelsByManufacturer || data.byBodyClass || data.byYearRange) {
+    // Note: Backend may return 'byYear' but frontend uses 'byYearRange' - handle both
+    if (data.byManufacturer || data.modelsByManufacturer || data.byBodyClass || data.byYearRange || data.byYear) {
       return VehicleStatistics.fromSegmentedStats(data);
     }
 
@@ -282,10 +283,13 @@ export class VehicleStatistics {
    */
   private static fromSegmentedStats(data: any): VehicleStatistics {
     // Transform API's segmented statistics structure to arrays
+    // Note: Backend returns 'byYear' but frontend expects 'byYearRange' - handle both
+    const byYearData = data.byYearRange || data.byYear;
+
     const topManufacturers = VehicleStatistics.transformByManufacturer(data.byManufacturer);
     const topModels = VehicleStatistics.transformModelsByManufacturer(data.modelsByManufacturer);
     const bodyClassDistribution = VehicleStatistics.transformByBodyClass(data.byBodyClass);
-    const yearDistribution = VehicleStatistics.transformByYearRange(data.byYearRange);
+    const yearDistribution = VehicleStatistics.transformByYearRange(byYearData);
 
     // Calculate totals
     const totalVehicles = data.totalCount || 0;
@@ -313,9 +317,10 @@ export class VehicleStatistics {
       yearDistribution,
       manufacturerDistribution: topManufacturers,
       // Preserve raw segmented statistics for chart highlighting
+      // Use byYearData to normalize 'byYear' from backend to 'byYearRange' for frontend
       byManufacturer: data.byManufacturer,
       byBodyClass: data.byBodyClass,
-      byYearRange: data.byYearRange,
+      byYearRange: byYearData,
       modelsByManufacturer: data.modelsByManufacturer
     });
   }
