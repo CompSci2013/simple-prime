@@ -27,32 +27,6 @@ import { ChartDataSource } from '../../../framework/components/base-chart/base-c
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 
-
-/**
- * Discover Component - Core discovery interface orchestrator
- *
- * **DOMAIN-AGNOSTIC**: Works with any domain via dependency injection.
- * Single component renders different UIs based on DOMAIN_CONFIG.
- *
- * **Primary Responsibilities**:
- * 1. Orchestrate framework panels (Picker, Statistics)
- * 2. Manage panel lifecycle (collapse, drag-drop reorder)
- * 3. Handle URL state synchronization with ResourceManagementService
- * 4. Route pop-out messages to URL updates (via PopOutManagerService)
- *
- * **Architecture**: Configuration-Driven + URL-First + Pop-Out Aware
- *
- * Pop-out window management is delegated to PopOutManagerService:
- * - Opening/closing windows
- * - BroadcastChannel setup
- * - State broadcasting
- * - Window close detection
- *
- * This component focuses on:
- * - Panel layout and ordering
- * - Message routing (pop-out message → URL update)
- * - Domain-specific logic (chart clicks, picker selections)
- */
 @Component({
     selector: 'app-discover',
     standalone: true,
@@ -65,22 +39,11 @@ import { ButtonModule } from 'primeng/button';
 export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   implements OnInit, OnDestroy {
 
-  /** Domain configuration (injected, works with any domain) */
   domainConfig: DomainConfig<TFilters, TData, TStatistics>;
-
-  /** Map of collapsed panel states (panel ID → collapsed boolean) */
   collapsedPanels = new Map<string, boolean>();
+  panelOrder: string[] = ['manufacturer-model-picker', 'statistics-panel-2'];
 
-  /** Ordered list of panel IDs (defines display order) */
-  panelOrder: string[] = [
-    'manufacturer-model-picker',
-    'statistics-panel-2'
-  ];
-
-  /** Destroy signal for subscription cleanup */
   private destroy$ = new Subject<void>();
-
-  /** Grid identifier for routing */
   private readonly gridId = 'discover';
 
   constructor(
@@ -98,7 +61,6 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   }
 
   ngOnInit(): void {
-    // Load panel preferences
     this.userPreferences.getPanelOrder()
       .pipe(takeUntil(this.destroy$))
       .subscribe(order => {
@@ -116,28 +78,23 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
         this.cdr.markForCheck();
       });
 
-    // Register domain-specific picker configurations
     const pickerConfigs = createAutomobilePickerConfigs(this.injector);
     this.pickerRegistry.registerMultiple(pickerConfigs);
 
-    // Initialize pop-out manager
     this.popOutManager.initialize(this.gridId);
 
-    // Handle messages from pop-outs
     this.popOutManager.messages$
       .pipe(takeUntil(this.destroy$))
       .subscribe(({ panelId, message }) => {
         this.handlePopOutMessage(panelId, message);
       });
 
-    // Handle pop-out close events
     this.popOutManager.closed$
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
         this.cdr.markForCheck();
       });
 
-    // Handle pop-up blocked events
     this.popOutManager.blocked$
       .pipe(takeUntil(this.destroy$))
       .subscribe(() => {
@@ -149,17 +106,12 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
         });
       });
 
-    // Broadcast state changes to all pop-outs
     this.resourceService.state$
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
         this.popOutManager.broadcastState(state);
       });
   }
-
-  // ============================================
-  // Panel State Methods
-  // ============================================
 
   isPanelPoppedOut(panelId: string): boolean {
     return this.popOutManager.isPoppedOut(panelId);
@@ -203,10 +155,6 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
     return typeMap[panelId] || panelId;
   }
 
-  // ============================================
-  // Pop-Out Methods
-  // ============================================
-
   popOutPanel(panelId: string, panelType: string): void {
     this.popOutManager.openPopOut(panelId, panelType);
     this.cdr.markForCheck();
@@ -218,14 +166,9 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
     this.cdr.markForCheck();
   }
 
-  // ============================================
-  // Message Handling (Pop-Out → URL)
-  // ============================================
-
   private async handlePopOutMessage(_panelId: string, message: any): Promise<void> {
     switch (message.type) {
       case PopOutMessageType.PANEL_READY:
-        // Pop-out ready - send current state
         const currentState = this.resourceService.getCurrentState();
         this.popOutManager.broadcastState(currentState);
         break;
@@ -292,10 +235,6 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
     }
   }
 
-  // ============================================
-  // URL Update Methods
-  // ============================================
-
   async onUrlParamsChange(params: Params): Promise<void> {
     await this.urlStateService.setParams(params);
   }
@@ -321,7 +260,7 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   }
 
   async onPickerSelectionChangeAndUpdateUrl(event: any): Promise<void> {
-    const paramName = 'modelCombos'; // TODO: Get from picker config
+    const paramName = 'modelCombos';
     await this.urlStateService.setParams({
       [paramName]: event.urlValue || null,
       page: 1
