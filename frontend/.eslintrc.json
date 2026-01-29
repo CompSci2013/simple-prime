@@ -1,0 +1,39 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json",
+    "ecmaVersion": 2020,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended"
+  ],
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "warn",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off"
+  },
+  "overrides": [
+    {
+      "files": ["src/framework/**/*.ts"],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "Identifier[name=/(?:vehicle|manufacturer|model|vin|automobile|car|truck|agriculture|crop|farm|real.?estate|property|house)/i]",
+            "message": "Domain-specific terms (vehicle, manufacturer, agriculture, etc.) are forbidden in the framework layer. Use generic types like TFilters, TData, TStatistics instead."
+          },
+          {
+            "selector": "Literal[value=/(?:vehicle|manufacturer|model|vin|automobile|car|truck|agriculture|crop|farm|real.?estate|property|house)/i]",
+            "message": "Domain-specific string literals are forbidden in the framework layer. Use configuration instead."
+          }
+        ]
+      }
+    }
+  ]
+}

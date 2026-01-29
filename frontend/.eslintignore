@@ -1,0 +1,5 @@
+node_modules/
+dist/
+*.spec.ts
+*.config.js
+karma.conf.js

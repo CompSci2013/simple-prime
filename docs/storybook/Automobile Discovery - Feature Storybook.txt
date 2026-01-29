@@ -1,0 +1,308 @@
+﻿AUTOMOBILE DISCOVERY APPLICATION - FEATURE STORYBOOK
+=====================================================
+Application: Generic Prime Discovery Framework v1.2.2
+Module: Automobile Discovery
+URL: http://192.168.0.244:4205/automobiles/discover
+Date: December 26, 2025
+
+
+=====================================================
+OVERVIEW
+=====================================================
+This document provides a comprehensive visual walkthrough of the Automobile Discovery application features, with 34 numbered screenshots documenting the user interface and functionality.
+
+
+Dataset Information:
+* Total Records: 4,887 vehicles displayed (55,463+ total in database)
+* - Data Fields: Manufacturer, Model, Year, Body Class, VIN Count
+* - Coverage: Global automobile market
+=====================================================
+SCREENSHOT INDEX WITH DESCRIPTIONS
+=====================================================
+
+
+SCREENSHOT 1: Landing Page - Automobile Discovery
+—----------------------------------------------
+Initial view of the Automobile Discovery page showing:
+* Navigation bar with Home and Domains links
+* - Page title “Automobile Discovery”
+* - Query Control panel (collapsed view with “Add filter by field…” dropdown)
+* - Query Panel with search fields
+* - Results Table showing 4887 results
+* - Sortable columns: Manufacturer, Model, Year, Body Class, VIN Count
+SCREENSHOT 2: Query Control - Filter Dropdown
+—------------------------------------------
+Filter dropdown menu expanded showing available filter options:
+* Manufacturer
+* - Model
+* - Body Class
+* - Year
+* Each option allows adding specific filters to narrow search results.
+SCREENSHOT 3: Manufacturer Filter Modal
+—------------------------------------
+Modal dialog for selecting manufacturers:
+* Search box: “Type to search manufacturers…”
+* - Scrollable list of manufacturers (Affordable Aluminum, Best Lane Enterprises, Brammo, Buick, Burkett’s Autorama, Cadillac, Chevrolet, Chrysler, Dodge, etc.)
+* - Cancel and Apply buttons
+* - Multi-select capability with checkboxes
+SCREENSHOT 4: Manufacturer Selection - Single Selection
+—----------------------------------------------------
+Shows Chevrolet selected with checkmark indicator.
+Bottom status: “Selected (1): Chevrolet”
+
+
+SCREENSHOT 5: Manufacturer Selection - Multiple Selection
+—------------------------------------------------------
+Shows both Chevrolet and Dodge selected.
+Bottom status: “Selected (2): Chevrolet, Dodge”
+
+
+SCREENSHOT 6: Filter Applied - Chevrolet & Dodge
+—---------------------------------------------
+Results after applying manufacturer filter:
+* Active Filters section visible: “Manufacturer: Chevrolet, Dodge” with X to remove
+* - Query Panel shows “Chevrolet,Dodge” in Manufacturer field
+* - Results reduced from 4887 to 1239 results
+* - Table now shows only Chevrolet and Dodge vehicles
+SCREENSHOT 7: Body Class Dropdown with Search
+—------------------------------------------
+Body Class filter expanded showing search input field for filtering body class options.
+
+
+SCREENSHOT 8: Body Class Search Field Active
+—-----------------------------------------
+Body Class dropdown with search text input ready for user input.
+
+
+SCREENSHOT 9: Results Table - Scrolled View
+—----------------------------------------
+Scrolled view of results table showing:
+* Various Chevrolet models (3 ton, 3500/4500, 3500HD, 4500HD, 4500XD, 490)
+* - Different body classes: Sedan, Pickup, Touring Car
+* - Year range from 1917 to 1972
+* - Consistent VIN Count of 12 per record
+SCREENSHOT 10: Expanded Row Details
+—--------------------------------
+Row expansion feature showing detailed vehicle information:
+* Vehicle_id: nhtsa-chevrolet-3-ton-1972
+* - manufacturer: Chevrolet
+* - model: 3 ton
+* - year: 1972
+* - body_class: Sedan
+* - instance_count: 12
+* - Additional fields: first_seen, last_seen, drive_type, engine, transmission, fuel_type, vehicle_class
+SCREENSHOT 11: Sorted by Year (Ascending)
+—--------------------------------------
+Table sorted by Year column in ascending order:
+* Up arrow indicator next to “Year” column header
+* - Results start from 1912 (Chevrolet Series C)
+* - Shows progression through early automotive history
+* - Mix of Touring Car and Sedan body classes
+SCREENSHOT 12: Sorted by Year (Descending)
+—---------------------------------------
+Table sorted by Year column in descending order:
+* Down arrow indicator next to “Year” column header
+* - Shows modern 2024 vehicles first: Corvette (Sports Car), Camaro (Coupe), Suburban (SUV), Tahoe (SUV), Silverado (Pickup), Malibu (Sedan), Equinox (SUV), etc.
+SCREENSHOT 13: Full Query Panel View
+—---------------------------------
+Complete view of the Query Panel showing all filter options:
+* Manufacturer search field
+* - Model search field with autocomplete
+* - Year Range (Min/Max)
+* - Year Range Max
+* - Body Class dropdown
+* - VIN Count Range (Min/Max)
+* - Clear Filters button
+SCREENSHOT 14: Model Search with Autocomplete
+—------------------------------------------
+Model search field demonstrating autocomplete:
+* User typed “Camaro”
+* - Dropdown shows matching suggestion “Camaro”
+* - Real-time filtering as user types
+SCREENSHOT 15: Model Filter Applied - Camaro
+—-----------------------------------------
+Results after applying Model filter:
+* Active Filters: “Manufacturer: Chevrolet, Dodge” AND “Model: Camaro”
+* - Results reduced to 59 records
+* - Shows Chevrolet Camaro from 2024, 2023 as Coupe body class
+SCREENSHOT 16: Year Range Filters Set
+—----------------------------------
+Year Range filter configured:
+* Min: 1990
+* - Max: 2010
+* - X buttons appear to clear individual range values
+SCREENSHOT 17: Pagination and Statistics Section
+—---------------------------------------------
+Bottom of page showing:
+* Pagination: “Showing 1 to 20 of 59 results”
+* - Page navigation: 1, 2, 3, arrows, first/last page buttons
+* - Page size dropdown showing “20”
+* - Manufacturer-Model Picker section (collapsed)
+* - Statistics section header
+SCREENSHOT 18: Statistics Dashboard with 4 Charts
+—----------------------------------------------
+Statistics & Distributions panel with 4 interactive charts:
+1. Vehicles by Manufacturer - Bar chart
+2. 2. Top Models by VIN Count - Bar chart  
+3. 3. Vehicles by Year - Distribution bar chart
+4. 4. Vehicles by Body Class - Bar chart
+5. Each chart includes toolbar with camera, zoom, expand icons.
+SCREENSHOT 19: Page 2 of Results
+—-----------------------------
+Second page of paginated results:
+* Showing older Camaro models (2004, 2003)
+* - Demonstrates pagination functionality
+* - Page 2 highlighted in pagination controls
+SCREENSHOT 20: All Filters Cleared
+—-------------------------------
+State after clicking “Clear All” button:
+* All filters reset to default
+* - Active Filters section hidden
+* - Results back to 4887 (full dataset)
+* - Query Panel fields empty
+SCREENSHOT 21: Domains Navigation Menu
+—-----------------------------------
+Domains dropdown menu showing available domains:
+* Automobiles (with arrow indicating sub-menu)
+* - Agriculture
+* - Physics
+* - Chemistry
+* - Mathematics
+* - Developer
+SCREENSHOT 22: Automobiles Sub-Menu
+—--------------------------------
+Automobiles domain sub-menu expanded:
+* Autos Home
+* - Autos Discover (current page)
+* - View Test Reports
+SCREENSHOT 23: Automobile Domain Home Page
+—---------------------------------------
+Domain landing page featuring:
+* Car icon with “Automobile Domain” title
+* - Subtitle: “Advanced Vehicle Data Discovery & Analysis”
+* - Feature cards: Advanced Search, Analytics, Detailed Specs, Performance
+* - “Ready to Explore?” call-to-action section
+SCREENSHOT 24: Automobile Domain - Bottom Section
+—----------------------------------------------
+Lower portion of domain home page:
+* “Launch Discovery Interface” button (blue with rocket icon)
+* - “View Test Reports” button (outlined)
+* - Dataset Information panel (Vehicle Count: 55,463+, Coverage: Global)
+* - Quick Tips section with usage guidance
+* - “Back to Domain Selection” link
+SCREENSHOT 25: Query Panel Collapsed
+—---------------------------------
+Query Panel in collapsed state:
+* Only header bar visible with “Query Panel” title
+* - Expand arrow (>) to restore full panel
+* - Pop-out icon available
+* - More space for Results Table
+SCREENSHOT 26: Query Panel Expanded Again
+—--------------------------------------
+Query Panel restored to expanded state:
+* Full search fields visible
+* - Collapse chevron (v) to minimize
+* - Pop-out icon for separate window
+SCREENSHOT 27: Query Panel Popped Out
+—----------------------------------
+Query Panel in “popped out” state:
+* Panel content shows: “Query Panel is open in a separate window”
+* - “Collapse” button to restore inline view
+* - Designed for multi-monitor workflows
+SCREENSHOT 28: Pagination and Additional Sections
+—----------------------------------------------
+Full view of bottom page elements:
+* Complete pagination controls with page numbers 1-5
+* - Page size dropdown (20 selected)
+* - Manufacturer-Model Picker section (collapsed)
+* - Statistics section with chart headers visible
+SCREENSHOT 29: Manufacturer-Model Picker Expanded
+—----------------------------------------------
+Manufacturer-Model Picker panel opened:
+* Search box: “Search manufacturer or model…”
+* - Clear and Apply buttons
+* - Table columns: Manufacturer, Model, Count
+* - Checkbox selection for each row
+* - Sample entries with occurrence counts
+SCREENSHOT 30: Manufacturer-Model Picker Full View
+—-----------------------------------------------
+Complete view of picker showing:
+* Multiple Brammo models (Street Bikes, Dual Sport, Scooter, Touring, Urban)
+* - Buick models (Allure, Cascada, Century, Coachbuilder, Electra)
+* - Count column showing year occurrences (e.g., Buick Century: 71, Buick Electra: 33)
+SCREENSHOT 31: Page Size Dropdown Options
+—--------------------------------------
+Page size selector expanded showing options:
+* 10 rows per page
+* - 20 rows per page (default)
+* - 50 rows per page
+* - 100 rows per page
+SCREENSHOT 32: Application Home Page
+—---------------------------------
+Main application home page showing:
+* “Explore data across multiple domains” header
+* - Featured Automobiles card with “Explore Automobiles” button
+* - Other Domains section with 4 cards:
+*   * Agriculture - Agricultural data analysis
+*   * Physics - Physics research data
+*   * Chemistry - Chemical compound data
+*   * Mathematics - Mathematical datasets
+SCREENSHOT 33: Full Application Home - Generic Prime Discovery Framework
+—---------------------------------------------------------------------
+Complete home page view:
+* Application title: “Generic Prime Discovery Framework”
+* - Subtitle: “Explore data across multiple domains”
+* - Version: v1.2.2 (top right)
+* - Full layout with domain selection cards
+SCREENSHOT 34: Final Overview - Automobile Discovery Page
+—------------------------------------------------------
+Clean view of Automobile Discovery page ready for use:
+* All panels in default state
+* - No active filters
+* - 4887 results displayed
+* - All features accessible
+=====================================================
+FEATURE SUMMARY
+=====================================================
+
+
+1. NAVIGATION
+2.    - Home/Domains header navigation
+3.    - Multi-domain support (6 domains)
+4.    - Sub-navigation within domains
+2. QUERY CONTROL
+* Dynamic filter addition by field
+*    - Active filters display with removal
+*    - Clear All functionality
+3. QUERY PANEL
+* Manufacturer search with autocomplete
+*    - Model search with autocomplete
+*    - Year Range (Min/Max) filters
+*    - Body Class multi-select dropdown
+*    - VIN Count Range filters
+*    - Clear Filters button
+*    - Collapse/Expand toggle
+*    - Pop-out for multi-monitor
+4. RESULTS TABLE
+* Sortable columns (asc/desc)
+*    - Row expansion for details
+*    - Result count display
+5. PAGINATION
+6.    - Page navigation controls
+7.    - Page size options (10/20/50/100)
+8.    - “Showing X of Y” indicator
+6. MANUFACTURER-MODEL PICKER
+* Search functionality
+*    - Checkbox multi-select
+*    - Occurrence count display
+7. STATISTICS DASHBOARD
+* 4 interactive charts
+*    - Chart toolbar controls
+*    - Visual data distribution
+8. PANEL CONTROLS
+* Collapse/Expand
+*    - Pop-out windows
+*    - Hamburger menu
+=====================================================
+END OF DOCUMENT
+=====================================================

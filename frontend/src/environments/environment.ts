@@ -1,0 +1,98 @@
+/**
+ * Development Environment Configuration
+ *
+ * @fileoverview
+ * Environment configuration for development builds. This file defines runtime settings
+ * for the application during development with ng serve or development server.
+ *
+ * @remarks
+ * **Build-Time Replacement**:
+ * This file is replaced during production builds via the `fileReplacements` array in angular.json.
+ * The build process automatically uses environment.prod.ts instead when building with
+ * --configuration production flag.
+ *
+ * **Configuration Details**:
+ * - `production`: false - Development mode enabled for debugging
+ * - `apiBaseUrl`: Development backend endpoint via Kubernetes Traefik ingress
+ * - `includeTestIds`: true - Enables test-id attributes for E2E Playwright tests
+ *
+ * **Backend Access**:
+ * The API endpoint (http://generic-prime.minilab/api/specs/v1) uses Traefik ingress
+ * on the Kubernetes control plane (Loki), allowing access from:
+ * - Thor SSH shell
+ * - Development container via `--network host`
+ * - E2E test container (with /etc/hosts entry)
+ * - Windows client (with /etc/hosts pointing to 192.168.0.110)
+ *
+ * **Test Attribute Behavior**:
+ * When includeTestIds is true, Angular components can use [attr.data-testid] attributes
+ * for E2E test selectors. These attributes are stripped in production builds to reduce HTML output.
+ *
+ * @see environment.prod.ts - Production environment configuration
+ * @see angular.json - Build configuration with fileReplacements array
+ * @see ORIENTATION.md - Infrastructure and network configuration
+ *
+ * @version 1.0
+ * @since 1.0.0
+ */
+
+/**
+ * Environment object containing runtime configuration for development
+ *
+ * @type {Object}
+ * @property {boolean} production - Whether running in production mode (false for development)
+ * @property {string} apiBaseUrl - Base URL for backend API calls
+ * @property {boolean} includeTestIds - Enable test-id attributes for E2E testing
+ */
+export const environment = {
+  /** Development mode flag - controls debug output and feature availability */
+  production: false,
+
+  /**
+   * Backend API endpoint
+   *
+   * URL pattern: http://generic-prime.minilab/api/specs/v1
+   * - Hostname: generic-prime.minilab (resolves to Loki 192.168.0.110 via /etc/hosts)
+   * - Port: 80 (standard HTTP, routed through Traefik ingress)
+   * - Path: /api/specs/v1 (API route prefix for data discovery service)
+   *
+   * This endpoint is available in:
+   * - Development container (--network host enables access to cluster hostnames)
+   * - Thor SSH shell (direct access to cluster internal networking)
+   * - E2E test container (with /etc/hosts entry for generic-prime.minilab → 192.168.0.110)
+   * - Windows client (with /etc/hosts entry for generic-prime.minilab → 192.168.0.110)
+   *
+   * The same endpoint works for both development server (port 4205) and production deployments
+   * because all requests route through the Kubernetes Traefik ingress controller on Loki.
+   */
+  apiBaseUrl: 'http://generic-prime.minilab/api/specs/v1',
+
+  /**
+   * E2E test attribute flag
+   *
+   * When true, Angular components can use [attr.data-testid] for test selectors.
+   * These attributes are automatically stripped during production builds.
+   *
+   * Example component usage:
+   * ```html
+   * <button [attr.data-testid]="'manufacturer-filter-button'">
+   *   Filter by Manufacturer
+   * </button>
+   * ```
+   *
+   * Playwright selectors can then target these attributes:
+   * ```typescript
+   * const button = page.locator('[data-testid="manufacturer-filter-button"]');
+   * ```
+   */
+  includeTestIds: true
+};
+
+/*
+ * For easier debugging in development mode, you can import the following file
+ * to ignore zone related error stack frames such as `zone.run`, `zoneDelegate.invokeTask`.
+ *
+ * This import should be commented out in production mode because it will have a negative impact
+ * on performance if an error is thrown.
+ */
+// import 'zone.js/plugins/zone-error';  // Included with Angular CLI.

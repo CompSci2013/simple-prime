@@ -1,0 +1,96 @@
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to host names. Each
+# entry should be kept on an individual line. The IP address should
+# be placed in the first column followed by the corresponding host name.
+# The IP address and the host name should be separated by at least one
+# space.
+#
+# Additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# For example:
+#
+#      102.54.94.97     rhino.acme.com          # source server
+#       38.25.63.10     x.acme.com              # x client host
+# localhost name resolution is handled within DNS itself.
+#	127.0.0.1       localhost
+#	::1             localhost
+
+# ============================================================================
+# Halo Lab - Kubernetes Cluster Hosts (Session 22 - Architecture Corrected)
+# ============================================================================
+#
+# IMPORTANT NOTES:
+# - Thor (192.168.0.244): K3s worker node, runs development container
+# - Loki (192.168.0.110): K3s control plane, runs Traefik ingress
+# - generic-prime.minilab MUST resolve to Loki (192.168.0.110)
+#   because Traefik ingress controller runs on the control plane
+# ============================================================================
+
+# localhost resolution
+127.0.0.1       localhost
+::1             localhost
+
+# ============================================================================
+# Thor Node (192.168.0.244) - K3s Worker + Development Host
+# ============================================================================
+192.168.0.244   minilab
+192.168.0.244   minipc
+192.168.0.244   registry.minilab
+192.168.0.244   angular.minilab
+192.168.0.244   traefik.minilab
+192.168.0.244   ockview-wrapper.minilab
+192.168.0.244   dockview-wrapper.minilab.local
+192.168.0.244   satellites.minilab
+192.168.0.244   kibana.minilab
+192.168.0.244   thor
+192.168.0.244   thor.minilab
+
+# ============================================================================
+# Loki Node (192.168.0.110) - K3s Control Plane + Ingress
+# ============================================================================
+192.168.0.110   loki
+192.168.0.110   loki.minilab
+192.168.0.110   whoami.minilab
+192.168.0.110   gitLab.minilab
+192.168.0.110   ollama.minilab
+192.168.0.110   chat.minilab
+192.168.0.110   dockview.minilab
+192.168.0.110   rag.minilab
+192.168.0.110   qdrant.minilab
+192.168.0.110   rag-ui.minilab
+192.168.0.110   api.satellites.minilab
+192.168.0.110   api.transportation.minilab
+192.168.0.110   transportation.minilab
+192.168.0.110   autos.minilab
+192.168.0.110   autos2.minilab
+192.168.0.110   auto-discovery.minilab
+
+# ============================================================================
+# generic-prime Application (Kubernetes Ingress on Loki)
+# ============================================================================
+# CRITICAL: These MUST point to Loki (192.168.0.110) because:
+# - Traefik ingress controller runs on Loki (control plane)
+# - All external requests route through Loki:80 first
+# - Development frontend is on Thor:4205 but API calls go through Loki ingress
+# - Production frontend will be deployed to Kubernetes on Loki ingress
+192.168.0.110   generic-prime.minilab
+192.168.0.110   generic-prime-dockview.minilab
+
+# ============================================================================
+# End of Hosts File
+# ============================================================================
+# Updated: 2025-12-20 (Session 22)
+# Source: ~/projects/generic-prime/docs/windows-hosts.txt
+#
+# How to use this file:
+# 1. Open Notepad as Administrator
+# 2. Open: C:\Windows\System32\drivers\etc\hosts
+# 3. Replace entire contents with this file
+# 4. Save the file
+# 5. Flush DNS cache: ipconfig /flushdns (in Command Prompt)
+# 6. Verify: ping generic-prime.minilab (should resolve to 192.168.0.110)
+# ============================================================================

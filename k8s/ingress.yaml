@@ -1,0 +1,30 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: generic-prime-ingress
+  namespace: generic-prime
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: web
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: generic-prime.minilab
+    http:
+      paths:
+      # Backend API - vehicle specifications and catalog
+      - path: /api
+        pathType: Prefix
+        backend:
+          service:
+            name: generic-prime-backend-api
+            port:
+              number: 3000
+
+      # Frontend application
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: generic-prime-frontend
+            port:
+              number: 80

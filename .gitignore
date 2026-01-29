@@ -1,0 +1,37 @@
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+package-lock.json
+
+# IDEs and editors
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.history/*
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.swp
+*.swo
+*~
+
+# Generated documentation
+frontend/documents/
+
+# Playwright E2E test artifacts
+frontend/playwright-report/
+frontend/test-results/
+frontend/test-results.json
+
+# Claude fix loop runtime artifacts
+.claude/fix-log.txt
+.claude/fix-state.json
+.claude/dev-server.log
+.claude/fix-archive/

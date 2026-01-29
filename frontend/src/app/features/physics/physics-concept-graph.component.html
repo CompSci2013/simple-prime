@@ -1,0 +1,85 @@
+<!--
+Physics Concept Graph Template
+
+Purpose: Renders interactive Cytoscape.js visualization of physics concepts and dependencies
+
+Template Structure:
+1. Header Section: Back button, title, subtitle, and description
+2. Cytoscape Container: Interactive graph canvas with fit-to-view button
+3. Edge Tooltip: Hover tooltip showing relationship labels
+4. Legend Section: Color-coded learning levels (Foundational/Intermediate/Advanced)
+5. Info Panel: Selected node details with level badge and description
+6. Instructions: Usage guide for graph interaction
+
+Styling: Dark theme with cyan accents, level-based node colors (#64c8ff, #ffa500, #ff6b9d)
+Animations: fadeInDown (header), fadeIn (canvas), fadeInUp (legend/instructions), slideIn (info panel)
+Responsive: Mobile breakpoint at 768px, reduced canvas height on mobile
+
+Component Reference: {@link PhysicsConceptGraphComponent}
+-->
+<div class="concept-graph-container">
+  <!-- Header Section -->
+  <div class="header">
+    <button class="back-button" (click)="goBack()">← Back to Physics</button>
+    <div class="header-content">
+      <h1>Physics Concept Graph</h1>
+      <p class="subtitle">Thermodynamics & Solid State Matter Specialization</p>
+      <p class="description">Interactive visualization of physics concepts and their relationships</p>
+    </div>
+  </div>
+
+  <!-- Cytoscape Container -->
+  <div class="canvas-wrapper-outer">
+    <button class="fit-button" (click)="fitGraph()" title="Fit graph to view">
+      ⊡ Fit to View
+    </button>
+    <div class="canvas-wrapper" #cytoscapeContainer></div>
+
+    <!-- Edge Label Tooltip -->
+    @if (hoveredEdgeLabel) {
+      <div class="edge-tooltip" [style.top]="tooltipPos?.top" [style.left]="tooltipPos?.left">
+        {{ hoveredEdgeLabel }}
+      </div>
+    }
+  </div>
+
+  <!-- Legend Section -->
+  <div class="legend-section">
+    <div class="legend-title">Learning Levels</div>
+    <div class="legend-items">
+      <div class="legend-item">
+        <span class="legend-color" style="background-color: #64c8ff;"></span>
+        <span>Foundational - Years 1-2</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background-color: #ffa500;"></span>
+        <span>Intermediate - Core Physics</span>
+      </div>
+      <div class="legend-item">
+        <span class="legend-color" style="background-color: #ff6b9d;"></span>
+        <span>Advanced - PhD Level</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Info Panel -->
+  @if (selectedNode) {
+    <div class="info-panel">
+      <div class="info-header">
+        <h3>{{ selectedNode.label }}</h3>
+        <button class="close-btn" (click)="selectedNode = null">✕</button>
+      </div>
+      <div class="info-content">
+        <p class="info-level">
+          <strong>Level:</strong> <span class="level-badge" [attr.data-level]="selectedNode.level">{{ selectedNode.level }}</span>
+        </p>
+        <p class="info-description">{{ selectedNode.description }}</p>
+      </div>
+    </div>
+  }
+
+  <!-- Instructions -->
+  <div class="instructions">
+    <p><strong>How to Use:</strong> Click on any node to view details. Pan with mouse, zoom with scroll wheel. Lines show prerequisite and conceptual relationships.</p>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+<!-- Statistics Panel 2 Component Template - CDK Mixed Orientation Chart Grid -->
+<div class="statistics-content" [attr.data-testid]="environment.includeTestIds ? 'statistics-panel-2' : null">
+  <!-- No data message -->
+  @if (!statistics()) {
+    <div class="no-data-message">
+      <i class="pi pi-info-circle"></i>
+      <p>No statistics available. Add filters or select data to view distributions.</p>
+    </div>
+  }
+
+  <!-- Chart Grid with CDK Mixed Orientation -->
+  @if (statistics()) {
+    <div
+      cdkDropList
+      cdkDropListOrientation="mixed"
+      (cdkDropListDropped)="onChartDrop($event)"
+      class="chart-grid">
+      @for (chartId of chartOrder; track chartId) {
+        @if (getDataSource(chartId); as dataSource) {
+          <div class="chart-box" cdkDrag>
+            <!-- Drag Handle -->
+            <div class="chart-drag-handle" cdkDragHandle>
+              <i class="pi pi-bars"></i>
+            </div>
+            @if (isInPopOut || !isPanelPoppedOut('chart-' + chartId)) {
+              <app-base-chart
+                [dataSource]="dataSource"
+                [statistics]="statistics()"
+                [highlights]="highlights()"
+                [selectedValue]="null"
+                [canPopOut]="!isInPopOut"
+                (popOutClick)="onChartPopOut(chartId)"
+                (chartClick)="onChartClick($event, chartId)">
+              </app-base-chart>
+            } @else {
+              <div class="popout-placeholder">
+                <i class="pi pi-external-link"></i>
+                <span>Chart is open in a separate window</span>
+              </div>
+            }
+          </div>
+        }
+      }
+    </div>
+  }
+</div>

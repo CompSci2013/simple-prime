@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: generic-prime-frontend
+  namespace: generic-prime
+  labels:
+    app: generic-prime-frontend
+    tier: frontend
+    version: v1.0.0
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: generic-prime-frontend
+  template:
+    metadata:
+      labels:
+        app: generic-prime-frontend
+        tier: frontend
+        version: v1.0.0
+    spec:
+      nodeSelector:
+        kubernetes.io/hostname: thor
+      containers:
+      - name: frontend
+        image: localhost/generic-prime-frontend:prod
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 80
+          name: http
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "250m"
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          timeoutSeconds: 5
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5
+          timeoutSeconds: 3
+          failureThreshold: 2

@@ -1,0 +1,67 @@
+<div class="panel-popout-container">
+
+  <!-- Panel Content - Render based on type -->
+  <div class="popout-content">
+    @switch (panelType) {
+      <!-- Query Control -->
+      @case ('query-control') {
+        <app-query-control
+          [domainConfig]="domainConfig"
+          (urlParamsChange)="onUrlParamsChange($event)"
+          (clearAllFilters)="onClearAllFilters()">
+        </app-query-control>
+      }
+      <!-- Picker (Manufacturer-Model Picker) -->
+      @case ('picker') {
+        <app-base-picker
+          [configId]="getPickerConfigId()"
+          (selectionChange)="onPickerSelectionChange($event)">
+        </app-base-picker>
+      }
+      <!-- Statistics Panel (CDK Mixed Orientation Chart Grid) -->
+      @case ('statistics-2') {
+        <app-statistics-panel-2
+          [domainConfig]="domainConfig">
+        </app-statistics-panel-2>
+      }
+      <!-- Results Table -->
+      @case ('results') {
+        <app-results-table
+          [domainConfig]="domainConfig">
+        </app-results-table>
+      }
+      <!-- Query Panel (filters only) -->
+      @case ('query-panel') {
+        <app-query-panel
+          [domainConfig]="domainConfig"
+          (urlParamsChange)="onUrlParamsChange($event)"
+          (clearAllFilters)="onClearAllFilters()">
+        </app-query-panel>
+      }
+      <!-- Dynamic Results Table (drag-drop columns, resizable widths) -->
+      @case ('basic-results') {
+        <app-dynamic-results-table
+          [domainConfig]="domainConfig"
+          (urlParamsChange)="onUrlParamsChange($event)">
+        </app-dynamic-results-table>
+      }
+      <!-- Individual Chart -->
+      @case ('chart') {
+        <app-base-chart
+          [dataSource]="getChartDataSource()"
+          [statistics]="resourceService.statistics()"
+          [highlights]="resourceService.highlights()"
+          [selectedValue]="null"
+          (chartClick)="onChartClick($event)">
+        </app-base-chart>
+      }
+      <!-- Unknown panel type -->
+      @default {
+        <div class="unknown-panel">
+          <p>Unknown panel type: {{ panelType }}</p>
+          <p>Panel ID: {{ panelId }}</p>
+        </div>
+      }
+    }
+  </div>
+</div>

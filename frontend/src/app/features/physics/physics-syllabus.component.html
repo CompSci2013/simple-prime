@@ -1,0 +1,71 @@
+<!--
+Physics Syllabus Detail Page Template
+
+Purpose: Displays detailed syllabus for a selected physics course with topics, descriptions, and key points
+
+Template Structure:
+1. Header Section: Back button, course icon, title, description, and topic count
+2. Syllabus Topics Section: List of numbered topic cards with key points
+3. Empty State: Message when syllabus data is unavailable
+4. Error State: Fallback when no course node is selected
+
+Styling: Dark theme with cyan accents (#64c8ff), numbered badges, topic cards
+Animations: fadeInDown (header), fadeInUp (topics with 0.2s delay)
+Responsive: Mobile breakpoint at 768px, grid layout changes to single column
+
+Component Reference: {@link PhysicsSyllabusComponent}
+-->
+@if (selectedNode) {
+  <div class="syllabus-container">
+    <!-- Header Section -->
+    <div class="header">
+      <button class="back-button" (click)="goBack()">← Back</button>
+      <div class="header-content">
+        <div class="header-icon">{{ selectedNode.icon }}</div>
+        <h1>{{ selectedNode.title }}</h1>
+        <p class="subtitle">{{ selectedNode.description }}</p>
+        <div class="header-meta">
+          <span class="meta-value">{{ selectedNode.syllabus?.length || 0 }} Topics</span>
+        </div>
+      </div>
+    </div>
+    <!-- Syllabus Topics Section -->
+    @if (selectedNode.syllabus && selectedNode.syllabus.length > 0) {
+      <div class="syllabus-section">
+        <div class="topics-list">
+          @for (item of selectedNode.syllabus; track item; let i = $index) {
+            <div class="topic-card">
+              <div class="topic-number">{{ i + 1 }}</div>
+              <div class="topic-content">
+                <h3>{{ item.topic }}</h3>
+                <p class="topic-description">{{ item.description }}</p>
+                <div class="key-points">
+                  <ul>
+                    @for (point of item.keyPoints; track point) {
+                      <li>{{ point }}</li>
+                    }
+                  </ul>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+    <!-- Empty State -->
+    @if (!selectedNode.syllabus || selectedNode.syllabus.length === 0) {
+      <div class="empty-state">
+        <p>No syllabus information available for this course.</p>
+      </div>
+    }
+  </div>
+}
+
+<!-- No Node Selected -->
+@if (!selectedNode) {
+  <div class="error-state">
+    <h2>Course Not Found</h2>
+    <p>Unable to load the selected course. Please go back and try again.</p>
+    <button class="cta-button" (click)="goBack()">← Back to Physics</button>
+  </div>
+}

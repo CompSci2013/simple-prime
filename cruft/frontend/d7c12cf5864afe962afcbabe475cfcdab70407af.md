@@ -1,0 +1,664 @@
+# Page snapshot
+
+```yaml
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - link "🏠 Home" [ref=e4] [cursor=pointer]:
+        - /url: /
+      - generic [ref=e5] [cursor=pointer]: 📚 Domains
+      - generic [ref=e6]: v1.2.2
+    - main [ref=e7]:
+      - generic [ref=e9]:
+        - heading "Automobile Discovery" [level=1] [ref=e11]
+        - generic [ref=e12]:
+          - generic [ref=e13]:
+            - generic [ref=e14]:
+              - generic [ref=e15]:
+                - generic [ref=e17]: 
+                - heading "Query Control" [level=3] [ref=e18]
+              - generic [ref=e19]:
+                - button [ref=e20] [cursor=pointer]:
+                  - generic [ref=e21]: 
+                - button [ref=e22] [cursor=pointer]:
+                  - generic [ref=e23]: 
+            - generic [ref=e28]:
+              - generic [ref=e30] [cursor=pointer]:
+                - generic [ref=e31]:
+                  - combobox "Add filter by field..."
+                - generic [ref=e32]: Add filter by field...
+                - button "dropdown trigger" [ref=e33]:
+                  - generic [ref=e34]: 
+              - generic [ref=e35]:
+                - button "Clear All" [disabled]:
+                  - generic: 
+                  - generic: Clear All
+          - generic [ref=e36]:
+            - generic [ref=e37]:
+              - generic [ref=e38]:
+                - generic [ref=e40]: 
+                - heading "Query Panel" [level=3] [ref=e41]
+              - generic [ref=e42]:
+                - button [ref=e43] [cursor=pointer]:
+                  - generic [ref=e44]: 
+                - button [ref=e45] [cursor=pointer]:
+                  - generic [ref=e46]: 
+            - generic [ref=e52]:
+              - generic [ref=e53]:
+                - generic [ref=e54]: Manufacturer
+                - searchbox "Enter manufacturer name..." [ref=e58]
+              - generic [ref=e59]:
+                - generic [ref=e60]: Model
+                - searchbox "Type to search models..." [ref=e64]
+              - generic [ref=e65]:
+                - generic [ref=e66]: Year Range
+                - generic [ref=e69]:
+                  - textbox "Min" [ref=e70]
+                  - generic [ref=e71]:
+                    - button [ref=e72] [cursor=pointer]:
+                      - generic [ref=e73]: 
+                    - button [ref=e74] [cursor=pointer]:
+                      - generic [ref=e75]: 
+              - generic [ref=e76]:
+                - generic [ref=e77]: Year Range Max
+                - generic [ref=e80]:
+                  - textbox "Max" [ref=e81]
+                  - generic [ref=e82]:
+                    - button [ref=e83] [cursor=pointer]:
+                      - generic [ref=e84]: 
+                    - button [ref=e85] [cursor=pointer]:
+                      - generic [ref=e86]: 
+              - generic [ref=e87]:
+                - generic [ref=e88]: Body Class
+                - generic [ref=e90] [cursor=pointer]:
+                  - generic [ref=e91]:
+                    - listbox
+                  - generic [ref=e93]: Select body classes...
+                  - generic [ref=e95]: 
+              - generic [ref=e96]:
+                - generic [ref=e97]: VIN Count Range
+                - generic [ref=e100]:
+                  - textbox "Min" [ref=e101]
+                  - generic [ref=e102]:
+                    - button [ref=e103] [cursor=pointer]:
+                      - generic [ref=e104]: 
+                    - button [ref=e105] [cursor=pointer]:
+                      - generic [ref=e106]: 
+              - generic [ref=e107]:
+                - generic [ref=e108]: VIN Count Range Max
+                - generic [ref=e111]:
+                  - textbox "Max" [ref=e112]
+                  - generic [ref=e113]:
+                    - button [ref=e114] [cursor=pointer]:
+                      - generic [ref=e115]: 
+                    - button [ref=e116] [cursor=pointer]:
+                      - generic [ref=e117]: 
+              - button "Clear Filters" [ref=e120] [cursor=pointer]:
+                - generic [ref=e121]: 
+                - generic [ref=e122]: Clear Filters
+          - generic [ref=e123]:
+            - generic [ref=e124]:
+              - generic [ref=e125]:
+                - generic [ref=e127]: 
+                - heading "Results Table" [level=3] [ref=e128]
+              - generic [ref=e129]:
+                - button [ref=e130] [cursor=pointer]:
+                  - generic [ref=e131]: 
+                - button [ref=e132] [cursor=pointer]:
+                  - generic [ref=e133]: 
+            - generic [ref=e140]:
+              - generic [ref=e143]: 4887 result(s)
+              - table [ref=e145]:
+                - rowgroup [ref=e146]:
+                  - row "Manufacturer  Model  Year  Body Class  VIN Count " [ref=e147]:
+                    - columnheader [ref=e148]
+                    - columnheader "Manufacturer " [ref=e149] [cursor=pointer]:
+                      - text: Manufacturer
+                      - generic [ref=e151]: 
+                    - columnheader "Model " [ref=e152] [cursor=pointer]:
+                      - text: Model
+                      - generic [ref=e154]: 
+                    - columnheader "Year " [ref=e155] [cursor=pointer]:
+                      - text: Year
+                      - generic [ref=e157]: 
+                    - columnheader "Body Class " [ref=e158] [cursor=pointer]:
+                      - text: Body Class
+                      - generic [ref=e160]: 
+                    - columnheader "VIN Count " [ref=e161] [cursor=pointer]:
+                      - text: VIN Count
+                      - generic [ref=e163]: 
+                - rowgroup [ref=e164]:
+                  - row "Affordable Aluminum Affordable Aluminum 1970 Sedan 12" [ref=e165]:
+                    - cell [ref=e166]:
+                      - button [ref=e167] [cursor=pointer]:
+                        - generic [ref=e168]: 
+                    - cell "Affordable Aluminum" [ref=e169]
+                    - cell "Affordable Aluminum" [ref=e170]
+                    - cell "1970" [ref=e171]
+                    - cell "Sedan" [ref=e172]
+                    - cell "12" [ref=e173]
+                  - row "Best Lane Enterprises dba Ramp Free Best Lane Enterprises dba Ramp Free 1960 Sedan 12" [ref=e174]:
+                    - cell [ref=e175]:
+                      - button [ref=e176] [cursor=pointer]:
+                        - generic [ref=e177]: 
+                    - cell "Best Lane Enterprises dba Ramp Free" [ref=e178]
+                    - cell "Best Lane Enterprises dba Ramp Free" [ref=e179]
+                    - cell "1960" [ref=e180]
+                    - cell "Sedan" [ref=e181]
+                    - cell "12" [ref=e182]
+                  - row "Brammo Brammo Street Bikes 1972 Sedan 12" [ref=e183]:
+                    - cell [ref=e184]:
+                      - button [ref=e185] [cursor=pointer]:
+                        - generic [ref=e186]: 
+                    - cell "Brammo" [ref=e187]
+                    - cell "Brammo Street Bikes" [ref=e188]
+                    - cell "1972" [ref=e189]
+                    - cell "Sedan" [ref=e190]
+                    - cell "12" [ref=e191]
+                  - row "Brammo Dual Sport 1965 Sports Car 12" [ref=e192]:
+                    - cell [ref=e193]:
+                      - button [ref=e194] [cursor=pointer]:
+                        - generic [ref=e195]: 
+                    - cell "Brammo" [ref=e196]
+                    - cell "Dual Sport" [ref=e197]
+                    - cell "1965" [ref=e198]
+                    - cell "Sports Car" [ref=e199]
+                    - cell "12" [ref=e200]
+                  - row "Brammo Scooter 1968 Sedan 12" [ref=e201]:
+                    - cell [ref=e202]:
+                      - button [ref=e203] [cursor=pointer]:
+                        - generic [ref=e204]: 
+                    - cell "Brammo" [ref=e205]
+                    - cell "Scooter" [ref=e206]
+                    - cell "1968" [ref=e207]
+                    - cell "Sedan" [ref=e208]
+                    - cell "12" [ref=e209]
+                  - row "Brammo Touring 1970 Touring Car 12" [ref=e210]:
+                    - cell [ref=e211]:
+                      - button [ref=e212] [cursor=pointer]:
+                        - generic [ref=e213]: 
+                    - cell "Brammo" [ref=e214]
+                    - cell "Touring" [ref=e215]
+                    - cell "1970" [ref=e216]
+                    - cell "Touring Car" [ref=e217]
+                    - cell "12" [ref=e218]
+                  - row "Brammo Urban 1962 Sedan 12" [ref=e219]:
+                    - cell [ref=e220]:
+                      - button [ref=e221] [cursor=pointer]:
+                        - generic [ref=e222]: 
+                    - cell "Brammo" [ref=e223]
+                    - cell "Urban" [ref=e224]
+                    - cell "1962" [ref=e225]
+                    - cell "Sedan" [ref=e226]
+                    - cell "12" [ref=e227]
+                  - row "Buick Allure 1968 Sedan 12" [ref=e228]:
+                    - cell [ref=e229]:
+                      - button [ref=e230] [cursor=pointer]:
+                        - generic [ref=e231]: 
+                    - cell "Buick" [ref=e232]
+                    - cell "Allure" [ref=e233]
+                    - cell "1968" [ref=e234]
+                    - cell "Sedan" [ref=e235]
+                    - cell "12" [ref=e236]
+                  - row "Buick Cascada 1972 Sedan 12" [ref=e237]:
+                    - cell [ref=e238]:
+                      - button [ref=e239] [cursor=pointer]:
+                        - generic [ref=e240]: 
+                    - cell "Buick" [ref=e241]
+                    - cell "Cascada" [ref=e242]
+                    - cell "1972" [ref=e243]
+                    - cell "Sedan" [ref=e244]
+                    - cell "12" [ref=e245]
+                  - row "Buick Century 2005 Sedan 12" [ref=e246]:
+                    - cell [ref=e247]:
+                      - button [ref=e248] [cursor=pointer]:
+                        - generic [ref=e249]: 
+                    - cell "Buick" [ref=e250]
+                    - cell "Century" [ref=e251]
+                    - cell "2005" [ref=e252]
+                    - cell "Sedan" [ref=e253]
+                    - cell "12" [ref=e254]
+                  - row "Buick Century 2004 Sedan 12" [ref=e255]:
+                    - cell [ref=e256]:
+                      - button [ref=e257] [cursor=pointer]:
+                        - generic [ref=e258]: 
+                    - cell "Buick" [ref=e259]
+                    - cell "Century" [ref=e260]
+                    - cell "2004" [ref=e261]
+                    - cell "Sedan" [ref=e262]
+                    - cell "12" [ref=e263]
+                  - row "Buick Century 2003 Sedan 12" [ref=e264]:
+                    - cell [ref=e265]:
+                      - button [ref=e266] [cursor=pointer]:
+                        - generic [ref=e267]: 
+                    - cell "Buick" [ref=e268]
+                    - cell "Century" [ref=e269]
+                    - cell "2003" [ref=e270]
+                    - cell "Sedan" [ref=e271]
+                    - cell "12" [ref=e272]
+                  - row "Buick Century 2002 Sedan 12" [ref=e273]:
+                    - cell [ref=e274]:
+                      - button [ref=e275] [cursor=pointer]:
+                        - generic [ref=e276]: 
+                    - cell "Buick" [ref=e277]
+                    - cell "Century" [ref=e278]
+                    - cell "2002" [ref=e279]
+                    - cell "Sedan" [ref=e280]
+                    - cell "12" [ref=e281]
+                  - row "Buick Century 2001 Sedan 12" [ref=e282]:
+                    - cell [ref=e283]:
+                      - button [ref=e284] [cursor=pointer]:
+                        - generic [ref=e285]: 
+                    - cell "Buick" [ref=e286]
+                    - cell "Century" [ref=e287]
+                    - cell "2001" [ref=e288]
+                    - cell "Sedan" [ref=e289]
+                    - cell "12" [ref=e290]
+                  - row "Buick Century 2000 Sedan 12" [ref=e291]:
+                    - cell [ref=e292]:
+                      - button [ref=e293] [cursor=pointer]:
+                        - generic [ref=e294]: 
+                    - cell "Buick" [ref=e295]
+                    - cell "Century" [ref=e296]
+                    - cell "2000" [ref=e297]
+                    - cell "Sedan" [ref=e298]
+                    - cell "12" [ref=e299]
+                  - row "Buick Century 1999 Sedan 12" [ref=e300]:
+                    - cell [ref=e301]:
+                      - button [ref=e302] [cursor=pointer]:
+                        - generic [ref=e303]: 
+                    - cell "Buick" [ref=e304]
+                    - cell "Century" [ref=e305]
+                    - cell "1999" [ref=e306]
+                    - cell "Sedan" [ref=e307]
+                    - cell "12" [ref=e308]
+                  - row "Buick Century 1998 Sedan 12" [ref=e309]:
+                    - cell [ref=e310]:
+                      - button [ref=e311] [cursor=pointer]:
+                        - generic [ref=e312]: 
+                    - cell "Buick" [ref=e313]
+                    - cell "Century" [ref=e314]
+                    - cell "1998" [ref=e315]
+                    - cell "Sedan" [ref=e316]
+                    - cell "12" [ref=e317]
+                  - row "Buick Century 1997 Sedan 12" [ref=e318]:
+                    - cell [ref=e319]:
+                      - button [ref=e320] [cursor=pointer]:
+                        - generic [ref=e321]: 
+                    - cell "Buick" [ref=e322]
+                    - cell "Century" [ref=e323]
+                    - cell "1997" [ref=e324]
+                    - cell "Sedan" [ref=e325]
+                    - cell "12" [ref=e326]
+                  - row "Buick Century 1996 Sedan 12" [ref=e327]:
+                    - cell [ref=e328]:
+                      - button [ref=e329] [cursor=pointer]:
+                        - generic [ref=e330]: 
+                    - cell "Buick" [ref=e331]
+                    - cell "Century" [ref=e332]
+                    - cell "1996" [ref=e333]
+                    - cell "Sedan" [ref=e334]
+                    - cell "12" [ref=e335]
+                  - row "Buick Century 1995 Sedan 12" [ref=e336]:
+                    - cell [ref=e337]:
+                      - button [ref=e338] [cursor=pointer]:
+                        - generic [ref=e339]: 
+                    - cell "Buick" [ref=e340]
+                    - cell "Century" [ref=e341]
+                    - cell "1995" [ref=e342]
+                    - cell "Sedan" [ref=e343]
+                    - cell "12" [ref=e344]
+              - generic [ref=e346]:
+                - generic [ref=e347] [cursor=pointer]: Showing 1 to 20 of 4887 results
+                - button "" [disabled]:
+                  - generic: 
+                - button "" [disabled]:
+                  - generic: 
+                - generic [ref=e348]:
+                  - button "1" [ref=e349] [cursor=pointer]
+                  - button "2" [ref=e350] [cursor=pointer]
+                  - button "3" [ref=e351] [cursor=pointer]
+                  - button "4" [ref=e352] [cursor=pointer]
+                  - button "5" [ref=e353] [cursor=pointer]
+                - button "" [ref=e354] [cursor=pointer]:
+                  - generic [ref=e355]: 
+                - button "" [ref=e356] [cursor=pointer]:
+                  - generic [ref=e357]: 
+                - generic [ref=e359] [cursor=pointer]:
+                  - generic [ref=e360]:
+                    - combobox
+                  - generic [ref=e361]: "20"
+                  - button "dropdown trigger" [ref=e362]:
+                    - generic [ref=e363]: 
+          - generic [ref=e365]:
+            - generic [ref=e366]:
+              - generic [ref=e368]: 
+              - heading "Manufacturer-Model Picker" [level=3] [ref=e369]
+            - generic [ref=e370]:
+              - button [ref=e371] [cursor=pointer]:
+                - generic [ref=e372]: 
+              - button [ref=e373] [cursor=pointer]:
+                - generic [ref=e374]: 
+          - generic [ref=e375]:
+            - generic [ref=e376]:
+              - generic [ref=e377]:
+                - generic [ref=e379]: 
+                - heading "Statistics" [level=3] [ref=e380]
+              - generic [ref=e381]:
+                - button [ref=e382] [cursor=pointer]:
+                  - generic [ref=e383]: 
+                - button [ref=e384] [cursor=pointer]:
+                  - generic [ref=e385]: 
+            - generic [ref=e390]:
+              - generic [ref=e391]:
+                - generic [ref=e392]:
+                  - generic [ref=e393]: 
+                  - generic [ref=e394]: Statistics & Distributions
+                  - generic [ref=e395]: (4 charts)
+                - tablist [ref=e396]:
+                  - tab "collapse button" [expanded] [ref=e397] [cursor=pointer]:
+                    - generic [ref=e398]: 
+              - region " Statistics & Distributions (4 charts) collapse button" [ref=e399]:
+                - generic [ref=e402]:
+                  - generic [ref=e403]:
+                    - generic [ref=e404]: Manufacturers
+                    - generic [ref=e406]:
+                      - heading "Vehicles by Manufacturer" [level=3] [ref=e408]
+                      - generic [ref=e411]:
+                        - img:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Chevrolet
+                                - generic:
+                                  - generic: Ford
+                                - generic:
+                                  - generic: Buick
+                                - generic:
+                                  - generic: Chrysler
+                                - generic:
+                                  - generic: Dodge
+                                - generic:
+                                  - generic: Cadillac
+                                - generic:
+                                  - generic: Pontiac
+                                - generic:
+                                  - generic: Lincoln
+                                - generic:
+                                  - generic: Jeep
+                                - generic:
+                                  - generic: GMC
+                                - generic:
+                                  - generic: Plymouth
+                                - generic:
+                                  - generic: International
+                                - generic:
+                                  - generic: Tesla
+                                - generic:
+                                  - generic: WHITEGMC
+                                - generic:
+                                  - generic: Ram-Lin
+                                - generic:
+                                  - generic: Oldsmobile
+                                - generic:
+                                  - generic: Mercury
+                                - generic:
+                                  - generic: Ram
+                                - generic:
+                                  - generic: RamVac
+                                - generic:
+                                  - generic: RAM OEM Trailer
+                              - generic:
+                                - generic:
+                                  - generic: "0"
+                                - generic:
+                                  - generic: "200"
+                                - generic:
+                                  - generic: "400"
+                                - generic:
+                                  - generic: "600"
+                                - generic:
+                                  - generic: "800"
+                        - img
+                        - toolbar [ref=e425]:
+                          - button "Download plot as a PNG" [ref=e427] [cursor=pointer]:
+                            - img [ref=e428]
+                          - generic [ref=e430]:
+                            - button "Zoom" [ref=e431] [cursor=pointer]:
+                              - img [ref=e432]
+                            - button "Pan" [ref=e434] [cursor=pointer]:
+                              - img [ref=e435]
+                            - button "Box Select" [ref=e437] [cursor=pointer]:
+                              - img [ref=e438]
+                          - generic [ref=e440]:
+                            - button "Zoom in" [ref=e441] [cursor=pointer]:
+                              - img [ref=e442]
+                            - button "Zoom out" [ref=e444] [cursor=pointer]:
+                              - img [ref=e445]
+                            - button "Autoscale" [ref=e447] [cursor=pointer]:
+                              - img [ref=e448]
+                            - button "Reset axes" [ref=e450] [cursor=pointer]:
+                              - img [ref=e451]
+                        - img
+                  - generic [ref=e453]:
+                    - generic [ref=e454]: Models
+                    - generic [ref=e456]:
+                      - heading "Top Models by VIN Count" [level=3] [ref=e458]
+                      - generic [ref=e461]:
+                        - img:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Chevrolet Suburban
+                                - generic:
+                                  - generic: Lincoln Continental
+                                - generic:
+                                  - generic: Chevrolet Corvette
+                                - generic:
+                                  - generic: Buick Century
+                                - generic:
+                                  - generic: Chrysler 300
+                                - generic:
+                                  - generic: Chrysler Imperial
+                                - generic:
+                                  - generic: Chevrolet Impala
+                                - generic:
+                                  - generic: Chevrolet Malibu
+                                - generic:
+                                  - generic: Ford Mustang
+                                - generic:
+                                  - generic: Dodge Charger
+                                - generic:
+                                  - generic: Chevrolet Camaro
+                                - generic:
+                                  - generic: Chrysler New Yorker
+                                - generic:
+                                  - generic: Buick Regal
+                                - generic:
+                                  - generic: Jeep Cherokee
+                                - generic:
+                                  - generic: Ford F-150
+                                - generic:
+                                  - generic: Cadillac Eldorado
+                                - generic:
+                                  - generic: Cadillac Fleetwood
+                                - generic:
+                                  - generic: Pontiac Bonneville
+                                - generic:
+                                  - generic: Buick LeSabre
+                                - generic:
+                                  - generic: Buick Skylark
+                              - generic:
+                                - generic:
+                                  - generic: "0"
+                                - generic:
+                                  - generic: "20"
+                                - generic:
+                                  - generic: "40"
+                                - generic:
+                                  - generic: "60"
+                                - generic:
+                                  - generic: "80"
+                        - img
+                        - toolbar [ref=e475]:
+                          - button "Download plot as a PNG" [ref=e477] [cursor=pointer]:
+                            - img [ref=e478]
+                          - generic [ref=e480]:
+                            - button "Zoom" [ref=e481] [cursor=pointer]:
+                              - img [ref=e482]
+                            - button "Pan" [ref=e484] [cursor=pointer]:
+                              - img [ref=e485]
+                            - button "Box Select" [ref=e487] [cursor=pointer]:
+                              - img [ref=e488]
+                          - generic [ref=e490]:
+                            - button "Zoom in" [ref=e491] [cursor=pointer]:
+                              - img [ref=e492]
+                            - button "Zoom out" [ref=e494] [cursor=pointer]:
+                              - img [ref=e495]
+                            - button "Autoscale" [ref=e497] [cursor=pointer]:
+                              - img [ref=e498]
+                            - button "Reset axes" [ref=e500] [cursor=pointer]:
+                              - img [ref=e501]
+                        - img
+                  - generic [ref=e503]:
+                    - generic [ref=e504]: Year
+                    - generic [ref=e506]:
+                      - heading "Vehicles by Year" [level=3] [ref=e508]
+                      - generic [ref=e511]:
+                        - img:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: "1908"
+                                - generic:
+                                  - generic: "1913"
+                                - generic:
+                                  - generic: "1918"
+                                - generic:
+                                  - generic: "1923"
+                                - generic:
+                                  - generic: "1928"
+                                - generic:
+                                  - generic: "1933"
+                                - generic:
+                                  - generic: "1938"
+                                - generic:
+                                  - generic: "1943"
+                                - generic:
+                                  - generic: "1948"
+                                - generic:
+                                  - generic: "1953"
+                                - generic:
+                                  - generic: "1958"
+                                - generic:
+                                  - generic: "1963"
+                                - generic:
+                                  - generic: "1968"
+                                - generic:
+                                  - generic: "1973"
+                                - generic:
+                                  - generic: "1978"
+                                - generic:
+                                  - generic: "1983"
+                                - generic:
+                                  - generic: "1988"
+                                - generic:
+                                  - generic: "1993"
+                                - generic:
+                                  - generic: "1998"
+                                - generic:
+                                  - generic: "2003"
+                              - generic:
+                                - generic:
+                                  - generic: "0"
+                                - generic:
+                                  - generic: "50"
+                                - generic:
+                                  - generic: "100"
+                        - img
+                        - toolbar [ref=e525]:
+                          - button "Download plot as a PNG" [ref=e527] [cursor=pointer]:
+                            - img [ref=e528]
+                          - generic [ref=e530]:
+                            - button "Zoom" [ref=e531] [cursor=pointer]:
+                              - img [ref=e532]
+                            - button "Pan" [ref=e534] [cursor=pointer]:
+                              - img [ref=e535]
+                            - button "Box Select" [ref=e537] [cursor=pointer]:
+                              - img [ref=e538]
+                          - generic [ref=e540]:
+                            - button "Zoom in" [ref=e541] [cursor=pointer]:
+                              - img [ref=e542]
+                            - button "Zoom out" [ref=e544] [cursor=pointer]:
+                              - img [ref=e545]
+                            - button "Autoscale" [ref=e547] [cursor=pointer]:
+                              - img [ref=e548]
+                            - button "Reset axes" [ref=e550] [cursor=pointer]:
+                              - img [ref=e551]
+                        - img
+                  - generic [ref=e553]:
+                    - generic [ref=e554]: Body Class
+                    - generic [ref=e556]:
+                      - heading "Vehicles by Body Class" [level=3] [ref=e558]
+                      - generic [ref=e561]:
+                        - img:
+                          - generic:
+                            - generic:
+                              - generic:
+                                - generic:
+                                  - generic: Sedan
+                                - generic:
+                                  - generic: SUV
+                                - generic:
+                                  - generic: Coupe
+                                - generic:
+                                  - generic: Pickup
+                                - generic:
+                                  - generic: Van
+                                - generic:
+                                  - generic: Hatchback
+                                - generic:
+                                  - generic: Sports Car
+                                - generic:
+                                  - generic: Touring Car
+                                - generic:
+                                  - generic: Wagon
+                                - generic:
+                                  - generic: Convertible
+                                - generic:
+                                  - generic: Truck
+                                - generic:
+                                  - generic: Limousine
+                              - generic:
+                                - generic:
+                                  - generic: "0"
+                                - generic:
+                                  - generic: "1000"
+                                - generic:
+                                  - generic: "2000"
+                        - img
+                        - toolbar [ref=e575]:
+                          - button "Download plot as a PNG" [ref=e577] [cursor=pointer]:
+                            - img [ref=e578]
+                          - generic [ref=e580]:
+                            - button "Zoom" [ref=e581] [cursor=pointer]:
+                              - img [ref=e582]
+                            - button "Pan" [ref=e584] [cursor=pointer]:
+                              - img [ref=e585]
+                            - button "Box Select" [ref=e587] [cursor=pointer]:
+                              - img [ref=e588]
+                          - generic [ref=e590]:
+                            - button "Zoom in" [ref=e591] [cursor=pointer]:
+                              - img [ref=e592]
+                            - button "Zoom out" [ref=e594] [cursor=pointer]:
+                              - img [ref=e595]
+                            - button "Autoscale" [ref=e597] [cursor=pointer]:
+                              - img [ref=e598]
+                            - button "Reset axes" [ref=e600] [cursor=pointer]:
+                              - img [ref=e601]
+                        - img
+  - img [ref=e603]
+```

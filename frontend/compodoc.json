@@ -1,0 +1,11 @@
+{
+  "tsconfig": "tsconfig.app.json",
+  "output": "./documents",
+  "theme": "dark",
+  "hideGenerator": false,
+  "disableDependencies": false,
+  "disablePrivate": false,
+  "disableProtected": false,
+  "disableInternal": false,
+  "disableLifeCycleHooks": false
+}

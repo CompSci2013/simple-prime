@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: generic-prime-frontend
+  namespace: generic-prime
+  labels:
+    app: generic-prime-frontend
+    tier: frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: generic-prime-frontend
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+    name: http

@@ -1,0 +1,24 @@
+# Use the official Playwright image which comes with browsers and OS dependencies.
+# Using v1.57.0 to match @playwright/test version in package.json
+FROM mcr.microsoft.com/playwright:v1.57.0-jammy
+
+# Add generic-prime.minilab hostname mapping for backend API access
+# Maps to Traefik ingress on Thor (192.168.0.244)
+RUN echo "192.168.0.244 generic-prime generic-prime.minilab" >> /etc/hosts
+
+# Set the base working directory.
+WORKDIR /app
+
+# Copy package files first to leverage Docker layer caching.
+# This layer only gets rebuilt if package.json or package-lock.json changes.
+COPY frontend/package*.json ./frontend/
+
+# Change to the frontend directory and install all dependencies.
+WORKDIR /app/frontend
+
+# Install dependencies (includes @playwright/test from package.json)
+# Use --legacy-peer-deps to handle Angular 14 + newer dependencies compatibility
+RUN npm install --legacy-peer-deps
+
+# Keep container running - source code will be mounted via bind mount
+CMD ["tail", "-f", "/dev/null"]

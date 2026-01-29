@@ -1,0 +1,61 @@
+<!--
+Physics Domain Landing Page Template
+
+Purpose: Renders the physics domain landing page with knowledge tiers, course navigation, and concept graph access
+
+Template Structure:
+1. Header Section: Domain branding with atom icon, title, and PhD curriculum subtitle
+2. Knowledge Tiers Section: Three-tiered course cards (Undergraduate → Graduate → PhD Specialization)
+3. Navigation Links: Concept graph link and back to domain selection
+4. Tier Cards: Interactive cards showing physics courses with icons, levels, and descriptions
+
+Styling: Uses dark theme with cyan accents (#64c8ff, #4ba3d9)
+Animations: fadeInDown (header), fadeInUp (tier cards with staggered delays), orbit (icon)
+Responsive: Mobile breakpoint at 768px, single-column layout on mobile
+
+Component Reference: {@link PhysicsComponent}
+-->
+<div class="physics-container">
+  <!-- Header Section -->
+  <div class="header">
+    <div class="header-icon">⚛️</div>
+    <h1>Physics Learning Path</h1>
+    <p class="subtitle">PhD Curriculum: Thermodynamics & Solid State Matter Specialization</p>
+  </div>
+
+  <!-- Knowledge Tiers Section -->
+  <div class="knowledge-tiers-section">
+    <!-- Tier 1: Undergraduate -->
+    @for (tier of knowledgeTiers; track tier) {
+      <div class="tier-group">
+        <!-- Subtopic Cards for this Tier -->
+        <div class="tier-cards-grid">
+          @for (subtopic of tier.children; track subtopic) {
+            <div
+              class="knowledge-card"
+              (click)="navigateToNode(subtopic)"
+              [attr.data-level]="subtopic.level">
+              <div class="card-header">
+                <span class="card-icon">{{ subtopic.icon }}</span>
+                <span class="card-level-badge">{{ subtopic.level }}</span>
+              </div>
+              <div class="card-content">
+                <h3>{{ subtopic.title }}</h3>
+                <p class="card-description">{{ subtopic.description }}</p>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Navigation Links -->
+  <div class="navigation-links">
+    <a routerLink="/physics/concept-graph" class="concept-graph-link">
+      <span class="link-icon">🧬</span>
+      <span class="link-text">View Concept Graph</span>
+    </a>
+    <a routerLink="/" class="back-button">← Back to Domain Selection</a>
+  </div>
+</div>

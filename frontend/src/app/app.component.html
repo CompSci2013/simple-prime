@@ -1,0 +1,49 @@
+<!-- Global Toast Notifications -->
+<p-toast key="app-toast" position="top-right"></p-toast>
+
+<!-- Navigation Banner - Hidden in pop-out windows -->
+@if (!isPopOut) {
+  <header class="app-header">
+    <a routerLink="/" class="home-link">🏠 Home</a>
+    <!-- Domain Navigation TieredMenu with Flyout Submenus -->
+    <a
+      #menuButton
+      class="domains-link"
+      (click)="menu.toggle($event)">
+      📚 Domains
+    </a>
+    <p-tieredMenu
+      #menu
+      [model]="domainMenuItems"
+      styleClass="domain-menu"
+      [popup]="true"
+      [appendTo]="'body'">
+    </p-tieredMenu>
+    <!-- AI Chat Toggle Button -->
+    <button
+      pButton
+      type="button"
+      icon="pi pi-comments"
+      [class.active]="aiChatVisible()"
+      class="p-button-text ai-chat-toggle"
+      (click)="toggleAiChat()"
+      pTooltip="AI Assistant"
+      tooltipPosition="bottom">
+    </button>
+    <span class="version-label">v{{ version }}</span>
+  </header>
+}
+
+<!-- AI Chat Panel (floating) - Application-wide -->
+@if (aiChatVisible() && !isPopOut) {
+  <div class="ai-chat-floating">
+    <app-ai-chat
+      (closeChat)="onAiChatClose()">
+    </app-ai-chat>
+  </div>
+}
+
+<!-- Application Content -->
+<main class="app-content">
+  <router-outlet></router-outlet>
+</main>

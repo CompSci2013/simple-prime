@@ -1,0 +1,217 @@
+╔════════════════════════════════════════════════════════════════════════════╗
+║                    ARCHITECTURE AUDIT: IMPLEMENTATION                       ║
+║                         CHECKLIST & TRACKER                                ║
+║                       Ready for: 2025-12-18                                ║
+╚════════════════════════════════════════════════════════════════════════════╝
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 1: CRITICAL FIX (20 minutes) - BLOCKING ALL OTHER WORK
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [ ] STEP 1: Remove re-exports from FrameworkModule
+      File: frontend/src/framework/framework.module.ts
+      Action: Delete lines 50-52 (CommonModule, FormsModule, PrimengModule)
+      Verify: File saved, no syntax errors
+      Time: 5 min
+      Status: _______________
+
+  [ ] STEP 2: Create validation script
+      File: Create scripts/check-module-reexports.js
+      Action: Copy from MODULE-ARCHITECTURE-AUDIT.md Section "Method 4"
+      Verify: File created, no errors in script
+      Time: 10 min
+      Status: _______________
+
+  [ ] STEP 3: Add npm scripts to package.json
+      File: frontend/package.json
+      Action: Add check:modules and check:modules:strict
+      Verify: Scripts section has both entries
+      Time: 5 min
+      Status: _______________
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 2: VERIFICATION (15 minutes) - CONFIRM FIX WORKS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [ ] STEP 4: Run module validation
+      Command: npm run check:modules
+      Expected: ✅ No module re-export anti-patterns detected!
+      Time: 1 min
+      Status: _______________
+
+  [ ] STEP 5: Build the application
+      Command: ng build --configuration development
+      Expected: "Build succeeded" (no errors)
+      Time: 3-5 min
+      Status: _______________
+
+  [ ] STEP 6: Start development server
+      Command: npm start -- --host 0.0.0.0 --port 4205
+      Check:
+        [ ] Dev server starts without errors
+        [ ] Navigate to http://192.168.0.244:4205
+        [ ] Home page loads
+        [ ] Domain selector visible
+        [ ] No console errors (F12 → Console)
+      Time: 3-5 min
+      Status: _______________
+
+  [ ] STEP 7: Run E2E tests
+      Command: npm run test:e2e
+      Expected: 33/33 tests passing
+      Time: 1 min
+      Status: _______________
+
+  [ ] STEP 8: Regenerate documentation
+      Command: npm run docs:gen
+      Check:
+        [ ] No errors during generation
+        [ ] Open dist/documentation/modules/FrameworkModule.html
+        [ ] Verify FrameworkModule exports are CLEAN
+        [ ] CommonModule NOT in exports
+        [ ] FormsModule NOT in exports
+        [ ] PrimengModule NOT in exports
+      Time: 2-3 min
+      Status: _______________
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 3: CI/CD SETUP (30 minutes) - OPTIONAL BUT RECOMMENDED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [ ] STEP 9: Create pre-commit hook
+      Command: npx husky add .husky/pre-commit "npm run check:modules:strict"
+      Verify: .husky/pre-commit file created
+      Test: Make a small commit → hook runs automatically
+      Time: 10 min
+      Status: _______________
+
+  [ ] STEP 10: Add circular dependency detection
+      Option A: Install circular-dependency-plugin
+        Command: npm install --save-dev circular-dependency-plugin
+      Option B: Create jest test for circular imports
+      Verify: Build fails if circular dependency detected
+      Time: 15-20 min
+      Status: _______________
+
+  [ ] STEP 11: Update NEXT-STEPS.md
+      File: docs/claude/NEXT-STEPS.md
+      Action: Add section on post-AngularTools module validation
+      Include:
+        [ ] How to run npm run check:modules
+        [ ] When to regenerate Compodoc
+        [ ] Link to MODULE-ARCHITECTURE-AUDIT.md
+      Time: 10 min
+      Status: _______________
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PHASE 4: POLISH (20 minutes) - NICE TO HAVE / FUTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  [ ] STEP 12: Audit all modules
+      Command: npm run check:modules
+      Action: Review output for any modules with violations
+      Check:
+        [ ] frontend/src/framework/framework.module.ts (✅ fixed)
+        [ ] frontend/src/app/primeng.module.ts (✅ correct)
+        [ ] frontend/src/app/app.module.ts (✅ correct)
+      Time: 10-15 min
+      Status: _______________
+
+  [ ] STEP 13: Consider ESLint rule (FUTURE)
+      Purpose: Catch violations at lint time
+      Complexity: HIGH
+      Timeline: Do AFTER all other items complete
+      Time: 30+ min (deferred)
+      Status: _______________
+
+  [ ] STEP 14: Update CLAUDE.md
+      File: CLAUDE.md
+      Action: Add Critical Development Rule #6
+      Content: "Explicit Module Dependencies: Never rely on transitive imports"
+      Time: 5 min
+      Status: _______________
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SUCCESS CRITERIA
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ✓ npm run check:modules returns ✅ (0 violations)
+  ✓ ng build --configuration development succeeds
+  ✓ npm start loads home page without errors
+  ✓ npm run test:e2e returns 33/33 passing
+  ✓ Compodoc FrameworkModule has clean exports
+  ✓ Pre-commit hook configured (optional)
+  ✓ Documentation updated (optional)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+TIME TRACKING
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Phase 1 (Critical):     [ ] 20 min    Started: ___  Finished: ___
+  Phase 2 (Verification): [ ] 15 min    Started: ___  Finished: ___
+  Phase 3 (CI/CD):        [ ] 30 min    Started: ___  Finished: ___
+  Phase 4 (Polish):       [ ] 20 min    Started: ___  Finished: ___
+  ──────────────────────────────────
+  CRITICAL PATH:          [ ] 25 min    Started: ___  Finished: ___
+  FULL IMPLEMENTATION:    [ ] 85 min    Started: ___  Finished: ___
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+ISSUE SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  MODULE:    FrameworkModule
+  FILE:      frontend/src/framework/framework.module.ts
+  LINES:     50-52
+  ISSUE:     Re-exports CommonModule, FormsModule, PrimengModule
+  IMPACT:    Creates hidden dependencies
+  SEVERITY:  Medium
+  RISK:      Low (AppModule already imports these explicitly)
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+DOCUMENTS REFERENCE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  📌 START HERE (5 min):
+     → MODULE-AUDIT-BULLET-SUMMARY.txt
+
+  ⚡ QUICK FIX (30 min):
+     → QUICK-START-MODULE-FIX.md
+
+  📋 DETAILED CHECKLIST (15 min):
+     → SUGGESTED-ITEMS-CHECKLIST.md
+
+  📚 FULL TECHNICAL REPORT (45 min):
+     → docs/claude/MODULE-ARCHITECTURE-AUDIT.md
+
+  📖 DEVELOPER GUIDELINES (ongoing):
+     → docs/ANGULAR-MODULE-GUIDELINES.md
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+QUICK COMMANDS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  # Validate modules
+  npm run check:modules
+
+  # Build
+  ng build --configuration development
+
+  # Run dev server
+  npm start -- --host 0.0.0.0 --port 4205
+
+  # E2E tests
+  npm run test:e2e
+
+  # Regenerate docs
+  npm run docs:gen
+
+  # Setup pre-commit
+  npx husky add .husky/pre-commit "npm run check:modules:strict"
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Created: 2025-12-18
+Ready for: Implementation
+Estimated effort: 25-90 minutes (depending on scope)
+
+Ready to start? See QUICK-START-MODULE-FIX.md for step-by-step guide!

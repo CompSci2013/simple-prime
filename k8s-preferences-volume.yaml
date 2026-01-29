@@ -1,0 +1,39 @@
+---
+# PersistentVolume using hostPath for direct access from thor
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: generic-prime-preferences-pv
+spec:
+  capacity:
+    storage: 1Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: /mnt/generic-prime-preferences
+    type: DirectoryOrCreate
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+        - matchExpressions:
+            - key: kubernetes.io/hostname
+              operator: In
+              values:
+                - thor
+
+---
+# PersistentVolumeClaim
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: generic-prime-preferences-pvc-v2
+  namespace: generic-prime
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: generic-prime-preferences-pv
+  resources:
+    requests:
+      storage: 1Gi

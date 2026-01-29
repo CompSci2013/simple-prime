@@ -1,0 +1,142 @@
+<div class="discover-container">
+  <!-- Header -->
+  <div class="discover-header">
+    <h1>{{ domainConfig.domainLabel }}</h1>
+    <span class="results-count">{{ resourceService.totalResults() }} {{ resourceService.totalResults() === 1 ? 'result' : 'results' }}</span>
+  </div>
+
+  <!-- Draggable Panels Container -->
+  <div cdkDropList (cdkDropListDropped)="onPanelDrop($event)" class="panels-container">
+    @for (panelId of panelOrder; track panelId) {
+      <!-- Panel Wrapper -->
+      <div class="panel-wrapper" cdkDrag [attr.id]="'panel-' + panelId">
+        <!-- Drag Handle -->
+        <div class="panel-header">
+          <div class="panel-title-group">
+            <div cdkDragHandle class="drag-handle">
+              <i class="pi pi-bars"></i>
+            </div>
+            <h3 class="panel-title">{{ getPanelTitle(panelId) }}</h3>
+          </div>
+          <div class="panel-actions">
+            <button
+              pButton
+              type="button"
+              [icon]="isPanelCollapsed(panelId) ? 'pi pi-chevron-right' : 'pi pi-chevron-down'"
+              class="p-button-sm p-button-text"
+              (click)="togglePanelCollapse(panelId)"
+              [pTooltip]="isPanelCollapsed(panelId) ? 'Expand' : 'Collapse'"
+              tooltipPosition="left">
+            </button>
+            @if (!isPanelPoppedOut(panelId)) {
+              <button
+                pButton
+                type="button"
+                icon="pi pi-external-link"
+                class="p-button-sm p-button-text"
+                [attr.id]="'popout-' + panelId"
+                (click)="popOutPanel(panelId, getPanelType(panelId))"
+                pTooltip="Pop out to separate window"
+                tooltipPosition="left">
+              </button>
+            }
+          </div>
+        </div>
+        <!-- Panel Content -->
+        @if (!isPanelCollapsed(panelId)) {
+          <div>
+            <!-- Query Control -->
+            @if (panelId === 'query-control') {
+              @if (!isPanelPoppedOut('query-control')) {
+                <div>
+                  <app-query-control
+                    [domainConfig]="domainConfig"
+                    (urlParamsChange)="onUrlParamsChange($event)"
+                    (clearAllFilters)="onClearAllFilters()">
+                  </app-query-control>
+                </div>
+              } @else {
+                <div class="popout-placeholder">
+                  <i class="pi pi-external-link"></i>
+                  <span>Query Control is open in a separate window</span>
+                </div>
+              }
+            }
+            <!-- Query Panel (domain-agnostic filter panel) -->
+            @if (panelId === 'query-panel') {
+              @if (!isPanelPoppedOut('query-panel')) {
+                <div>
+                  <app-query-panel [domainConfig]="domainConfig"></app-query-panel>
+                </div>
+              } @else {
+                <div class="popout-placeholder">
+                  <i class="pi pi-external-link"></i>
+                  <span>Query Panel is open in a separate window</span>
+                </div>
+              }
+            }
+            <!-- Manufacturer-Model Picker -->
+            @if (panelId === 'manufacturer-model-picker') {
+              @if (!isPanelPoppedOut('manufacturer-model-picker')) {
+                <div>
+                  <app-base-picker
+                    [configId]="'manufacturer-model-picker'"
+                    (selectionChange)="onPickerSelectionChangeAndUpdateUrl($event)">
+                  </app-base-picker>
+                </div>
+              } @else {
+                <div class="popout-placeholder">
+                  <i class="pi pi-external-link"></i>
+                  <span>Manufacturer-Model Picker is open in a separate window</span>
+                </div>
+              }
+            }
+            <!-- Statistics Panel (CDK Mixed Orientation Chart Grid) -->
+            @if (panelId === 'statistics-panel-2') {
+              @if (!isPanelPoppedOut('statistics-panel-2')) {
+                <div>
+                  <app-statistics-panel-2
+                    [domainConfig]="domainConfig"
+                    [isPanelPoppedOut]="isPanelPoppedOut.bind(this)"
+                    (chartPopOut)="onChartPopOut($event)">
+                  </app-statistics-panel-2>
+                </div>
+              } @else {
+                <div class="popout-placeholder">
+                  <i class="pi pi-external-link"></i>
+                  <span>Statistics Panel 2 is open in a separate window</span>
+                </div>
+              }
+            }
+            <!-- Results Table (legacy - kept for backwards compatibility) -->
+            @if (panelId === 'results-table') {
+              @if (!isPanelPoppedOut('results-table')) {
+                <div>
+                  <app-results-table [domainConfig]="domainConfig"></app-results-table>
+                </div>
+              } @else {
+                <div class="popout-placeholder">
+                  <i class="pi pi-external-link"></i>
+                  <span>Results Table is open in a separate window</span>
+                </div>
+              }
+            }
+            <!-- Dynamic Results Table (drag-drop columns, resizable widths) -->
+            @if (panelId === 'basic-results-table') {
+              @if (!isPanelPoppedOut('basic-results-table')) {
+                <div>
+                  <app-dynamic-results-table [domainConfig]="domainConfig"></app-dynamic-results-table>
+                </div>
+              } @else {
+                <div class="popout-placeholder">
+                  <i class="pi pi-external-link"></i>
+                  <span>Results Table is open in a separate window</span>
+                </div>
+              }
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
