@@ -9,6 +9,7 @@ export * from './global-error.handler';
 export * from './http-error.interceptor';
 export * from './picker-config-registry.service';
 export * from './popout-context.service';
+export * from './popout-manager.service';
 export * from './request-coordinator.service';
 export * from './resource-management.service';
 export * from './url-state.service';
