@@ -179,6 +179,13 @@ export class Discover3Component<TFilters = any, TData = any, TStatistics = any>
     this.cdr.markForCheck();
   }
 
+  onDockviewChartPopOut(chartId: string): void {
+    // Dockview charts use a different prefix to ensure unique application-wide IDs
+    const panelId = `dockview-chart-${chartId}`;
+    this.popOutManager.openPopOut(panelId, 'chart');
+    this.cdr.markForCheck();
+  }
+
   private async handlePopOutMessage(_panelId: string, message: any): Promise<void> {
     switch (message.type) {
       case PopOutMessageType.PANEL_READY:

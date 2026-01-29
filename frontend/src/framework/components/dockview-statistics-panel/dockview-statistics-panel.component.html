@@ -13,7 +13,9 @@
           [highlights]="highlights"
           [selectedValue]="null"
           [hideTitle]="true"
-          (chartClick)="onChartClick($event, chartId)">
+          [canPopOut]="true"
+          (chartClick)="onChartClick($event, chartId)"
+          (popOutClick)="onChartPopOut(chartId)">
         </app-base-chart>
       </div>
     </ng-container>

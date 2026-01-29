@@ -108,6 +108,11 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
   }
 
   getChartDataSource(): any {
+    // Handle both regular charts (chart-manufacturer) and dockview charts (dockview-chart-manufacturer)
+    if (this.panelId.startsWith('dockview-chart-')) {
+      const chartId = this.panelId.replace('dockview-chart-', '');
+      return this.domainConfig.chartDataSources?.[chartId];
+    }
     if (this.panelId.startsWith('chart-')) {
       const chartId = this.panelId.replace('chart-', '');
       return this.domainConfig.chartDataSources?.[chartId];
@@ -156,9 +161,13 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
   }
 
   onChartClick(event: { value: string; isHighlightMode: boolean }): void {
-    const chartId = this.panelId.startsWith('chart-')
-      ? this.panelId.replace('chart-', '')
-      : this.panelId;
+    // Extract chart ID from panel ID, handling both chart- and dockview-chart- prefixes
+    let chartId = this.panelId;
+    if (this.panelId.startsWith('dockview-chart-')) {
+      chartId = this.panelId.replace('dockview-chart-', '');
+    } else if (this.panelId.startsWith('chart-')) {
+      chartId = this.panelId.replace('chart-', '');
+    }
 
     this.popOutContext.sendMessage({
       type: PopOutMessageType.CHART_CLICK,

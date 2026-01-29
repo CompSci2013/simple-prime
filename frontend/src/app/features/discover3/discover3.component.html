@@ -78,7 +78,8 @@
           <div *ngIf="!isPanelPoppedOut('dockview-statistics'); else dockviewPoppedOut">
             <app-dockview-statistics-panel
               [domainConfig]="domainConfig"
-              [chartIds]="['manufacturer', 'top-models']">
+              [chartIds]="['manufacturer', 'top-models']"
+              (chartPopOut)="onDockviewChartPopOut($event)">
             </app-dockview-statistics-panel>
           </div>
           <ng-template #dockviewPoppedOut>

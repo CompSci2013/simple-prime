@@ -88,6 +88,8 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
     dataSource: ChartDataSource;
   }>();
 
+  @Output() chartPopOut = new EventEmitter<string>();
+
   // ============================================================================
   // State
   // ============================================================================
@@ -295,6 +297,13 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
     } else {
       this.urlState.setParams(newParams);
     }
+  }
+
+  /**
+   * Handle chart pop-out request
+   */
+  onChartPopOut(chartId: string): void {
+    this.chartPopOut.emit(chartId);
   }
 
   /**
