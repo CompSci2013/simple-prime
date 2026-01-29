@@ -2,26 +2,24 @@
 <p-toast key="app-toast" position="top-right"></p-toast>
 
 <!-- Navigation Banner - Hidden in pop-out windows -->
-@if (!isPopOut) {
-  <header class="app-header">
-    <a routerLink="/" class="home-link">🏠 Home</a>
-    <!-- Domain Navigation TieredMenu with Flyout Submenus -->
-    <a
-      #menuButton
-      class="domains-link"
-      (click)="menu.toggle($event)">
-      📚 Domains
-    </a>
-    <p-tieredMenu
-      #menu
-      [model]="domainMenuItems"
-      styleClass="domain-menu"
-      [popup]="true"
-      [appendTo]="'body'">
-    </p-tieredMenu>
-    <span class="version-label">v{{ version }}</span>
-  </header>
-}
+<header class="app-header" *ngIf="!isPopOut">
+  <a routerLink="/" class="home-link">🏠 Home</a>
+  <!-- Domain Navigation TieredMenu with Flyout Submenus -->
+  <a
+    #menuButton
+    class="domains-link"
+    (click)="menu.toggle($event)">
+    📚 Domains
+  </a>
+  <p-tieredMenu
+    #menu
+    [model]="domainMenuItems"
+    styleClass="domain-menu"
+    [popup]="true"
+    [appendTo]="'body'">
+  </p-tieredMenu>
+  <span class="version-label">v{{ version }}</span>
+</header>
 
 <!-- Application Content -->
 <main class="app-content">

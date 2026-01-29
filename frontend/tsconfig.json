@@ -1,4 +1,3 @@
-/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
@@ -14,14 +13,14 @@
     "declaration": false,
     "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "importHelpers": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "target": "ES2022",
-    "module": "preserve",
+    "target": "ES2020",
+    "module": "ES2020",
     "lib": [
-      "ES2022",
+      "ES2020",
       "dom"
     ],
     "skipLibCheck": true,

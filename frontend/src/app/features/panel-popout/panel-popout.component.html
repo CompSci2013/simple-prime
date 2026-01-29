@@ -1,38 +1,36 @@
 <div class="panel-popout-container">
 
   <!-- Panel Content - Render based on type -->
-  <div class="popout-content">
-    @switch (panelType) {
-      <!-- Picker (Manufacturer-Model Picker) -->
-      @case ('picker') {
-        <app-base-picker
-          [configId]="getPickerConfigId()"
-          (selectionChange)="onPickerSelectionChange($event)">
-        </app-base-picker>
-      }
-      <!-- Statistics Panel (CDK Mixed Orientation Chart Grid) -->
-      @case ('statistics-2') {
-        <app-statistics-panel-2
-          [domainConfig]="domainConfig">
-        </app-statistics-panel-2>
-      }
-      <!-- Individual Chart -->
-      @case ('chart') {
-        <app-base-chart
-          [dataSource]="getChartDataSource()"
-          [statistics]="resourceService.statistics()"
-          [highlights]="resourceService.highlights()"
-          [selectedValue]="null"
-          (chartClick)="onChartClick($event)">
-        </app-base-chart>
-      }
-      <!-- Unknown panel type -->
-      @default {
-        <div class="unknown-panel">
-          <p>Unknown panel type: {{ panelType }}</p>
-          <p>Panel ID: {{ panelId }}</p>
-        </div>
-      }
-    }
+  <div class="popout-content" [ngSwitch]="panelType">
+    <!-- Picker (Manufacturer-Model Picker) -->
+    <ng-container *ngSwitchCase="'picker'">
+      <app-base-picker
+        [configId]="getPickerConfigId()"
+        (selectionChange)="onPickerSelectionChange($event)">
+      </app-base-picker>
+    </ng-container>
+    <!-- Statistics Panel (CDK Mixed Orientation Chart Grid) -->
+    <ng-container *ngSwitchCase="'statistics-2'">
+      <app-statistics-panel-2
+        [domainConfig]="domainConfig">
+      </app-statistics-panel-2>
+    </ng-container>
+    <!-- Individual Chart -->
+    <ng-container *ngSwitchCase="'chart'">
+      <app-base-chart
+        [dataSource]="getChartDataSource()"
+        [statistics]="resourceService.statistics$ | async"
+        [highlights]="resourceService.highlights$ | async"
+        [selectedValue]="null"
+        (chartClick)="onChartClick($event)">
+      </app-base-chart>
+    </ng-container>
+    <!-- Unknown panel type -->
+    <ng-container *ngSwitchDefault>
+      <div class="unknown-panel">
+        <p>Unknown panel type: {{ panelType }}</p>
+        <p>Panel ID: {{ panelId }}</p>
+      </div>
+    </ng-container>
   </div>
 </div>
