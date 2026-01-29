@@ -53,7 +53,8 @@ export class UserPreferencesService {
    */
   private readonly DEFAULT_PANEL_ORDER = [
     'manufacturer-model-picker',
-    'statistics-panel-2'
+    'statistics-1',
+    'statistics-2'
   ];
 
   /**

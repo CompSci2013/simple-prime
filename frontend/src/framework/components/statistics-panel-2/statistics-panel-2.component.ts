@@ -73,6 +73,12 @@ export class StatisticsPanel2Component implements OnInit, OnDestroy {
   @Input() domainConfig!: DomainConfig<any, any, any>;
 
   /**
+   * Optional subset of chart IDs to display
+   * If not provided, all charts from domainConfig.chartDataSources are shown
+   */
+  @Input() chartIds?: string[];
+
+  /**
    * Function to check if a chart is popped out
    * Provided by parent component (DiscoverComponent)
    */
@@ -124,8 +130,10 @@ export class StatisticsPanel2Component implements OnInit, OnDestroy {
       return;
     }
 
-    // Initialize chart order from domain config
-    if (this.domainConfig.chartDataSources) {
+    // Initialize chart order from chartIds input or domain config
+    if (this.chartIds && this.chartIds.length > 0) {
+      this.chartOrder = this.chartIds;
+    } else if (this.domainConfig.chartDataSources) {
       this.chartOrder = Object.keys(this.domainConfig.chartDataSources);
     }
   }

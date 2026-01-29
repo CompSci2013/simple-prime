@@ -117,6 +117,14 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
     return this.panelId;
   }
 
+  getChartIdsForPanel(): string[] {
+    const chartIdMap: { [key: string]: string[] } = {
+      'statistics-1': ['manufacturer', 'top-models'],
+      'statistics-2': ['body-class', 'year']
+    };
+    return chartIdMap[this.panelId] || [];
+  }
+
   onUrlParamsChange(params: any): void {
     console.log('[PanelPopout] onUrlParamsChange received', params);
     this.popOutContext.sendMessage({

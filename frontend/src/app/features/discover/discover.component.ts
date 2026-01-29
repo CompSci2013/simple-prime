@@ -24,7 +24,7 @@ import { UrlStateService } from '../../../framework/services/url-state.service';
 import { UserPreferencesService } from '../../../framework/services/user-preferences.service';
 import { StatisticsPanel2Component } from '../../../framework/components/statistics-panel-2/statistics-panel-2.component';
 import { BasePickerComponent } from '../../../framework/components/base-picker/base-picker.component';
-import { BaseChartComponent, ChartDataSource } from '../../../framework/components/base-chart/base-chart.component';
+import { ChartDataSource } from '../../../framework/components/base-chart/base-chart.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 
@@ -35,14 +35,14 @@ import { ButtonModule } from 'primeng/button';
     styleUrls: ['./discover.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ResourceManagementService],
-    imports: [CommonModule, DragDropModule, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component, BaseChartComponent]
+    imports: [CommonModule, DragDropModule, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component]
 })
 export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   implements OnInit, OnDestroy {
 
   domainConfig: DomainConfig<TFilters, TData, TStatistics>;
   collapsedPanels = new Map<string, boolean>();
-  panelOrder: string[] = ['manufacturer-model-picker', 'chart-manufacturer', 'chart-top-models'];
+  panelOrder: string[] = ['manufacturer-model-picker', 'statistics-1', 'statistics-2'];
 
   private destroy$ = new Subject<void>();
   private readonly gridId = 'discover';
@@ -147,9 +147,8 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   getPanelTitle(panelId: string): string {
     const titleMap: { [key: string]: string } = {
       'manufacturer-model-picker': 'Manufacturer-Model Picker',
-      'statistics-panel-2': 'Statistics',
-      'chart-manufacturer': 'Vehicles by Manufacturer',
-      'chart-top-models': 'Top Models by VIN Count'
+      'statistics-1': 'Statistics',
+      'statistics-2': 'Statistics'
     };
     return titleMap[panelId] || panelId;
   }
@@ -157,21 +156,18 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   getPanelType(panelId: string): string {
     const typeMap: { [key: string]: string } = {
       'manufacturer-model-picker': 'picker',
-      'statistics-panel-2': 'statistics-2'
+      'statistics-1': 'statistics-2',
+      'statistics-2': 'statistics-2'
     };
-    // Handle chart panels dynamically
-    if (panelId.startsWith('chart-')) {
-      return 'chart';
-    }
     return typeMap[panelId] || panelId;
   }
 
-  getChartDataSource(panelId: string): ChartDataSource | undefined {
-    if (panelId.startsWith('chart-')) {
-      const chartId = panelId.replace('chart-', '');
-      return this.domainConfig.chartDataSources?.[chartId];
-    }
-    return undefined;
+  getChartIdsForPanel(panelId: string): string[] {
+    const chartIdMap: { [key: string]: string[] } = {
+      'statistics-1': ['manufacturer', 'top-models'],
+      'statistics-2': ['body-class', 'year']
+    };
+    return chartIdMap[panelId] || [];
   }
 
   popOutPanel(panelId: string, panelType: string): void {

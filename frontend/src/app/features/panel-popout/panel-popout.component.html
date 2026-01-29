@@ -12,7 +12,8 @@
     <!-- Statistics Panel (CDK Mixed Orientation Chart Grid) -->
     <ng-container *ngSwitchCase="'statistics-2'">
       <app-statistics-panel-2
-        [domainConfig]="domainConfig">
+        [domainConfig]="domainConfig"
+        [chartIds]="getChartIdsForPanel()">
       </app-statistics-panel-2>
     </ng-container>
     <!-- Individual Chart -->

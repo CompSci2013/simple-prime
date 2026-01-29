@@ -56,37 +56,37 @@
             </div>
           </ng-template>
         </ng-container>
-        <!-- Statistics Panel (CDK Mixed Orientation Chart Grid) -->
-        <ng-container *ngIf="panelId === 'statistics-panel-2'">
-          <div *ngIf="!isPanelPoppedOut('statistics-panel-2'); else statsPoppedOut">
+        <!-- Statistics Panel 1 (Manufacturer & Top Models) -->
+        <ng-container *ngIf="panelId === 'statistics-1'">
+          <div *ngIf="!isPanelPoppedOut('statistics-1'); else stats1PoppedOut">
             <app-statistics-panel-2
               [domainConfig]="domainConfig"
+              [chartIds]="getChartIdsForPanel('statistics-1')"
               [isPanelPoppedOut]="isPanelPoppedOut.bind(this)"
               (chartPopOut)="onChartPopOut($event)">
             </app-statistics-panel-2>
           </div>
-          <ng-template #statsPoppedOut>
+          <ng-template #stats1PoppedOut>
             <div class="popout-placeholder">
               <i class="pi pi-external-link"></i>
-              <span>Statistics Panel 2 is open in a separate window</span>
+              <span>Statistics is open in a separate window</span>
             </div>
           </ng-template>
         </ng-container>
-        <!-- Individual Chart Panel -->
-        <ng-container *ngIf="panelId.startsWith('chart-') && getChartDataSource(panelId) as chartDataSource">
-          <div *ngIf="!isPanelPoppedOut(panelId); else chartPoppedOut" class="chart-panel-content">
-            <app-base-chart
-              [dataSource]="chartDataSource"
-              [statistics]="resourceService.statistics$ | async"
-              [highlights]="resourceService.highlights$ | async"
-              [selectedValue]="null"
-              (chartClick)="onStandaloneChartClick($event, chartDataSource)">
-            </app-base-chart>
+        <!-- Statistics Panel 2 (Body Class & Year) -->
+        <ng-container *ngIf="panelId === 'statistics-2'">
+          <div *ngIf="!isPanelPoppedOut('statistics-2'); else stats2PoppedOut">
+            <app-statistics-panel-2
+              [domainConfig]="domainConfig"
+              [chartIds]="getChartIdsForPanel('statistics-2')"
+              [isPanelPoppedOut]="isPanelPoppedOut.bind(this)"
+              (chartPopOut)="onChartPopOut($event)">
+            </app-statistics-panel-2>
           </div>
-          <ng-template #chartPoppedOut>
+          <ng-template #stats2PoppedOut>
             <div class="popout-placeholder">
               <i class="pi pi-external-link"></i>
-              <span>{{ getPanelTitle(panelId) }} is open in a separate window</span>
+              <span>Statistics is open in a separate window</span>
             </div>
           </ng-template>
         </ng-container>
