@@ -33,6 +33,10 @@ export const routes: Routes = [
     loadComponent: () => import('./features/discover/discover.component').then(m => m.DiscoverComponent)
   },
   {
+    path: 'automobiles/discover2',
+    loadComponent: () => import('./features/discover2/discover2.component').then(m => m.Discover2Component)
+  },
+  {
     path: 'agriculture',
     loadComponent: () => import('./features/agriculture/agriculture.component').then(m => m.AgricultureComponent)
   },
