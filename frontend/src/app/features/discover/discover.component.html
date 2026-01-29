@@ -45,36 +45,6 @@
         <!-- Panel Content -->
         @if (!isPanelCollapsed(panelId)) {
           <div>
-            <!-- Query Control -->
-            @if (panelId === 'query-control') {
-              @if (!isPanelPoppedOut('query-control')) {
-                <div>
-                  <app-query-control
-                    [domainConfig]="domainConfig"
-                    (urlParamsChange)="onUrlParamsChange($event)"
-                    (clearAllFilters)="onClearAllFilters()">
-                  </app-query-control>
-                </div>
-              } @else {
-                <div class="popout-placeholder">
-                  <i class="pi pi-external-link"></i>
-                  <span>Query Control is open in a separate window</span>
-                </div>
-              }
-            }
-            <!-- Query Panel (domain-agnostic filter panel) -->
-            @if (panelId === 'query-panel') {
-              @if (!isPanelPoppedOut('query-panel')) {
-                <div>
-                  <app-query-panel [domainConfig]="domainConfig"></app-query-panel>
-                </div>
-              } @else {
-                <div class="popout-placeholder">
-                  <i class="pi pi-external-link"></i>
-                  <span>Query Panel is open in a separate window</span>
-                </div>
-              }
-            }
             <!-- Manufacturer-Model Picker -->
             @if (panelId === 'manufacturer-model-picker') {
               @if (!isPanelPoppedOut('manufacturer-model-picker')) {
@@ -105,32 +75,6 @@
                 <div class="popout-placeholder">
                   <i class="pi pi-external-link"></i>
                   <span>Statistics Panel 2 is open in a separate window</span>
-                </div>
-              }
-            }
-            <!-- Results Table (legacy - kept for backwards compatibility) -->
-            @if (panelId === 'results-table') {
-              @if (!isPanelPoppedOut('results-table')) {
-                <div>
-                  <app-results-table [domainConfig]="domainConfig"></app-results-table>
-                </div>
-              } @else {
-                <div class="popout-placeholder">
-                  <i class="pi pi-external-link"></i>
-                  <span>Results Table is open in a separate window</span>
-                </div>
-              }
-            }
-            <!-- Dynamic Results Table (drag-drop columns, resizable widths) -->
-            @if (panelId === 'basic-results-table') {
-              @if (!isPanelPoppedOut('basic-results-table')) {
-                <div>
-                  <app-dynamic-results-table [domainConfig]="domainConfig"></app-dynamic-results-table>
-                </div>
-              } @else {
-                <div class="popout-placeholder">
-                  <i class="pi pi-external-link"></i>
-                  <span>Results Table is open in a separate window</span>
                 </div>
               }
             }

@@ -26,12 +26,8 @@ import { PopOutContextService } from '../../../framework/services/popout-context
 import { ResourceManagementService } from '../../../framework/services/resource-management.service';
 import { UrlStateService } from '../../../framework/services/url-state.service';
 import { UserPreferencesService } from '../../../framework/services/user-preferences.service';
-import { DynamicResultsTableComponent } from '../../../framework/components/dynamic-results-table/dynamic-results-table.component';
-import { ResultsTableComponent } from '../../../framework/components/results-table/results-table.component';
 import { StatisticsPanel2Component } from '../../../framework/components/statistics-panel-2/statistics-panel-2.component';
 import { BasePickerComponent } from '../../../framework/components/base-picker/base-picker.component';
-import { QueryPanelComponent } from '../../../framework/components/query-panel/query-panel.component';
-import { QueryControlComponent } from '../../../framework/components/query-control/query-control.component';
 import { ChartDataSource } from '../../../framework/components/base-chart/base-chart.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
@@ -116,7 +112,7 @@ import { ButtonModule } from 'primeng/button';
     styleUrls: ['./discover.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ResourceManagementService],
-    imports: [CdkDropList, CdkDrag, CdkDragHandle, ButtonModule, TooltipModule, QueryControlComponent, QueryPanelComponent, BasePickerComponent, StatisticsPanel2Component, ResultsTableComponent, DynamicResultsTableComponent]
+    imports: [CdkDropList, CdkDrag, CdkDragHandle, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component]
 })
 export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   implements OnInit, OnDestroy {
@@ -140,11 +136,8 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
    * Ordered list of panel IDs (defines display order)
    */
   panelOrder: string[] = [
-    'query-control',
-    'query-panel',
     'manufacturer-model-picker',
-    'statistics-panel-2',
-    'basic-results-table'
+    'statistics-panel-2'
   ];
 
   /**
@@ -364,12 +357,8 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
    */
   getPanelTitle(panelId: string): string {
     const titleMap: { [key: string]: string } = {
-      'query-control': 'Query Control',
-      'query-panel': 'Query Panel',
       'manufacturer-model-picker': 'Manufacturer-Model Picker',
-      'statistics-panel-2': 'Statistics',
-      'results-table': 'Results',
-      'basic-results-table': 'Results Table'
+      'statistics-panel-2': 'Statistics'
     };
     return titleMap[panelId] || panelId;
   }
@@ -382,12 +371,8 @@ export class DiscoverComponent<TFilters = any, TData = any, TStatistics = any>
    */
   getPanelType(panelId: string): string {
     const typeMap: { [key: string]: string } = {
-      'query-control': 'query-control',
-      'query-panel': 'query-panel',
       'manufacturer-model-picker': 'picker',
-      'statistics-panel-2': 'statistics-2',
-      'results-table': 'results',
-      'basic-results-table': 'basic-results'
+      'statistics-panel-2': 'statistics-2'
     };
     return typeMap[panelId] || panelId;
   }

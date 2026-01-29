@@ -52,11 +52,8 @@ export class UserPreferencesService {
    * @private
    */
   private readonly DEFAULT_PANEL_ORDER = [
-    'query-control',
-    'query-panel',
     'manufacturer-model-picker',
-    'statistics-panel-2',
-    'basic-results-table'
+    'statistics-panel-2'
   ];
 
   /**
