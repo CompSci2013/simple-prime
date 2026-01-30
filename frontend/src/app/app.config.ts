@@ -1,7 +1,7 @@
-import { ErrorHandler, importProvidersFrom, Injector } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ErrorHandler, Injector } from '@angular/core';
+import { provideRouter } from '@angular/router';
+import { provideHttpClient, withInterceptorsFromDi, HTTP_INTERCEPTORS } from '@angular/common/http';
+import { provideAnimations } from '@angular/platform-browser/animations';
 import { HttpErrorInterceptor } from '../framework/services/http-error.interceptor';
 import { MessageService } from 'primeng/api';
 
@@ -11,26 +11,24 @@ import { DOMAIN_CONFIG } from '../framework/services/domain-config-registry.serv
 import { createAutomobileDomainConfig } from '../domain-config/automobile';
 
 /**
- * Application Configuration (Standalone Bootstrap - Angular 14)
+ * Application Configuration (Standalone Bootstrap - Angular 15)
  *
- * Configures the Generic-Prime application using Angular 14 standalone APIs.
+ * Configures the Generic-Prime application using Angular 15 standalone APIs.
  *
  * Providers:
- * - RouterModule: Configures application routing
- * - HttpClientModule: Enables HTTP communication
+ * - provideRouter: Configures application routing with standalone API
+ * - provideHttpClient: Enables HTTP communication with interceptor support
+ * - provideAnimations: Enables Angular animations for PrimeNG
  * - HTTP_INTERCEPTORS: Global HTTP error handling with HttpErrorInterceptor
- * - BrowserAnimationsModule: Enables Angular animations for PrimeNG
  * - MessageService: PrimeNG toast/message service
  * - GlobalErrorHandler: Application-wide error handling
  * - DOMAIN_CONFIG: Domain configuration factory for automobile domain
  */
 export const appConfig = {
   providers: [
-    importProvidersFrom(
-      RouterModule.forRoot(routes),
-      HttpClientModule,
-      BrowserAnimationsModule
-    ),
+    provideRouter(routes),
+    provideHttpClient(withInterceptorsFromDi()),
+    provideAnimations(),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: HttpErrorInterceptor,

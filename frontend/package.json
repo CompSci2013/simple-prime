@@ -1,6 +1,6 @@
 {
   "name": "frontend",
-  "version": "14.0.0",
+  "version": "15.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
@@ -21,30 +21,30 @@
   },
   "private": true,
   "dependencies": {
-    "@angular/animations": "^14.3.0",
-    "@angular/cdk": "^14.2.7",
-    "@angular/common": "^14.3.0",
-    "@angular/compiler": "^14.3.0",
-    "@angular/core": "^14.3.0",
-    "@angular/forms": "^14.3.0",
-    "@angular/platform-browser": "^14.3.0",
-    "@angular/platform-browser-dynamic": "^14.3.0",
-    "@angular/router": "^14.3.0",
+    "@angular/animations": "^15.2.10",
+    "@angular/cdk": "^15.2.9",
+    "@angular/common": "^15.2.10",
+    "@angular/compiler": "^15.2.10",
+    "@angular/core": "^15.2.10",
+    "@angular/forms": "^15.2.10",
+    "@angular/platform-browser": "^15.2.10",
+    "@angular/platform-browser-dynamic": "^15.2.10",
+    "@angular/router": "^15.2.10",
     "cytoscape": "^3.33.1",
     "cytoscape-dagre": "^2.5.0",
     "dockview": "^4.13.1",
     "katex": "^0.16.27",
     "plotly.js-dist-min": "^2.27.0",
     "primeicons": "^6.0.1",
-    "primeng": "^14.2.3",
-    "rxjs": "^7.5.7",
-    "tslib": "^2.3.0",
-    "zone.js": "~0.11.8"
+    "primeng": "^15.4.1",
+    "rxjs": "^7.8.1",
+    "tslib": "^2.6.2",
+    "zone.js": "~0.12.0"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "^14.2.13",
-    "@angular/cli": "~14.2.13",
-    "@angular/compiler-cli": "^14.3.0",
+    "@angular-devkit/build-angular": "^15.2.11",
+    "@angular/cli": "~15.2.11",
+    "@angular/compiler-cli": "^15.2.10",
     "@compodoc/compodoc": "^1.1.32",
     "@playwright/test": "^1.57.0",
     "@types/cytoscape-dagre": "^2.3.4",
@@ -55,6 +55,6 @@
     "eslint": "^8.57.0",
     "http-server": "^14.1.1",
     "playwright": "^1.57.0",
-    "typescript": "~4.8.4"
+    "typescript": "~4.9.5"
   }
 }
