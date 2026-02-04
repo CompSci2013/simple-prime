@@ -29,10 +29,10 @@
       margin: 0 auto;
 
       .feature-card {
-        background: linear-gradient(135deg, rgba(100, 200, 255, 0.08) 0%, rgba(75, 163, 217, 0.04) 100%);
+        background: linear-gradient(135deg, rgba(76, 175, 80, 0.08) 0%, rgba(56, 142, 60, 0.04) 100%);
         border-radius: 12px;
         padding: 2rem;
-        border: 1px solid rgba(100, 200, 255, 0.15);
+        border: 1px solid rgba(76, 175, 80, 0.15);
         transition: all 0.3s ease;
         text-align: center;
         cursor: pointer;
@@ -51,7 +51,7 @@
           left: 0;
           right: 0;
           height: 3px;
-          background: linear-gradient(90deg, #64c8ff, #4ba3d9);
+          background: linear-gradient(90deg, #4caf50, #388e3c);
           transform: scaleX(0);
           transition: transform 0.3s ease;
           transform-origin: center;
@@ -59,9 +59,9 @@
 
         &:hover {
           transform: translateY(-8px);
-          border-color: rgba(100, 200, 255, 0.3);
-          background: linear-gradient(135deg, rgba(100, 200, 255, 0.15) 0%, rgba(75, 163, 217, 0.08) 100%);
-          box-shadow: 0 15px 40px rgba(100, 200, 255, 0.2);
+          border-color: rgba(76, 175, 80, 0.3);
+          background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(56, 142, 60, 0.08) 100%);
+          box-shadow: 0 15px 40px rgba(76, 175, 80, 0.2);
 
           &::before {
             transform: scaleX(1);
@@ -124,9 +124,9 @@
       }
 
       &:hover {
-        border-color: rgba(100, 200, 255, 0.2);
-        background: linear-gradient(135deg, rgba(100, 200, 255, 0.08) 0%, rgba(75, 163, 217, 0.04) 100%);
-        box-shadow: 0 10px 30px rgba(100, 200, 255, 0.1);
+        border-color: rgba(76, 175, 80, 0.2);
+        background: linear-gradient(135deg, rgba(76, 175, 80, 0.08) 0%, rgba(56, 142, 60, 0.04) 100%);
+        box-shadow: 0 10px 30px rgba(76, 175, 80, 0.1);
         transform: translateY(-4px);
       }
 
@@ -144,7 +144,7 @@
           display: block;
           width: 4px;
           height: 1.4rem;
-          background: linear-gradient(180deg, #64c8ff, #4ba3d9);
+          background: linear-gradient(180deg, #4caf50, #388e3c);
           border-radius: 2px;
         }
       }

@@ -1,0 +1,42 @@
+{
+  "hits": {
+    "total": { "value": 12, "relation": "eq" },
+    "hits": [
+      { "_source": { "crop": "Wheat", "region": "Midwest", "yield_bushels": 52.4, "acres": 1500, "year": 2024 } },
+      { "_source": { "crop": "Corn", "region": "Midwest", "yield_bushels": 178.5, "acres": 2200, "year": 2024 } },
+      { "_source": { "crop": "Soybeans", "region": "Midwest", "yield_bushels": 48.2, "acres": 1800, "year": 2024 } },
+      { "_source": { "crop": "Cotton", "region": "South", "yield_bushels": 875, "acres": 900, "year": 2024 } },
+      { "_source": { "crop": "Rice", "region": "South", "yield_bushels": 7500, "acres": 600, "year": 2024 } },
+      { "_source": { "crop": "Wheat", "region": "Plains", "yield_bushels": 45.8, "acres": 3200, "year": 2024 } },
+      { "_source": { "crop": "Barley", "region": "Northwest", "yield_bushels": 72.1, "acres": 450, "year": 2024 } },
+      { "_source": { "crop": "Oats", "region": "Midwest", "yield_bushels": 64.3, "acres": 320, "year": 2024 } },
+      { "_source": { "crop": "Corn", "region": "Plains", "yield_bushels": 162.0, "acres": 1650, "year": 2024 } },
+      { "_source": { "crop": "Soybeans", "region": "South", "yield_bushels": 42.7, "acres": 1100, "year": 2024 } },
+      { "_source": { "crop": "Sorghum", "region": "Plains", "yield_bushels": 68.9, "acres": 780, "year": 2024 } },
+      { "_source": { "crop": "Sunflowers", "region": "Plains", "yield_bushels": 1450, "acres": 520, "year": 2024 } }
+    ]
+  },
+  "aggregations": {
+    "by_crop": {
+      "buckets": [
+        { "key": "Wheat", "doc_count": 2 },
+        { "key": "Corn", "doc_count": 2 },
+        { "key": "Soybeans", "doc_count": 2 },
+        { "key": "Cotton", "doc_count": 1 },
+        { "key": "Rice", "doc_count": 1 },
+        { "key": "Barley", "doc_count": 1 },
+        { "key": "Oats", "doc_count": 1 },
+        { "key": "Sorghum", "doc_count": 1 },
+        { "key": "Sunflowers", "doc_count": 1 }
+      ]
+    },
+    "by_region": {
+      "buckets": [
+        { "key": "Midwest", "doc_count": 4 },
+        { "key": "Plains", "doc_count": 4 },
+        { "key": "South", "doc_count": 3 },
+        { "key": "Northwest", "doc_count": 1 }
+      ]
+    }
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "hits": {
+    "total": { "value": 8, "relation": "eq" },
+    "hits": [
+      { "_source": { "location": "Farm A", "region": "Midwest", "ph": 6.8, "nitrogen_ppm": 45, "phosphorus_ppm": 32, "potassium_ppm": 180 } },
+      { "_source": { "location": "Farm B", "region": "Midwest", "ph": 7.2, "nitrogen_ppm": 38, "phosphorus_ppm": 28, "potassium_ppm": 165 } },
+      { "_source": { "location": "Farm C", "region": "South", "ph": 6.4, "nitrogen_ppm": 52, "phosphorus_ppm": 41, "potassium_ppm": 210 } },
+      { "_source": { "location": "Farm D", "region": "Plains", "ph": 7.5, "nitrogen_ppm": 35, "phosphorus_ppm": 25, "potassium_ppm": 145 } },
+      { "_source": { "location": "Farm E", "region": "Northwest", "ph": 6.1, "nitrogen_ppm": 58, "phosphorus_ppm": 48, "potassium_ppm": 195 } },
+      { "_source": { "location": "Farm F", "region": "South", "ph": 6.6, "nitrogen_ppm": 42, "phosphorus_ppm": 35, "potassium_ppm": 175 } },
+      { "_source": { "location": "Farm G", "region": "Plains", "ph": 7.0, "nitrogen_ppm": 40, "phosphorus_ppm": 30, "potassium_ppm": 160 } },
+      { "_source": { "location": "Farm H", "region": "Midwest", "ph": 6.9, "nitrogen_ppm": 48, "phosphorus_ppm": 38, "potassium_ppm": 185 } }
+    ]
+  },
+  "aggregations": {
+    "avg_ph": { "value": 6.81 },
+    "avg_nitrogen": { "value": 44.75 },
+    "by_region": {
+      "buckets": [
+        { "key": "Midwest", "doc_count": 3 },
+        { "key": "Plains", "doc_count": 2 },
+        { "key": "South", "doc_count": 2 },
+        { "key": "Northwest", "doc_count": 1 }
+      ]
+    }
+  }
+}
