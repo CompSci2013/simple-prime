@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 
 /**
- * Application Routes Configuration (Angular 21 Lazy Loading)
+ * Application Routes Configuration (Angular 14 Lazy Loading)
  *
  * Defines all routes and navigation paths for the Generic-Prime application.
  * Uses `loadComponent` for lazy loading to improve initial bundle size and
@@ -9,11 +9,9 @@ import { Routes } from '@angular/router';
  *
  * Route Structure:
  * - Root & Home: '', 'home' -> HomeComponent (domain selector landing page)
- * - Automobile: 'automobiles' -> AutomobileComponent, 'automobiles/discover' -> DiscoverComponent
+ * - Automobile: 'automobiles' -> AutomobileComponent, 'automobiles/discover' -> Discover3Component
  * - Agriculture: 'agriculture' -> AgricultureComponent
- * - Developer: 'dependencies' -> DependencyGraphComponent (architecture visualization)
  * - Pop-out: 'panel/:gridId/:panelId/:type' -> PanelPopoutComponent (window synchronization)
- * - Reporting: 'report' -> ReportComponent (test results)
  */
 export const routes: Routes = [
   {
@@ -35,10 +33,6 @@ export const routes: Routes = [
   {
     path: 'agriculture',
     loadComponent: () => import('./features/agriculture/agriculture.component').then(m => m.AgricultureComponent)
-  },
-  {
-    path: 'report',
-    loadComponent: () => import('./features/report/report.component').then(m => m.ReportComponent)
   },
   {
     path: 'panel/:gridId/:panelId/:type',

@@ -22,12 +22,10 @@ import packageJson from '../../package.json';
  * - Renders the application shell with PrimeNG TieredMenu navigation
  * - Registers all domain configuration providers during initialization
  * - Manages domain-specific navigation across 2 domains
- * - Provides access to developer tools (dependency graph, test reports)
  *
  * Navigation Structure:
  * - Automobiles: Home and Discovery interface for vehicle data
  * - Agriculture: Domain entry point for agricultural data (stub)
- * - Developer: Tools for architecture analysis (dependency graph, reports)
  *
  * Domain Integration:
  * Initializes DomainConfigRegistry with all available domain providers, enabling
@@ -38,7 +36,7 @@ import packageJson from '../../package.json';
  * @selector app-root
  * @remarks
  * This component uses PrimeNG's TieredMenu for nested navigation with flyout submenus.
- * Each domain has Home, Discover, and Reports options where applicable.
+ * Each domain has Home and Discover options.
  *
  * @see DomainConfigRegistry - Service managing domain configurations
  * @see MenuItem - PrimeNG menu item structure
@@ -65,8 +63,7 @@ export class AppComponent implements OnInit, OnDestroy {
       icon: '🚗',
       items: [
         { label: 'Autos Home', icon: '🏠', routerLink: ['/automobiles'] },
-        { label: 'Autos Discover', icon: '🔍', routerLink: ['/automobiles/discover'] },
-        { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
+        { label: 'Autos Discover', icon: '🔍', routerLink: ['/automobiles/discover'] }
       ]
     },
     {
@@ -74,15 +71,7 @@ export class AppComponent implements OnInit, OnDestroy {
       icon: '🌾',
       items: [
         { label: 'Agriculture Home', icon: '🏠', routerLink: ['/agriculture'] },
-        { label: 'Agriculture Discover', icon: '🔍', routerLink: ['/agriculture/discover'] },
-        { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
-      ]
-    },
-    {
-      label: 'Developer',
-      icon: '⚙️',
-      items: [
-        { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
+        { label: 'Agriculture Discover', icon: '🔍', routerLink: ['/agriculture/discover'] }
       ]
     }
   ];
@@ -113,17 +102,5 @@ export class AppComponent implements OnInit, OnDestroy {
     this.menu.toggle(event);
   }
 
-  /**
-   * Opens Playwright test reports in a new browser tab
-   *
-   * Navigates to the '/report' route and displays it in a new window.
-   * Called from the "View Test Reports" menu items across all domains.
-   *
-   * @public
-   * @returns {void}
-   */
-  openTestReports(): void {
-    window.open('/report', '_blank');
-  }
 }
 
