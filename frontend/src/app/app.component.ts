@@ -66,8 +66,6 @@ export class AppComponent implements OnInit, OnDestroy {
       items: [
         { label: 'Autos Home', icon: '🏠', routerLink: ['/automobiles'] },
         { label: 'Autos Discover', icon: '🔍', routerLink: ['/automobiles/discover'] },
-        { label: 'Autos Discover 2', icon: '🔍', routerLink: ['/automobiles/discover2'] },
-        { label: 'Autos Discover 3', icon: '🔍', routerLink: ['/automobiles/discover3'] },
         { label: 'View Test Reports', icon: '📋', command: () => this.openTestReports() }
       ]
     },

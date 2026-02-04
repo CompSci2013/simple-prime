@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 /**
  * Automobile Component - Automobile Domain Landing Page
@@ -29,7 +29,7 @@ import { RouterLink } from '@angular/router';
     templateUrl: './automobile.component.html',
     styleUrls: ['./automobile.component.scss'],
     standalone: true,
-    imports: [RouterLink]
+    imports: [RouterModule]
 })
 export class AutomobileComponent {
 

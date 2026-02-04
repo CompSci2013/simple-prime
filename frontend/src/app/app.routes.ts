@@ -30,14 +30,6 @@ export const routes: Routes = [
   },
   {
     path: 'automobiles/discover',
-    loadComponent: () => import('./features/discover/discover.component').then(m => m.DiscoverComponent)
-  },
-  {
-    path: 'automobiles/discover2',
-    loadComponent: () => import('./features/discover2/discover2.component').then(m => m.Discover2Component)
-  },
-  {
-    path: 'automobiles/discover3',
     loadComponent: () => import('./features/discover3/discover3.component').then(m => m.Discover3Component)
   },
   {

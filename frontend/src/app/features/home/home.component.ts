@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 /**
  * Home Component - Landing Page
@@ -19,7 +20,7 @@ import { RouterLink } from '@angular/router';
     templateUrl: './home.component.html',
     styleUrls: ['./home.component.scss'],
     standalone: true,
-    imports: [RouterLink]
+    imports: [CommonModule, RouterModule]
 })
 export class HomeComponent {
 }

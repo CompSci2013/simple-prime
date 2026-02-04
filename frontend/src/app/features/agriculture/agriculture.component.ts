@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterModule } from '@angular/router';
 
 /**
  * Agriculture Component - Agricultural Domain Page
@@ -23,7 +23,7 @@ import { RouterLink } from '@angular/router';
     templateUrl: './agriculture.component.html',
     styleUrls: ['./agriculture.component.scss'],
     standalone: true,
-    imports: [RouterLink]
+    imports: [RouterModule]
 })
 export class AgricultureComponent {
 
