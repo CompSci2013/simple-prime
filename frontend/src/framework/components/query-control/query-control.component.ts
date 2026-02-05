@@ -157,6 +157,13 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
   selectedOptions: (string | number)[] = [];
   searchQuery = '';
 
+  /**
+   * Keyboard navigation state for multiselect listbox
+   * Tracks the currently focused option index (separate from selection)
+   * WAI-ARIA: In multiselect, focus and selection are decoupled
+   */
+  focusedOptionIndex = -1;
+
   // ==================== Range Dialog State ====================
 
   showRangeDialog = false;
@@ -412,8 +419,9 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
       this.selectedOptions = [...existingFilter.values];
     }
 
-    // Load options from API
+    // Load options - either from API endpoint or from static transformer
     if (filterDef.optionsEndpoint) {
+      // Fetch from API, then optionally transform
       this.apiService.get(filterDef.optionsEndpoint).subscribe({
         next: (response) => {
           this.allOptions = filterDef.optionsTransformer?.(response) || [];
@@ -428,6 +436,18 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
           this.cdr.markForCheck();
         }
       });
+    } else if (filterDef.optionsTransformer) {
+      // No endpoint - use transformer directly for static options
+      this.allOptions = filterDef.optionsTransformer(null) || [];
+      this.filteredOptions = [...this.allOptions];
+      this.loadingOptions = false;
+      this.optionsError = null;
+      this.cdr.markForCheck();
+    } else {
+      // No options source configured
+      this.loadingOptions = false;
+      this.optionsError = 'No options configured for this filter.';
+      this.cdr.markForCheck();
     }
   }
 
@@ -436,23 +456,181 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
    * This is called by PrimeNG's (onShow) event after dialog is fully rendered
    */
   onMultiselectDialogShow(): void {
+    // Initialize focus to first option for keyboard navigation
+    this.focusedOptionIndex = this.filteredOptions.length > 0 ? 0 : -1;
+
     // Focus the search input field so users can immediately start typing
+    // Keyboard navigation will work from the search input
     if (this.searchInput && this.searchInput.nativeElement) {
-      // Use setTimeout to ensure the dialog is fully rendered before focusing
       setTimeout(() => {
         this.searchInput.nativeElement.focus();
       }, 0);
     }
+    this.cdr.markForCheck();
   }
 
   /**
    * Search options in multiselect dialog
+   * Resets focus to first option when search changes
    */
   onSearchChange(query: string): void {
     const lowerQuery = query.toLowerCase();
     this.filteredOptions = this.allOptions.filter(opt =>
       opt.label.toLowerCase().includes(lowerQuery)
     );
+    // Reset focus to first option when search results change
+    this.focusedOptionIndex = this.filteredOptions.length > 0 ? 0 : -1;
+    this.cdr.markForCheck();
+  }
+
+  // ==================== Keyboard Navigation (WAI-ARIA Listbox) ====================
+
+  /**
+   * Handle keyboard events for multiselect listbox navigation
+   * Follows WAI-ARIA Listbox Pattern: https://www.w3.org/WAI/ARIA/apg/patterns/listbox/
+   *
+   * Key bindings:
+   * - Arrow Down: Move focus to next option
+   * - Arrow Up: Move focus to previous option
+   * - Home: Move focus to first option
+   * - End: Move focus to last option
+   * - Space: Toggle selection of focused option
+   * - Enter: Apply filter and close dialog
+   * - Escape: Cancel and close dialog (handled by PrimeNG dialog)
+   */
+  onOptionsKeydown(event: KeyboardEvent): void {
+    if (this.loadingOptions || this.optionsError || this.filteredOptions.length === 0) {
+      return;
+    }
+
+    switch (event.key) {
+      case 'ArrowDown':
+        event.preventDefault();
+        this.moveFocus(1);
+        break;
+
+      case 'ArrowUp':
+        event.preventDefault();
+        this.moveFocus(-1);
+        break;
+
+      case 'Home':
+        event.preventDefault();
+        this.focusedOptionIndex = 0;
+        this.scrollFocusedOptionIntoView();
+        this.cdr.markForCheck();
+        break;
+
+      case 'End':
+        event.preventDefault();
+        this.focusedOptionIndex = this.filteredOptions.length - 1;
+        this.scrollFocusedOptionIntoView();
+        this.cdr.markForCheck();
+        break;
+
+      case ' ':
+        // Space toggles selection of focused option
+        event.preventDefault();
+        this.toggleFocusedOption();
+        break;
+
+      case 'Enter':
+        // Enter applies filter if selections exist
+        event.preventDefault();
+        if (this.selectedOptions.length > 0) {
+          this.applyFilter();
+        }
+        break;
+    }
+  }
+
+  /**
+   * Move focus by delta (positive = down, negative = up)
+   * Wraps around at boundaries
+   */
+  private moveFocus(delta: number): void {
+    if (this.filteredOptions.length === 0) return;
+
+    let newIndex = this.focusedOptionIndex + delta;
+
+    // Wrap around
+    if (newIndex < 0) {
+      newIndex = this.filteredOptions.length - 1;
+    } else if (newIndex >= this.filteredOptions.length) {
+      newIndex = 0;
+    }
+
+    this.focusedOptionIndex = newIndex;
+    this.scrollFocusedOptionIntoView();
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Toggle selection state of the currently focused option
+   * WAI-ARIA: Space key toggles selection without moving focus
+   */
+  private toggleFocusedOption(): void {
+    if (this.focusedOptionIndex < 0 || this.focusedOptionIndex >= this.filteredOptions.length) {
+      return;
+    }
+
+    const option = this.filteredOptions[this.focusedOptionIndex];
+    const value = option.value;
+    const index = this.selectedOptions.indexOf(value);
+
+    if (index === -1) {
+      // Add to selection
+      this.selectedOptions = [...this.selectedOptions, value];
+    } else {
+      // Remove from selection
+      this.selectedOptions = this.selectedOptions.filter(v => v !== value);
+    }
+
+    this.cdr.markForCheck();
+  }
+
+  /**
+   * Scroll the focused option into view within the options list
+   */
+  private scrollFocusedOptionIntoView(): void {
+    // Use setTimeout to ensure DOM has updated
+    setTimeout(() => {
+      const optionElement = document.querySelector(
+        `.options-list .option-item[data-index="${this.focusedOptionIndex}"]`
+      );
+      if (optionElement) {
+        optionElement.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+      }
+    }, 0);
+  }
+
+  /**
+   * Check if an option is currently focused
+   */
+  isOptionFocused(index: number): boolean {
+    return this.focusedOptionIndex === index;
+  }
+
+  /**
+   * Check if an option is currently selected
+   */
+  isOptionSelected(value: string | number): boolean {
+    return this.selectedOptions.includes(value);
+  }
+
+  /**
+   * Handle click on an option item - toggle selection and set focus
+   */
+  onOptionClick(index: number, value: string | number): void {
+    this.focusedOptionIndex = index;
+    const selIndex = this.selectedOptions.indexOf(value);
+
+    if (selIndex === -1) {
+      this.selectedOptions = [...this.selectedOptions, value];
+    } else {
+      this.selectedOptions = this.selectedOptions.filter(v => v !== value);
+    }
+
     this.cdr.markForCheck();
   }
 

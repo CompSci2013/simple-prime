@@ -7,7 +7,6 @@
   .discover-header {
     text-align: center;
     margin-bottom: 2rem;
-    animation: fadeInDown 0.6s ease-out;
 
     h1 {
       font-size: 2.5rem;
@@ -27,47 +26,12 @@
     }
   }
 
-  .filters-panel {
-    display: flex;
-    gap: 1.5rem;
-    align-items: flex-end;
-    flex-wrap: wrap;
+  .query-control-panel {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.08);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 1rem;
     margin-bottom: 2rem;
-    animation: fadeInUp 0.6s ease-out 0.1s both;
-
-    .filter-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-
-      label {
-        font-size: 0.875rem;
-        color: #b0b0b0;
-        font-weight: 500;
-      }
-
-      ::ng-deep .filter-dropdown {
-        min-width: 180px;
-
-        .p-dropdown {
-          background: rgba(255, 255, 255, 0.05);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          color: #ffffff;
-
-          &:hover {
-            border-color: rgba(76, 175, 80, 0.4);
-          }
-
-          .p-dropdown-label {
-            color: #ffffff;
-          }
-        }
-      }
-    }
   }
 
   .statistics-row {
@@ -75,7 +39,6 @@
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
-    animation: fadeInUp 0.6s ease-out 0.2s both;
 
     .stat-card {
       display: flex;
@@ -115,94 +78,49 @@
     }
   }
 
+  // Shared panel styles
+  .table-panel,
+  .chart-panel {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    overflow: hidden;
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.02);
+
+      h2 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      .panel-actions {
+        display: flex;
+        gap: 0.5rem;
+      }
+
+      .record-count {
+        font-size: 0.875rem;
+        color: #b0b0b0;
+      }
+    }
+  }
+
   .content-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 2rem;
     margin-bottom: 2rem;
-    animation: fadeInUp 0.6s ease-out 0.3s both;
 
     @media (max-width: 1024px) {
       grid-template-columns: 1fr;
-    }
-
-    .table-panel,
-    .chart-panel {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      border-radius: 12px;
-      overflow: hidden;
-
-      .panel-header {
-        padding: 1rem 1.5rem;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        background: rgba(255, 255, 255, 0.02);
-
-        h2 {
-          margin: 0;
-          font-size: 1.2rem;
-          font-weight: 600;
-          color: #ffffff;
-        }
-      }
-    }
-
-    .table-panel {
-      ::ng-deep {
-        .p-datatable {
-          background: transparent;
-
-          .p-datatable-header {
-            background: transparent;
-            border: none;
-          }
-
-          .p-datatable-thead > tr > th {
-            background: rgba(255, 255, 255, 0.05);
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.08);
-            font-weight: 600;
-          }
-
-          .p-datatable-tbody > tr {
-            background: transparent;
-            color: #e0e0e0;
-
-            &:hover {
-              background: rgba(76, 175, 80, 0.08);
-            }
-
-            > td {
-              border-color: rgba(255, 255, 255, 0.05);
-            }
-          }
-
-          .p-paginator {
-            background: rgba(255, 255, 255, 0.02);
-            border-color: rgba(255, 255, 255, 0.08);
-            color: #b0b0b0;
-
-            .p-paginator-element {
-              color: #b0b0b0;
-
-              &:hover {
-                background: rgba(76, 175, 80, 0.15);
-              }
-
-              &.p-highlight {
-                background: rgba(76, 175, 80, 0.3);
-                color: #ffffff;
-              }
-            }
-          }
-        }
-
-        .empty-message {
-          text-align: center;
-          color: #888;
-          padding: 2rem;
-        }
-      }
     }
 
     .chart-panel {
@@ -213,16 +131,79 @@
         align-items: center;
         justify-content: center;
 
-        ::ng-deep canvas {
-          max-height: 100%;
+        ::ng-deep {
+          app-base-chart {
+            width: 100%;
+            height: 100%;
+          }
         }
+      }
+    }
+  }
+
+  // Standalone table panel (outside grid)
+  > .table-panel {
+    margin-bottom: 2rem;
+
+    ::ng-deep {
+      .p-datatable {
+        background: transparent;
+
+        .p-datatable-header {
+          background: transparent;
+          border: none;
+        }
+
+        .p-datatable-thead > tr > th {
+          background: rgba(255, 255, 255, 0.05);
+          color: #ffffff;
+          border-color: rgba(255, 255, 255, 0.08);
+          font-weight: 600;
+        }
+
+        .p-datatable-tbody > tr {
+          background: transparent;
+          color: #e0e0e0;
+
+          &:hover {
+            background: rgba(76, 175, 80, 0.08);
+          }
+
+          > td {
+            border-color: rgba(255, 255, 255, 0.05);
+          }
+        }
+
+        .p-paginator {
+          background: rgba(255, 255, 255, 0.02);
+          border-color: rgba(255, 255, 255, 0.08);
+          color: #b0b0b0;
+
+          .p-paginator-element {
+            color: #b0b0b0;
+
+            &:hover {
+              background: rgba(76, 175, 80, 0.15);
+            }
+
+            &.p-highlight {
+              background: rgba(76, 175, 80, 0.3);
+              color: #ffffff;
+            }
+          }
+        }
+      }
+
+      .empty-message {
+        text-align: center;
+        color: #888;
+        padding: 2rem;
       }
     }
   }
 
   .back-link {
     text-align: center;
-    animation: fadeInUp 0.6s ease-out 0.4s both;
 
     .back-button {
       display: inline-block;
@@ -244,28 +225,6 @@
   }
 }
 
-/* Animations */
-@keyframes fadeInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -276,20 +235,11 @@
       font-size: 1.8rem;
     }
 
-    .filters-panel {
-      flex-direction: column;
-      align-items: stretch;
-
-      .filter-group {
-        width: 100%;
-
-        ::ng-deep .filter-dropdown {
-          min-width: 100%;
-        }
-      }
+    .statistics-row {
+      grid-template-columns: 1fr;
     }
 
-    .statistics-row {
+    .content-grid {
       grid-template-columns: 1fr;
     }
   }

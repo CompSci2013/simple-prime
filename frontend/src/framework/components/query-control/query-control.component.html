@@ -15,6 +15,7 @@
       optionLabel="label"
       optionValue="value"
       styleClass="filter-field-dropdown"
+      appendTo="body"
       [attr.data-testid]="environment.includeTestIds ? 'filter-field-dropdown' : null">
     </p-dropdown>
     <p-button
@@ -88,7 +89,7 @@
 
     <p class="dialog-subtitle">{{ multiselectDialogSubtitle }}</p>
 
-    <!-- Search Box -->
+    <!-- Search Box with keyboard navigation -->
     <div *ngIf="!loadingOptions && !optionsError" class="p-input-icon-left search-box">
       <i class="pi pi-search"></i>
       <input
@@ -98,7 +99,13 @@
         [(ngModel)]="searchQuery"
         [placeholder]="currentFilterDef?.searchPlaceholder || 'Search...'"
         (ngModelChange)="onSearchChange($event)"
+        (keydown)="onOptionsKeydown($event)"
         class="w-full"
+        role="combobox"
+        aria-autocomplete="list"
+        [attr.aria-expanded]="filteredOptions.length > 0"
+        [attr.aria-controls]="'options-listbox'"
+        [attr.aria-activedescendant]="focusedOptionIndex >= 0 ? 'option-' + focusedOptionIndex : null"
         />
     </div>
 
@@ -120,16 +127,28 @@
       </p-button>
     </div>
 
-    <!-- Options List -->
-    <div *ngIf="!loadingOptions && !optionsError" class="options-list">
-      <div *ngFor="let option of filteredOptions; let i = index" class="option-item">
-        <p-checkbox
-          [(ngModel)]="selectedOptions"
-          [value]="option.value"
-          [binary]="false"
-          [inputId]="'option-' + i">
-        </p-checkbox>
-        <label [for]="'option-' + i">{{ option.label }}</label>
+    <!-- Options List (WAI-ARIA Multiselect Listbox) -->
+    <div
+      *ngIf="!loadingOptions && !optionsError"
+      class="options-list"
+      role="listbox"
+      id="options-listbox"
+      aria-multiselectable="true"
+      [attr.aria-label]="currentFilterDef?.label + ' options'">
+      <div
+        *ngFor="let option of filteredOptions; let i = index"
+        class="option-item"
+        [class.focused]="isOptionFocused(i)"
+        [class.selected]="isOptionSelected(option.value)"
+        [attr.data-index]="i"
+        [id]="'option-' + i"
+        role="option"
+        [attr.aria-selected]="isOptionSelected(option.value)"
+        (click)="onOptionClick(i, option.value)">
+        <span class="option-checkbox" [class.checked]="isOptionSelected(option.value)">
+          <i *ngIf="isOptionSelected(option.value)" class="pi pi-check"></i>
+        </span>
+        <span class="option-label">{{ option.label }}</span>
       </div>
       <div *ngIf="filteredOptions.length === 0" class="no-results">
         <p>No options found</p>
@@ -167,6 +186,7 @@
     [closeOnEscape]="true"
     [draggable]="false"
     [resizable]="false"
+    styleClass="query-control-range-dialog"
     (onShow)="onRangeDialogShow()"
     (onHide)="onDialogHide()">
 

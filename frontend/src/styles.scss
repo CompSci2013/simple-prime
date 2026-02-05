@@ -37,3 +37,51 @@ html.popout-html {
     height: 100vh !important;
   }
 }
+
+
+// Query Control Range Dialog Styles
+// These need to be global because PrimeNG dialogs append to body
+.query-control-range-dialog {
+  // Fix dialog content height - ensure content area expands to fit children
+  .p-dialog-content {
+    overflow: visible !important;
+    height: auto !important;
+    min-height: fit-content;
+  }
+
+  .range-inputs {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1rem;
+
+    .p-field {
+      display: flex;
+      flex-direction: column;
+
+      label {
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: #ffffff;
+      }
+
+      p-inputnumber {
+        width: 100%;
+
+        .p-inputnumber {
+          width: 100%;
+        }
+
+        input {
+          width: 100%;
+        }
+      }
+    }
+  }
+
+  .dialog-subtitle {
+    margin: 0 0 1rem 0;
+    color: #cccccc;
+    font-size: 0.95rem;
+  }
+}

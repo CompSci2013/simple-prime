@@ -4,7 +4,7 @@ test.describe('Agriculture Module Tests', () => {
 
   // Helper to navigate via Angular router
   async function navigateToAgriculture(page: any) {
-    await page.goto('http://localhost:4200/');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
     await page.locator('a.domain-card', { hasText: 'Agriculture' }).click({ force: true });
     await page.waitForTimeout(1000);
@@ -17,7 +17,7 @@ test.describe('Agriculture Module Tests', () => {
   }
 
   test('Home page Agriculture button has correct href', async ({ page }) => {
-    await page.goto('http://localhost:4200/');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
 
     const agricultureCard = page.locator('a.domain-card', { hasText: 'Agriculture' });
@@ -78,32 +78,50 @@ test.describe('Agriculture Module Tests', () => {
     await navigateToAgricultureDiscover(page);
     await page.waitForTimeout(500);
 
-    // Get initial record count
-    const statsValue = page.locator('.stat-value').first();
+    // Get initial record count from stats panel
+    const statsValue = page.locator('[ref=e28]').or(page.locator('.stat-value').first());
     const initialCount = await statsValue.textContent();
     console.log('Initial count:', initialCount);
+    expect(initialCount).toBe('12');
 
-    // Click region dropdown
-    const regionDropdown = page.locator('#regionFilter').locator('..').locator('.p-dropdown');
-    await regionDropdown.click({ force: true });
+    // Click the Query Control dropdown to add a filter
+    const queryControlDropdown = page.locator('app-query-control .p-dropdown').first();
+    await queryControlDropdown.click({ force: true });
     await page.waitForTimeout(300);
 
-    // Select Midwest
-    const midwestOption = page.locator('.p-dropdown-item', { hasText: 'Midwest' });
-    if (await midwestOption.count() > 0) {
-      await midwestOption.click({ force: true });
-      await page.waitForTimeout(500);
+    // Select "Region" from the filter field options
+    const regionOption = page.locator('.p-dropdown-item', { hasText: 'Region' });
+    await regionOption.click({ force: true });
+    await page.waitForTimeout(500);
 
-      // Check count changed
-      const filteredCount = await statsValue.textContent();
-      console.log('Filtered count:', filteredCount);
-      // Midwest has 4 records, total is 12
-      expect(filteredCount).not.toBe(initialCount);
+    // A dialog should open for selecting region values
+    const dialog = page.locator('.p-dialog');
+    await expect(dialog).toBeVisible({ timeout: 5000 });
+
+    // Select Midwest from the dialog's multiselect options
+    const midwestCheckbox = dialog.locator('.p-checkbox', { hasText: 'Midwest' }).first()
+      .or(dialog.locator('label', { hasText: 'Midwest' }));
+    await midwestCheckbox.click({ force: true });
+    await page.waitForTimeout(300);
+
+    // Apply the filter
+    const applyButton = dialog.locator('button', { hasText: /apply|ok|save/i });
+    if (await applyButton.count() > 0) {
+      await applyButton.click({ force: true });
     }
+    await page.waitForTimeout(500);
+
+    // Verify URL has filter parameters (URL-First behavior)
+    expect(page.url()).toContain('region=');
+
+    // The count should have changed (Midwest has 4 records)
+    const filteredCount = await statsValue.textContent();
+    console.log('Filtered count:', filteredCount);
+    expect(filteredCount).not.toBe('12');
   });
 
   test('Menu navigation works for Agriculture', async ({ page }) => {
-    await page.goto('http://localhost:4200/');
+    await page.goto('/');
     await page.waitForLoadState('networkidle');
 
     // Open domains menu

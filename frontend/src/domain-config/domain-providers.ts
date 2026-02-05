@@ -1,5 +1,6 @@
 import { Provider } from '@angular/core';
 import { DOMAIN_PROVIDER as automobileDomainProvider } from './automobile';
+import { AGRICULTURE_DOMAIN_PROVIDER as agricultureDomainProvider } from './agriculture';
 
 /**
  * Array of all domain configuration providers.
@@ -20,4 +21,5 @@ import { DOMAIN_PROVIDER as automobileDomainProvider } from './automobile';
  */
 export const DOMAIN_PROVIDERS: Provider[] = [
   automobileDomainProvider,
+  agricultureDomainProvider,
 ];
