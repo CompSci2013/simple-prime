@@ -26,6 +26,7 @@ import { StatisticsPanel2Component } from '../../../framework/components/statist
 import { DockviewStatisticsPanelComponent } from '../../../framework/components/dockview-statistics-panel/dockview-statistics-panel.component';
 import { BasePickerComponent } from '../../../framework/components/base-picker/base-picker.component';
 import { BaseChartComponent } from '../../../framework/components/base-chart/base-chart.component';
+import { DynamicResultsTableComponent } from '../../../framework/components/dynamic-results-table/dynamic-results-table.component';
 
 @Component({
     selector: 'app-panel-popout',
@@ -37,7 +38,7 @@ import { BaseChartComponent } from '../../../framework/components/base-chart/bas
         ResourceManagementService,
         { provide: IS_POPOUT_TOKEN, useValue: true }
     ],
-    imports: [CommonModule, BasePickerComponent, StatisticsPanel2Component, DockviewStatisticsPanelComponent, BaseChartComponent]
+    imports: [CommonModule, BasePickerComponent, StatisticsPanel2Component, DockviewStatisticsPanelComponent, BaseChartComponent, DynamicResultsTableComponent]
 })
 export class PanelPopoutComponent implements OnInit, OnDestroy {
   gridId: string = '';

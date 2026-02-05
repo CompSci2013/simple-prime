@@ -4,15 +4,25 @@ import { RouterModule, Routes } from '@angular/router';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 
+// PrimeNG Modules
 import { TableModule } from 'primeng/table';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
-import { ChartModule } from 'primeng/chart';
+import { TooltipModule } from 'primeng/tooltip';
 
+// Framework Components (Standalone - imported as modules in NgModule pattern)
+import { StatisticsPanel2Component } from '../../../framework/components/statistics-panel-2/statistics-panel-2.component';
+import { BaseChartComponent } from '../../../framework/components/base-chart/base-chart.component';
+import { QueryControlComponent } from '../../../framework/components/query-control/query-control.component';
+import { DynamicResultsTableComponent } from '../../../framework/components/dynamic-results-table/dynamic-results-table.component';
+
+// Domain Configuration
+import { AGRICULTURE_DOMAIN_PROVIDER } from '../../../domain-config/agriculture';
+
+// Local Components
 import { AgricultureHomeComponent } from './agriculture-home.component';
 import { AgricultureDiscoverComponent } from './agriculture-discover/agriculture-discover.component';
-import { AgricultureDataService } from './services/agriculture-data.service';
 
 /**
  * Agriculture Feature Module (NgModule Pattern - Angular 13 Style)
@@ -32,8 +42,15 @@ import { AgricultureDataService } from './services/agriculture-data.service';
  * standalone components as a modernization test, creating a hybrid
  * application architecture.
  *
+ * Framework Integration Note:
+ * Although this module uses NgModule pattern, it integrates with the Generic
+ * Discovery Framework using the same URL-First architecture as the standalone
+ * Automobile domain. The framework components (StatisticsPanel2, BaseChart,
+ * QueryControl) are standalone components imported into this NgModule.
+ *
  * @NgModule
  * @since 1.0 (Original Angular 13 implementation)
+ * @updated 2.0 (Framework integration with URL-First architecture)
  */
 const routes: Routes = [
   {
@@ -61,10 +78,17 @@ const routes: Routes = [
     DropdownModule,
     ButtonModule,
     CardModule,
-    ChartModule
+    TooltipModule,
+    // Framework Components (standalone components imported as modules)
+    StatisticsPanel2Component,
+    BaseChartComponent,
+    QueryControlComponent,
+    DynamicResultsTableComponent
   ],
   providers: [
-    AgricultureDataService
+    // Domain configuration provider - makes DOMAIN_CONFIG available
+    // throughout this module via dependency injection
+    AGRICULTURE_DOMAIN_PROVIDER
   ]
 })
 export class AgricultureModule { }

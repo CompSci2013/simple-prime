@@ -7,7 +7,7 @@ This document catalogs all UI controls on the Discover pages and identifies whet
 | Page | Route | Component | Angular Pattern |
 |------|-------|-----------|-----------------|
 | Agriculture Discover | `/agriculture/discover` | `agriculture-discover.component` | NgModule (Angular 13) |
-| Automobile Discover | `/automobiles/discover` | `discover3.component` | Standalone (Angular 14+) |
+| Automobile Discover | `/automobiles/discover` | `automobile-discover.component` | Standalone (Angular 14+) |
 
 ---
 
@@ -31,6 +31,7 @@ This document catalogs all UI controls on the Discover pages and identifies whet
 | **Dockview Statistics Panel** | Automobile Discover | Framework | `app-dockview-statistics-panel` | Tabbed chart container |
 | **Body Class Chart** | Automobile Discover | Framework | `app-base-chart` | "Vehicles by Body Class" |
 | **Year Chart** | Automobile Discover | Framework | `app-base-chart` | "Vehicles by Year" |
+| **Results Table** | Automobile Discover | Framework | `app-dynamic-results-table` | Vehicle data table with drag-drop columns |
 | **Draggable Panels** | Automobile Discover | Domain-Specific | Angular CDK `cdkDropList` | Panel reordering |
 | **Panel Collapse Toggle** | Automobile Discover | Domain-Specific | `pButton` (PrimeNG) | Expand/collapse panel |
 | **Panel Pop-out Button** | Automobile Discover | Domain-Specific | `pButton` (PrimeNG) | Pop panel to separate window |
@@ -110,7 +111,7 @@ Each domain implements its own statistics display. A framework `app-statistics-p
 
 ### Data Table
 
-The data table uses PrimeNG `p-table` **directly** in the domain component, not through a framework wrapper:
+**Agriculture Discover** uses PrimeNG `p-table` **directly** in the domain component:
 
 ```html
 <p-table
@@ -120,7 +121,15 @@ The data table uses PrimeNG `p-table` **directly** in the domain component, not 
   ...>
 ```
 
-Framework alternatives exist (`app-results-table`, `app-dynamic-results-table`) but are not used in the Discover page layout.
+**Automobile Discover** uses the framework component `app-dynamic-results-table`:
+
+```html
+<app-dynamic-results-table [domainConfig]="domainConfig"></app-dynamic-results-table>
+```
+
+Framework table components available:
+- `app-results-table` - Basic table with sorting/pagination
+- `app-dynamic-results-table` - Advanced table with drag-drop columns, resizable widths
 
 ---
 
@@ -131,8 +140,8 @@ Framework alternatives exist (`app-results-table`, `app-dynamic-results-table`) 
 | Filter Management | `app-query-control` | - |
 | Filter Dialogs | Multiselect, Range (in query-control) | - |
 | Charts | `app-base-chart` | Chart config/placement |
-| Statistics | - | Custom cards layout |
-| Data Table | `app-results-table` (available) | Direct `p-table` usage |
+| Statistics | `app-statistics-panel-2` | Custom cards layout (Agriculture) |
+| Data Table | `app-dynamic-results-table` (Automobile) | Direct `p-table` usage (Agriculture) |
 | Pop-out | Popout service (framework) | Pop-out buttons |
 | Navigation | - | Back link, routing |
 
@@ -156,9 +165,20 @@ src/app/features/agriculture/agriculture-discover/
 ├── agriculture-discover.component.html   # Domain-specific layout
 └── agriculture-discover.component.scss
 
+src/app/features/automobile/automobile-discover/
+├── automobile-discover.component.ts
+├── automobile-discover.component.html    # Domain-specific layout
+└── automobile-discover.component.scss
+
 src/domain-config/agriculture/
 ├── configs/
 │   └── agriculture.query-control-filters.ts  # Filter definitions
 └── adapters/
     └── agriculture-api.adapter.ts            # Data fetching
+
+src/domain-config/automobile/
+├── configs/
+│   └── automobile.picker-configs.ts          # Picker configurations
+└── adapters/
+    └── automobile-api.adapter.ts             # Data fetching
 ```

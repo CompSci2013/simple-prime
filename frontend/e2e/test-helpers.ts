@@ -11,32 +11,36 @@ import { Page, Locator } from '@playwright/test';
 
 /**
  * Navigate to the automobile discover page and wait for it to load
+ *
+ * Note: Automobile discover page has panels for statistics, charts, picker, and results table.
+ * It does NOT have query-control (that's Agriculture-only).
  */
 export async function navigateToDiscover(page: Page): Promise<void> {
   await page.goto('/automobiles/discover');
-  
+
   // Wait for the main container to load
   await page.waitForSelector('.discover-container', { timeout: 15000 });
-  
-  // Ensure Query Control panel is visible and expanded
-  const panel = page.locator('#panel-query-control');
-  await panel.waitFor({ timeout: 10000 });
-  
-  const expandButton = panel.locator('.panel-actions button').first();
+
+  // Wait for panels container to be ready
+  await page.waitForSelector('.panels-container', { timeout: 10000 });
+
+  // Wait for results table panel to be present (may be collapsed)
+  const resultsPanel = page.locator('#panel-results-table');
+  await resultsPanel.waitFor({ timeout: 10000 });
+
+  // Expand results table panel if collapsed
+  const expandButton = resultsPanel.locator('.panel-actions button').first();
   const buttonHtml = await expandButton.innerHTML();
-  
+
   if (buttonHtml.includes('pi-chevron-right')) {
-    console.log('[DEBUG] Query Control panel is collapsed, expanding...');
+    console.log('[DEBUG] Results Table panel is collapsed, expanding...');
     await expandButton.click();
     await page.waitForTimeout(500);
   }
-  
-  // Wait for the query control content to be visible
-  await page.waitForSelector('.query-control-panel, [data-testid="query-control-panel"]', { timeout: 10000 });
-  
-  // Wait for dropdown to be ready
-  await page.waitForSelector('.filter-field-dropdown, .p-dropdown', { timeout: 5000 });
-  
+
+  // Wait for table to be visible
+  await page.waitForSelector('app-dynamic-results-table, .p-datatable', { timeout: 10000 });
+
   // Give Angular time to finish rendering
   await page.waitForTimeout(500);
 }
@@ -47,7 +51,7 @@ export async function navigateToDiscover(page: Page): Promise<void> {
 export async function navigateWithFilters(page: Page, params: Record<string, string>): Promise<void> {
   const queryString = new URLSearchParams(params).toString();
   await page.goto(`/automobiles/discover?${queryString}`);
-  await page.waitForSelector('.p-dropdown', { timeout: 10000 });
+  await page.waitForSelector('.panels-container', { timeout: 10000 });
 }
 
 // ==================== Query Control Helpers ====================
