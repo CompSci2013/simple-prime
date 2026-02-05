@@ -35,7 +35,10 @@
     </ng-container>
     <!-- Dynamic Results Table -->
     <ng-container *ngSwitchCase="'basic-results'">
-      <app-dynamic-results-table [domainConfig]="domainConfig"></app-dynamic-results-table>
+      <app-dynamic-results-table
+        [domainConfig]="domainConfig"
+        (urlParamsChange)="onUrlParamsChange($event)">
+      </app-dynamic-results-table>
     </ng-container>
     <!-- Unknown panel type -->
     <ng-container *ngSwitchDefault>
