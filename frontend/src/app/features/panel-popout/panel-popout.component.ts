@@ -3,7 +3,6 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Inject,
   Injector,
   OnDestroy,
   OnInit
@@ -18,7 +17,7 @@ import {
   PopOutMessage,
   PopOutMessageType
 } from '../../../framework/models/popout.interface';
-import { DOMAIN_CONFIG } from '../../../framework/services/domain-config-registry.service';
+import { DomainConfigRegistry } from '../../../framework/services/domain-config-registry.service';
 import { PickerConfigRegistry } from '../../../framework/services/picker-config-registry.service';
 import { PopOutContextService } from '../../../framework/services/popout-context.service';
 import { ResourceManagementService } from '../../../framework/services/resource-management.service';
@@ -44,7 +43,7 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
   gridId: string = '';
   panelId: string = '';
   panelType: string = '';
-  domainConfig: DomainConfig<any, any, any>;
+  domainConfig!: DomainConfig<any, any, any>;
 
   private destroy$ = new Subject<void>();
 
@@ -54,11 +53,9 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private pickerRegistry: PickerConfigRegistry,
     private injector: Injector,
-    @Inject(DOMAIN_CONFIG) domainConfig: DomainConfig<any, any, any>,
+    private domainRegistry: DomainConfigRegistry,
     public resourceService: ResourceManagementService<any, any, any>
-  ) {
-    this.domainConfig = domainConfig;
-  }
+  ) {}
 
   ngOnInit(): void {
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe(params => {
@@ -66,9 +63,15 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
       this.panelId = params['panelId'];
       this.panelType = params['type'];
 
-      // Register picker configs with the same prefix as the parent page
-      const pickerConfigs = createAutomobilePickerConfigs(this.injector, this.gridId);
-      this.pickerRegistry.registerMultiple(pickerConfigs);
+      // Determine domain from gridId (e.g., 'agriculture-discover' -> 'agriculture')
+      const domainName = this.extractDomainFromGridId(this.gridId);
+      this.domainConfig = this.domainRegistry.get(domainName);
+
+      // Only register picker configs for automobile domain (which has pickers)
+      if (domainName === 'automobile') {
+        const pickerConfigs = createAutomobilePickerConfigs(this.injector, this.gridId);
+        this.pickerRegistry.registerMultiple(pickerConfigs);
+      }
 
       this.popOutContext.initializeAsPopOut(this.panelId);
 
@@ -178,6 +181,23 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
       },
       timestamp: Date.now()
     });
+  }
+
+  /**
+   * Extract domain name from gridId
+   * Maps gridId patterns to domain names for registry lookup
+   * e.g., 'agriculture-discover' -> 'agriculture'
+   *       'automobile-discover' -> 'automobile'
+   */
+  private extractDomainFromGridId(gridId: string): string {
+    if (gridId.startsWith('agriculture')) {
+      return 'agriculture';
+    }
+    if (gridId.startsWith('automobile')) {
+      return 'automobile';
+    }
+    // Default to automobile for backwards compatibility
+    return 'automobile';
   }
 
   ngOnDestroy(): void {

@@ -39,7 +39,7 @@ export const routes: Routes = [
   },
   {
     path: 'automobiles/discover',
-    loadComponent: () => import('./features/discover3/discover3.component').then(m => m.Discover3Component)
+    loadComponent: () => import('./features/automobile/automobile-discover/automobile-discover.component').then(m => m.AutomobileDiscoverComponent)
   },
   // Agriculture uses NgModule pattern (Angular 13 legacy style)
   {
