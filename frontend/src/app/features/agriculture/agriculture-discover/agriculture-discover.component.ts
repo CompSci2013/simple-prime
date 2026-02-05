@@ -1,166 +1,229 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  Inject,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
+import { Params } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { AgricultureDataService, CropRecord, AggregationBucket } from '../services/agriculture-data.service';
+import { DomainConfig } from '../../../../framework/models';
+import { PopOutMessageType } from '../../../../framework/models/popout.interface';
+import { DOMAIN_CONFIG } from '../../../../framework/services/domain-config-registry.service';
+import { PopOutManagerService } from '../../../../framework/services/popout-manager.service';
+import { ResourceManagementService } from '../../../../framework/services/resource-management.service';
+import { UrlStateService } from '../../../../framework/services/url-state.service';
+import { ChartDataSource } from '../../../../framework/components/base-chart/base-chart.component';
+import {
+  AgricultureSearchFilters,
+  CropResult,
+  AgricultureStatistics
+} from '../../../../domain-config/agriculture';
 
 /**
- * Agriculture Discover Component (NgModule Pattern)
+ * Agriculture Discover Component (NgModule Pattern with Framework Integration)
  *
  * Feature component for exploring agricultural data including crops, yields,
- * and regional statistics. Uses mock Elasticsearch data loaded from JSON files.
+ * and regional statistics. Uses the Generic Discovery Framework with
+ * URL-First state management.
  *
  * Features:
+ * - URL-First architecture (filters persist in URL)
  * - Data table with crop records
- * - Chart visualization of crop distribution by region
- * - Filter dropdowns for crop type and region
+ * - Plotly.js charts for crop/region distribution
+ * - Query Control for filter management
+ * - Pop-out support for charts
  *
  * Architecture Note:
- * This component uses the traditional NgModule pattern (Angular 13 style) and is
- * declared in AgricultureModule. Dependencies like PrimeNG modules are imported
- * at the module level, not the component level.
+ * This component uses the traditional NgModule pattern (Angular 13 style) but
+ * integrates with the same framework services used by the standalone Automobile
+ * domain (AutomobileDiscoverComponent). The key difference is that:
+ * - This component is declared in AgricultureModule
+ * - Dependencies are imported at the module level
+ * - Framework services are provided via the module's providers array
  *
  * @class AgricultureDiscoverComponent
  * @since 1.0 (Original Angular 13 implementation)
+ * @updated 2.0 (Framework integration with URL-First architecture)
  */
 @Component({
   selector: 'app-agriculture-discover',
   templateUrl: './agriculture-discover.component.html',
-  styleUrls: ['./agriculture-discover.component.scss']
+  styleUrls: ['./agriculture-discover.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // NOTE: In NgModule pattern, providers are typically at module level,
+  // but these services need to be scoped to this component instance
+  providers: [ResourceManagementService, PopOutManagerService]
 })
 export class AgricultureDiscoverComponent implements OnInit, OnDestroy {
+
+  domainConfig: DomainConfig<AgricultureSearchFilters, CropResult, AgricultureStatistics>;
+  collapsedPanels = new Map<string, boolean>();
+  panelOrder: string[] = ['query-control', 'statistics', 'crop-chart', 'region-chart', 'data-table'];
+
   private destroy$ = new Subject<void>();
+  private readonly gridId = 'agriculture-discover';
 
-  // Data
-  cropData: CropRecord[] = [];
-  filteredData: CropRecord[] = [];
-  loading = true;
-
-  // Filters
-  crops: string[] = [];
-  regions: string[] = [];
-  selectedCrop: string | null = null;
-  selectedRegion: string | null = null;
-
-  // Chart data
-  chartData: any;
-  chartOptions: any;
-
-  // Statistics
-  totalRecords = 0;
-  totalAcres = 0;
-  avgYield = 0;
-
-  constructor(private dataService: AgricultureDataService) {
-    this.initializeChartOptions();
+  constructor(
+    @Inject(DOMAIN_CONFIG) domainConfig: DomainConfig<any, any, any>,
+    public resourceService: ResourceManagementService<AgricultureSearchFilters, CropResult, AgricultureStatistics>,
+    private popOutManager: PopOutManagerService,
+    private cdr: ChangeDetectorRef,
+    private urlStateService: UrlStateService
+  ) {
+    this.domainConfig = domainConfig as DomainConfig<AgricultureSearchFilters, CropResult, AgricultureStatistics>;
   }
 
   ngOnInit(): void {
-    this.loadData();
-  }
+    this.popOutManager.initialize(this.gridId);
 
-  private loadData(): void {
-    this.loading = true;
-
-    this.dataService.getCropData()
+    // Listen for messages from pop-out windows
+    this.popOutManager.messages$
       .pipe(takeUntil(this.destroy$))
-      .subscribe(data => {
-        this.cropData = data;
-        this.filteredData = [...data];
-        this.extractFilterOptions();
-        this.updateStatistics();
-        this.updateChart();
-        this.loading = false;
+      .subscribe(({ panelId, message }) => {
+        this.handlePopOutMessage(panelId, message);
+      });
+
+    // Handle pop-out window closing
+    this.popOutManager.closed$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(() => {
+        this.cdr.markForCheck();
+      });
+
+    // Broadcast state changes to pop-out windows
+    this.resourceService.state$
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(state => {
+        this.popOutManager.broadcastState(state);
       });
   }
 
-  private extractFilterOptions(): void {
-    const cropSet = new Set(this.cropData.map(d => d.crop));
-    const regionSet = new Set(this.cropData.map(d => d.region));
-    this.crops = Array.from(cropSet).sort();
-    this.regions = Array.from(regionSet).sort();
+  // ============================================================================
+  // Panel Management
+  // ============================================================================
+
+  isPanelPoppedOut(panelId: string): boolean {
+    return this.popOutManager.isPoppedOut(panelId);
   }
 
-  onFilterChange(): void {
-    this.filteredData = this.cropData.filter(record => {
-      const cropMatch = !this.selectedCrop || record.crop === this.selectedCrop;
-      const regionMatch = !this.selectedRegion || record.region === this.selectedRegion;
-      return cropMatch && regionMatch;
-    });
-    this.updateStatistics();
-    this.updateChart();
+  isPanelCollapsed(panelId: string): boolean {
+    return this.collapsedPanels.get(panelId) ?? false;
   }
 
-  clearFilters(): void {
-    this.selectedCrop = null;
-    this.selectedRegion = null;
-    this.filteredData = [...this.cropData];
-    this.updateStatistics();
-    this.updateChart();
+  togglePanelCollapse(panelId: string): void {
+    const currentState = this.collapsedPanels.get(panelId) ?? false;
+    this.collapsedPanels.set(panelId, !currentState);
+    this.cdr.markForCheck();
   }
 
-  private updateStatistics(): void {
-    this.totalRecords = this.filteredData.length;
-    this.totalAcres = this.filteredData.reduce((sum, r) => sum + r.acres, 0);
-    this.avgYield = this.filteredData.length > 0
-      ? this.filteredData.reduce((sum, r) => sum + r.yield_bushels, 0) / this.filteredData.length
-      : 0;
+  trackByPanelId(index: number, panelId: string): string {
+    return panelId;
   }
 
-  private initializeChartOptions(): void {
-    this.chartOptions = {
-      plugins: {
-        legend: {
-          labels: {
-            color: '#ffffff'
-          }
+  // ============================================================================
+  // Chart Data Source Access
+  // ============================================================================
+
+  getChartDataSource(chartId: string): ChartDataSource | undefined {
+    return this.domainConfig.chartDataSources?.[chartId];
+  }
+
+  // ============================================================================
+  // Pop-Out Management
+  // ============================================================================
+
+  popOutPanel(panelId: string, panelType: string): void {
+    this.popOutManager.openPopOut(panelId, panelType);
+    this.cdr.markForCheck();
+  }
+
+  onChartPopOut(chartId: string): void {
+    const panelId = `chart-${chartId}`;
+    this.popOutManager.openPopOut(panelId, 'chart');
+    this.cdr.markForCheck();
+  }
+
+  onTablePopOut(): void {
+    this.popOutManager.openPopOut('results-table', 'basic-results');
+    this.cdr.markForCheck();
+  }
+
+  private async handlePopOutMessage(_panelId: string, message: any): Promise<void> {
+    switch (message.type) {
+      case PopOutMessageType.PANEL_READY:
+        const currentState = this.resourceService.getCurrentState();
+        this.popOutManager.broadcastState(currentState);
+        break;
+
+      case PopOutMessageType.URL_PARAMS_CHANGED:
+        if (message.payload?.params) {
+          await this.urlStateService.setParams(message.payload.params);
         }
-      },
-      scales: {
-        x: {
-          ticks: { color: '#b0b0b0' },
-          grid: { color: 'rgba(255,255,255,0.1)' }
-        },
-        y: {
-          ticks: { color: '#b0b0b0' },
-          grid: { color: 'rgba(255,255,255,0.1)' }
+        break;
+
+      case PopOutMessageType.CLEAR_ALL_FILTERS:
+        await this.urlStateService.clearParams();
+        break;
+
+      case PopOutMessageType.FILTER_ADD:
+        if (message.payload?.params) {
+          await this.urlStateService.setParams({
+            ...message.payload.params,
+            page: 1
+          });
         }
-      }
-    };
+        break;
+
+      case PopOutMessageType.FILTER_REMOVE:
+        if (message.payload?.field) {
+          await this.urlStateService.setParams({
+            [message.payload.field]: null,
+            page: 1
+          });
+        }
+        break;
+
+      case PopOutMessageType.CHART_CLICK:
+        if (message.payload) {
+          const dataSource = this.domainConfig.chartDataSources?.[message.payload.chartId];
+          await this.onStandaloneChartClick(
+            { value: message.payload.value, isHighlightMode: message.payload.isHighlightMode },
+            dataSource
+          );
+        }
+        break;
+    }
   }
 
-  private updateChart(): void {
-    // Aggregate by region
-    const regionCounts = new Map<string, number>();
-    this.filteredData.forEach(record => {
-      const count = regionCounts.get(record.region) || 0;
-      regionCounts.set(record.region, count + 1);
-    });
+  // ============================================================================
+  // URL State Management
+  // ============================================================================
 
-    const labels = Array.from(regionCounts.keys());
-    const data = Array.from(regionCounts.values());
+  async onUrlParamsChange(params: Params): Promise<void> {
+    await this.urlStateService.setParams(params);
+  }
 
-    this.chartData = {
-      labels: labels,
-      datasets: [
-        {
-          label: 'Records by Region',
-          data: data,
-          backgroundColor: [
-            'rgba(76, 175, 80, 0.7)',
-            'rgba(139, 195, 74, 0.7)',
-            'rgba(205, 220, 57, 0.7)',
-            'rgba(255, 193, 7, 0.7)'
-          ],
-          borderColor: [
-            'rgba(76, 175, 80, 1)',
-            'rgba(139, 195, 74, 1)',
-            'rgba(205, 220, 57, 1)',
-            'rgba(255, 193, 7, 1)'
-          ],
-          borderWidth: 1
-        }
-      ]
-    };
+  async onClearAllFilters(): Promise<void> {
+    await this.urlStateService.clearParams();
+  }
+
+  async onStandaloneChartClick(
+    event: { value: string; isHighlightMode: boolean },
+    dataSource: ChartDataSource | undefined
+  ): Promise<void> {
+    if (!dataSource) return;
+
+    const newParams = dataSource.toUrlParams(event.value, event.isHighlightMode);
+    if (!event.isHighlightMode) {
+      newParams['page'] = 1;
+    }
+
+    if (Object.keys(newParams).length > 0) {
+      await this.urlStateService.setParams(newParams);
+    }
   }
 
   ngOnDestroy(): void {

@@ -97,15 +97,31 @@
   </div>
 
   <!-- Data Table -->
-  <div class="table-panel">
+  <div class="table-panel" *ngIf="!isPanelPoppedOut('results-table'); else resultsTablePoppedOut">
     <div class="panel-header">
       <h2>Crop Data</h2>
-      <span class="record-count" *ngIf="resourceService.totalResults$ | async as total">
-        {{ total }} records
-      </span>
+      <div class="panel-actions">
+        <span class="record-count" *ngIf="resourceService.totalResults$ | async as total">
+          {{ total }} records
+        </span>
+        <button
+          pButton
+          type="button"
+          icon="pi pi-external-link"
+          class="p-button-text p-button-sm"
+          pTooltip="Pop out table"
+          (click)="onTablePopOut()">
+        </button>
+      </div>
     </div>
     <app-dynamic-results-table [domainConfig]="domainConfig"></app-dynamic-results-table>
   </div>
+  <ng-template #resultsTablePoppedOut>
+    <div class="table-panel popout-placeholder">
+      <i class="pi pi-external-link"></i>
+      <span>Results Table is open in a separate window</span>
+    </div>
+  </ng-template>
 
   <!-- Back Link -->
   <div class="back-link">
