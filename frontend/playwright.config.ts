@@ -2,7 +2,7 @@ import { defineConfig, devices } from '@playwright/test';
 
 // The port the application will be served on.
 // Must match the frontend dev server or production app port
-const PORT = 4205;
+const PORT = 4200;
 
 export default defineConfig({
   // Directory where the tests are located.

@@ -33,6 +33,7 @@ import { PopOutMessageType } from '../../models/popout.interface';
 import { PopOutContextService } from '../../services/popout-context.service';
 import { ResourceManagementService } from '../../services/resource-management.service';
 import { UrlStateService } from '../../services/url-state.service';
+import { DomainConfigRegistry } from '../../services/domain-config-registry.service';
 import { ChartDataSource, BaseChartComponent } from '../base-chart/base-chart.component';
 
 /**
@@ -120,7 +121,8 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
     private readonly urlState: UrlStateService,
     private readonly popOutContext: PopOutContextService,
     private readonly cdr: ChangeDetectorRef,
-    private readonly ngZone: NgZone
+    private readonly ngZone: NgZone,
+    private readonly domainRegistry: DomainConfigRegistry
   ) {}
 
   // ============================================================================
@@ -128,9 +130,9 @@ export class DockviewStatisticsPanelComponent implements OnInit, AfterViewInit, 
   // ============================================================================
 
   ngOnInit(): void {
+    // If domainConfig not provided via @Input (e.g., in popout), get from registry
     if (!this.domainConfig) {
-      console.error('DockviewStatisticsPanelComponent: domainConfig is required');
-      return;
+      this.domainConfig = this.domainRegistry.getActive();
     }
 
     console.log('[DockviewStats] ngOnInit - domainConfig:', this.domainConfig);

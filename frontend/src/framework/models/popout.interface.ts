@@ -90,7 +90,8 @@ export function buildWindowFeatures(features: PopOutWindowFeatures): string {
 }
 
 export function parsePopOutRoute(url: string): PopOutContext | null {
-  const match = url.match(/^\/panel\/([^/]+)\/([^/]+)\/([^/]+)/);
+  // Match /popout/:gridId/:componentId/:type (e.g., /popout/automobile-discover/chart-year/chart)
+  const match = url.match(/^\/popout\/([^/]+)\/([^/]+)\/([^/]+)/);
 
   if (!match) {
     return null;

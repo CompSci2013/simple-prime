@@ -27,6 +27,7 @@ import { PopOutMessageType } from '../../models/popout.interface';
 import { PopOutContextService } from '../../services/popout-context.service';
 import { ResourceManagementService } from '../../services/resource-management.service';
 import { UrlStateService } from '../../services/url-state.service';
+import { DomainConfigRegistry } from '../../services/domain-config-registry.service';
 import { ChartDataSource, BaseChartComponent } from '../base-chart/base-chart.component';
 
 
@@ -61,7 +62,8 @@ export class StatisticsPanel2Component implements OnInit, OnDestroy {
     private readonly resourceService: ResourceManagementService<any, any, any>,
     private readonly urlState: UrlStateService,
     private readonly popOutContext: PopOutContextService,
-    private readonly cdr: ChangeDetectorRef
+    private readonly cdr: ChangeDetectorRef,
+    private readonly domainRegistry: DomainConfigRegistry
   ) {}
 
   // ============================================================================
@@ -125,9 +127,9 @@ export class StatisticsPanel2Component implements OnInit, OnDestroy {
   // ============================================================================
 
   ngOnInit(): void {
+    // If domainConfig not provided via @Input (e.g., in popout), get from registry
     if (!this.domainConfig) {
-      console.error('StatisticsPanel2Component: domainConfig is required');
-      return;
+      this.domainConfig = this.domainRegistry.getActive();
     }
 
     // Initialize chart order from chartIds input or domain config

@@ -17,6 +17,7 @@ import { DomainConfig } from '../../models/domain-config.interface';
 import { ResourceManagementService } from '../../services/resource-management.service';
 import { PopOutContextService } from '../../services/popout-context.service';
 import { PopOutMessageType } from '../../models/popout.interface';
+import { DomainConfigRegistry } from '../../services/domain-config-registry.service';
 import { SkeletonModule } from 'primeng/skeleton';
 import { RippleModule } from 'primeng/ripple';
 import { ButtonModule } from 'primeng/button';
@@ -50,7 +51,8 @@ export class DynamicResultsTableComponent<TFilters = any, TData = any, TStatisti
     private readonly resourceService: ResourceManagementService<TFilters, TData, TStatistics>,
     private readonly cdr: ChangeDetectorRef,
     private readonly popOutContext: PopOutContextService,
-    private readonly elementRef: ElementRef
+    private readonly elementRef: ElementRef,
+    private readonly domainRegistry: DomainConfigRegistry
   ) {}
 
   // ============================================================================
@@ -123,8 +125,9 @@ export class DynamicResultsTableComponent<TFilters = any, TData = any, TStatisti
   // ============================================================================
 
   ngOnInit(): void {
+    // If domainConfig not provided via @Input (e.g., in popout), get from registry
     if (!this.domainConfig) {
-      throw new Error('DynamicResultsTableComponent requires domainConfig input');
+      this.domainConfig = this.domainRegistry.getActive();
     }
 
     this.columns = [...this.domainConfig.tableConfig.columns];

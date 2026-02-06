@@ -1,9 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component, Injector, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { RouterOutlet, RouterLink, ActivatedRoute } from '@angular/router';
+import { RouterOutlet, RouterLink, Router, NavigationEnd } from '@angular/router';
 import { TieredMenu } from 'primeng/tieredmenu';
 import { Subject } from 'rxjs';
-import { takeUntil } from 'rxjs/operators';
+import { takeUntil, filter } from 'rxjs/operators';
 import { MenuItem } from 'primeng/api';
 import { TieredMenuModule } from 'primeng/tieredmenu';
 import { ToastModule } from 'primeng/toast';
@@ -79,14 +79,21 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     private readonly domainConfigRegistry: DomainConfigRegistry,
     private readonly injector: Injector,
-    private readonly route: ActivatedRoute
+    private readonly router: Router
   ) {}
 
   ngOnInit(): void {
     this.domainConfigRegistry.registerDomainProviders(DOMAIN_PROVIDERS, this.injector);
 
-    this.route.queryParams.pipe(takeUntil(this.destroy$)).subscribe(params => {
-      this.isPopOut = !!params['popout'];
+    // Check if current URL is a popout route
+    this.isPopOut = this.router.url.startsWith('/popout');
+
+    // Also listen for navigation changes
+    this.router.events.pipe(
+      filter((event): event is NavigationEnd => event instanceof NavigationEnd),
+      takeUntil(this.destroy$)
+    ).subscribe(event => {
+      this.isPopOut = event.urlAfterRedirects.startsWith('/popout');
     });
   }
 
