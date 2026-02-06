@@ -25,7 +25,7 @@ import {
   AUTOMOBILE_QUERY_CONTROL_FILTERS,
   AUTOMOBILE_HIGHLIGHT_FILTERS,
   AUTOMOBILE_CHART_CONFIGS,
-  AUTOMOBILE_PICKER_CONFIGS
+  createAutomobilePickerConfigs
 } from './configs';
 import {
   ManufacturerChartDataSource,
@@ -81,7 +81,7 @@ export function createAutomobileDomainConfig(injector: Injector): DomainConfig<
 
   // ==================== UI Configuration ====================
   tableConfig: AUTOMOBILE_TABLE_CONFIG,
-  pickers: AUTOMOBILE_PICKER_CONFIGS,
+  pickers: createAutomobilePickerConfigs(injector),
   filters: AUTOMOBILE_FILTER_DEFINITIONS,
   queryControlFilters: AUTOMOBILE_QUERY_CONTROL_FILTERS,
   highlightFilters: AUTOMOBILE_HIGHLIGHT_FILTERS,

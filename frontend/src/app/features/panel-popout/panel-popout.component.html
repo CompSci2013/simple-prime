@@ -2,10 +2,11 @@
 
   <!-- Panel Content - Render based on type -->
   <div class="popout-content" [ngSwitch]="panelType">
-    <!-- Picker (Manufacturer-Model Picker) -->
+    <!-- Picker (domain-agnostic - uses config from domainConfig.pickers) -->
     <ng-container *ngSwitchCase="'picker'">
       <app-base-picker
-        [configId]="getPickerConfigId()"
+        *ngIf="getPickerConfig()"
+        [config]="getPickerConfig()"
         (selectionChange)="onPickerSelectionChange($event)">
       </app-base-picker>
     </ng-container>

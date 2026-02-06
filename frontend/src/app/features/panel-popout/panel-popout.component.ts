@@ -3,22 +3,19 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Injector,
   OnDestroy,
   OnInit
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { createAutomobilePickerConfigs } from '../../../domain-config/automobile/configs/automobile.picker-configs';
 import { DomainConfig } from '../../../framework/models';
-import { PickerSelectionEvent } from '../../../framework/models/picker-config.interface';
+import { PickerConfig, PickerSelectionEvent } from '../../../framework/models/picker-config.interface';
 import {
   PopOutMessage,
   PopOutMessageType
 } from '../../../framework/models/popout.interface';
 import { DomainConfigRegistry } from '../../../framework/services/domain-config-registry.service';
-import { PickerConfigRegistry } from '../../../framework/services/picker-config-registry.service';
 import { PopOutContextService } from '../../../framework/services/popout-context.service';
 import { ResourceManagementService } from '../../../framework/services/resource-management.service';
 import { IS_POPOUT_TOKEN } from '../../../framework/tokens/popout.token';
@@ -52,8 +49,6 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
     private popOutContext: PopOutContextService,
     private cdr: ChangeDetectorRef,
-    private pickerRegistry: PickerConfigRegistry,
-    private injector: Injector,
     private domainRegistry: DomainConfigRegistry,
     public resourceService: ResourceManagementService<any, any, any>
   ) {}
@@ -67,12 +62,6 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
       // Determine domain from gridId (e.g., 'agriculture-discover' -> 'agriculture')
       const domainName = this.extractDomainFromGridId(this.gridId);
       this.domainConfig = this.domainRegistry.get(domainName);
-
-      // Only register picker configs for automobile domain (which has pickers)
-      if (domainName === 'automobile') {
-        const pickerConfigs = createAutomobilePickerConfigs(this.injector, this.gridId);
-        this.pickerRegistry.registerMultiple(pickerConfigs);
-      }
 
       this.popOutContext.initializeAsPopOut(this.panelId);
 
@@ -124,9 +113,13 @@ export class PanelPopoutComponent implements OnInit, OnDestroy {
     return null;
   }
 
-  getPickerConfigId(): string {
-    // Return the properly prefixed picker config ID based on the parent gridId
-    return `${this.gridId}-manufacturer-model-picker`;
+  /**
+   * Get picker config from domain config
+   * Returns the first picker config or undefined if none defined
+   * The picker component will render based on this config
+   */
+  getPickerConfig(): PickerConfig<any> | undefined {
+    return this.domainConfig?.pickers?.[0];
   }
 
   getChartIdsForPanel(): string[] {
