@@ -12,13 +12,17 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
+  Inject,
   Input,
   OnDestroy,
   OnInit,
+  Optional,
   Output
 } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 import { Observable, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { IS_POPOUT_TOKEN } from '../../tokens/popout.token';
 import { CommonModule } from '@angular/common';
 import { DragDropModule, CdkDragDrop, moveItemInArray } from '@angular/cdk/drag-drop';
 import { environment } from '../../../environments/environment';
@@ -63,7 +67,9 @@ export class StatisticsPanel2Component implements OnInit, OnDestroy {
     private readonly urlState: UrlStateService,
     private readonly popOutContext: PopOutContextService,
     private readonly cdr: ChangeDetectorRef,
-    private readonly domainRegistry: DomainConfigRegistry
+    private readonly domainRegistry: DomainConfigRegistry,
+    @Optional() private readonly route: ActivatedRoute,
+    @Optional() @Inject(IS_POPOUT_TOKEN) private readonly isPopout: boolean
   ) {}
 
   // ============================================================================
@@ -135,9 +141,38 @@ export class StatisticsPanel2Component implements OnInit, OnDestroy {
     // Initialize chart order from chartIds input or domain config
     if (this.chartIds && this.chartIds.length > 0) {
       this.chartOrder = this.chartIds;
+    } else if (this.isPopout && this.route) {
+      // In popout: extract componentId from URL and map to chart IDs
+      // URL structure: /popout/:gridId/:componentId/:type
+      // componentId is like 'statistics-1' or 'statistics-2'
+      const componentId = this.route.parent?.snapshot.paramMap.get('componentId') ?? null;
+      this.chartOrder = this.getChartIdsForStatisticsPanel(componentId);
     } else if (this.domainConfig.chartDataSources) {
       this.chartOrder = Object.keys(this.domainConfig.chartDataSources);
     }
+  }
+
+  /**
+   * Map statistics panel ID to chart IDs
+   * This mirrors the mapping in discover components
+   */
+  private getChartIdsForStatisticsPanel(panelId: string | null): string[] {
+    // Statistics panel mappings
+    // TODO: Move this to domain config for full domain-agnostic support
+    const chartIdMap: { [key: string]: string[] } = {
+      'statistics-1': ['manufacturer', 'top-models'],
+      'statistics-2': ['body-class', 'year']
+    };
+
+    if (panelId && chartIdMap[panelId]) {
+      return chartIdMap[panelId];
+    }
+
+    // Fallback to all charts if panel ID not recognized
+    if (this.domainConfig.chartDataSources) {
+      return Object.keys(this.domainConfig.chartDataSources);
+    }
+    return [];
   }
 
   ngOnDestroy(): void {
