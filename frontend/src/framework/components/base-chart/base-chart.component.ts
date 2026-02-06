@@ -21,11 +21,18 @@ import {
   ChangeDetectorRef,
   ElementRef,
   ViewChild,
-  HostListener
+  HostListener,
+  Optional
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 import { ButtonModule } from 'primeng/button';
+import { DomainConfigRegistry } from '../../services/domain-config-registry.service';
+import { ResourceManagementService } from '../../services/resource-management.service';
+import { PopOutContextService } from '../../services/popout-context.service';
+import { PopOutMessageType } from '../../models/popout.interface';
 
 
 /**
@@ -291,7 +298,18 @@ export class BaseChartComponent implements OnInit, AfterViewInit, OnDestroy, OnC
    */
   private plotlyElement: PlotlyHTMLElement | null = null;
 
-  constructor(private cdr: ChangeDetectorRef) {}
+  /**
+   * Chart ID extracted from URL when in popout mode (e.g., 'year' from 'chart-year')
+   */
+  private chartId: string | null = null;
+
+  constructor(
+    private cdr: ChangeDetectorRef,
+    @Optional() private route: ActivatedRoute,
+    @Optional() private domainRegistry: DomainConfigRegistry,
+    @Optional() private resourceService: ResourceManagementService<any, any, any>,
+    @Optional() private popOutContext: PopOutContextService
+  ) {}
 
   /**
    * Angular lifecycle hook - Component initialization
@@ -314,6 +332,58 @@ export class BaseChartComponent implements OnInit, AfterViewInit, OnDestroy, OnC
    * - Falls back to 'Chart' if dataSource is not available
    */
   ngOnInit(): void {
+    console.log('[BaseChart] ngOnInit - dataSource:', !!this.dataSource);
+    console.log('[BaseChart] ngOnInit - popOutContext:', !!this.popOutContext);
+    console.log('[BaseChart] ngOnInit - isInPopOut:', this.popOutContext?.isInPopOut());
+    console.log('[BaseChart] ngOnInit - URL:', window.location.pathname);
+
+    // If in popout and dataSource not provided, get from registry
+    if (!this.dataSource && this.popOutContext?.isInPopOut() && this.route && this.domainRegistry) {
+      // Get chart ID from URL - try multiple approaches
+      // URL structure: /popout/:gridId/:componentId/:type (e.g., /popout/automobile-discover/chart-year/chart)
+      let componentId = this.route.parent?.snapshot.paramMap.get('componentId') || '';
+
+      // If parent route didn't have it, try getting from URL directly
+      if (!componentId) {
+        const urlParts = window.location.pathname.split('/');
+        // /popout/automobile-discover/chart-year/chart -> index 3 is componentId
+        componentId = urlParts[3] || '';
+      }
+
+      console.log('[BaseChart] In popout, componentId:', componentId);
+
+      const chartId = componentId.replace('chart-', '');
+      this.chartId = chartId; // Store for use in click handlers
+      console.log('[BaseChart] chartId:', chartId);
+
+      if (chartId) {
+        const domainConfig = this.domainRegistry.getActive();
+        console.log('[BaseChart] domainConfig chartDataSources:', Object.keys(domainConfig.chartDataSources || {}));
+        this.dataSource = domainConfig.chartDataSources?.[chartId];
+        console.log('[BaseChart] Got dataSource:', !!this.dataSource);
+
+        // Subscribe to statistics from ResourceManagementService
+        if (this.resourceService) {
+          this.resourceService.statistics$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(stats => {
+              console.log('[BaseChart] Received statistics:', !!stats);
+              this.statistics = stats;
+              this.renderChart();
+              this.cdr.markForCheck();
+            });
+
+          this.resourceService.highlights$
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(highlights => {
+              this.highlights = highlights;
+              this.renderChart();
+              this.cdr.markForCheck();
+            });
+        }
+      }
+    }
+
     if (!this.dataSource) {
       console.error('BaseChartComponent: dataSource is required');
     }
@@ -561,10 +631,7 @@ export class BaseChartComponent implements OnInit, AfterViewInit, OnDestroy, OnC
       try {
         const clickedValue = this.dataSource.handleClick(data);
         if (clickedValue) {
-          this.chartClick.emit({
-            value: clickedValue,
-            isHighlightMode: this.isHighlightModeActive
-          });
+          this.handleChartInteraction(clickedValue);
         }
       } catch (err) {
         console.error('[BaseChart] Click handler error:', err);
@@ -578,15 +645,46 @@ export class BaseChartComponent implements OnInit, AfterViewInit, OnDestroy, OnC
         // This ensures consistent formatting (comma-separated for most charts, pipe for year ranges)
         const selectedValue = this.dataSource.handleClick(data);
         if (selectedValue) {
-          this.chartClick.emit({
-            value: selectedValue,
-            isHighlightMode: this.isHighlightModeActive
-          });
+          this.handleChartInteraction(selectedValue);
         }
       } catch (err) {
         console.error('[BaseChart] Selection handler error:', err);
       }
     });
+  }
+
+  /**
+   * Handle chart interaction (click or selection)
+   *
+   * In popout mode: sends CHART_CLICK message to parent window
+   * In main window: emits chartClick event for parent component to handle
+   */
+  private handleChartInteraction(value: string): void {
+    const isInPopout = this.popOutContext?.isInPopOut();
+
+    if (isInPopout && this.chartId) {
+      // In popout: send message to parent window
+      console.log('[BaseChart] Sending CHART_CLICK to parent:', {
+        chartId: this.chartId,
+        value,
+        isHighlightMode: this.isHighlightModeActive
+      });
+
+      this.popOutContext?.sendMessage({
+        type: PopOutMessageType.CHART_CLICK,
+        payload: {
+          chartId: this.chartId,
+          value: value,
+          isHighlightMode: this.isHighlightModeActive
+        }
+      });
+    } else {
+      // In main window: emit event
+      this.chartClick.emit({
+        value: value,
+        isHighlightMode: this.isHighlightModeActive
+      });
+    }
   }
 
   /**
