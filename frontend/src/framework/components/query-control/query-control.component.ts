@@ -19,9 +19,11 @@ import {
   RangeConfig
 } from '../../models/filter-definition.interface';
 import { ApiService } from '../../services/api.service';
+import { FilterOptionsService } from '../../services/filter-options.service';
 import { UrlStateService } from '../../services/url-state.service';
 import { PopOutContextService } from '../../services/popout-context.service';
 import { PopOutMessageType } from '../../models/popout.interface';
+import { DomainConfigRegistry } from '../../services/domain-config-registry.service';
 import { InputNumberModule } from 'primeng/inputnumber';
 import { CheckboxModule } from 'primeng/checkbox';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -108,8 +110,10 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
   constructor(
     private readonly cdr: ChangeDetectorRef,
     private readonly apiService: ApiService,
+    private readonly filterOptionsService: FilterOptionsService,
     private readonly urlState: UrlStateService,
-    private readonly popOutContext: PopOutContextService
+    private readonly popOutContext: PopOutContextService,
+    private readonly domainRegistry: DomainConfigRegistry
   ) {}
 
   // ============================================================================
@@ -173,6 +177,11 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
   currentRangeConfig: RangeConfig | null = null;
 
   ngOnInit(): void {
+    // If domainConfig not provided via @Input (e.g., in popout), get from registry
+    if (!this.domainConfig) {
+      this.domainConfig = this.domainRegistry.getActive();
+    }
+
     // Initialize filter field options from domain config
     // Only include queryControlFilters, NOT highlightFilters
     // (highlightFilters are for highlighting data, not for main filter selection)
@@ -190,9 +199,16 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
           takeUntil(this.destroy$)
         )
         .subscribe((message: any) => {
-          if (message.payload && message.payload.state) {
+          if (message.payload) {
+            // Sync filter options cache from main window (URL-First compliance)
+            if (message.payload.filterOptionsCache) {
+              this.filterOptionsService.syncFromExternal(message.payload.filterOptionsCache);
+            }
+
             // Extract filters from the state object and render them
-            this.syncFiltersFromPopoutState(message.payload.state);
+            if (message.payload.state) {
+              this.syncFiltersFromPopoutState(message.payload.state);
+            }
             this.cdr.markForCheck();
           }
         });
@@ -419,12 +435,18 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
       this.selectedOptions = [...existingFilter.values];
     }
 
-    // Load options - either from API endpoint or from static transformer
+    // Load options - either from cache/API endpoint or from static transformer
     if (filterDef.optionsEndpoint) {
-      // Fetch from API, then optionally transform
-      this.apiService.get(filterDef.optionsEndpoint).subscribe({
-        next: (response) => {
-          this.allOptions = filterDef.optionsTransformer?.(response) || [];
+      // Use FilterOptionsService for URL-First compliance
+      // In main window: fetches and caches
+      // In popout: uses cached options from STATE_UPDATE broadcast
+      this.filterOptionsService.getOptions(
+        filterDef.optionsEndpoint,
+        String(filterDef.field),
+        filterDef.optionsTransformer
+      ).subscribe({
+        next: (options) => {
+          this.allOptions = options;
           this.filteredOptions = [...this.allOptions];
           this.loadingOptions = false;
           this.optionsError = null;
@@ -702,9 +724,10 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
       this.rangeMax = this.parseRangeValue(params[urlParamsConfig.max], filterDef.rangeConfig);
     }
 
-    // Load available range from API if endpoint provided
+    // Load available range from cache/API if endpoint provided
+    // Uses FilterOptionsService for URL-First compliance
     if (filterDef.optionsEndpoint) {
-      this.apiService.get(filterDef.optionsEndpoint).subscribe({
+      this.filterOptionsService.getRawResponseAsync(filterDef.optionsEndpoint, String(filterDef.field)).subscribe({
         next: (response: any) => {
           if (response && response.min !== undefined && response.max !== undefined) {
             this.availableRange = { min: response.min, max: response.max };

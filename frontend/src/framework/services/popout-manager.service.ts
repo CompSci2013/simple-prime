@@ -8,6 +8,7 @@ import {
   PopOutWindowRef
 } from '../models/popout.interface';
 import { PopOutContextService } from './popout-context.service';
+import { FilterOptionsCache } from './filter-options.service';
 
 @Injectable()
 export class PopOutManagerService implements OnDestroy {
@@ -111,14 +112,23 @@ export class PopOutManagerService implements OnDestroy {
     return true;
   }
 
-  broadcastState(state: any): void {
+  /**
+   * Broadcast state to all popout windows
+   *
+   * @param state - Application state from ResourceManagementService
+   * @param filterOptionsCache - Optional cached filter options for URL-First compliance
+   */
+  broadcastState(state: any, filterOptionsCache?: FilterOptionsCache): void {
     if (this.popoutWindows.size === 0) {
       return;
     }
 
     const message = {
       type: PopOutMessageType.STATE_UPDATE,
-      payload: { state },
+      payload: {
+        state,
+        filterOptionsCache: filterOptionsCache || null
+      },
       timestamp: Date.now()
     };
 

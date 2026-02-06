@@ -17,6 +17,7 @@ import { createAutomobilePickerConfigs } from '../../../../domain-config/automob
 import { DomainConfig } from '../../../../framework/models';
 import { PopOutMessageType } from '../../../../framework/models/popout.interface';
 import { DOMAIN_CONFIG } from '../../../../framework/services/domain-config-registry.service';
+import { FilterOptionsService } from '../../../../framework/services/filter-options.service';
 import { PickerConfigRegistry } from '../../../../framework/services/picker-config-registry.service';
 import { PopOutManagerService } from '../../../../framework/services/popout-manager.service';
 import { ResourceManagementService } from '../../../../framework/services/resource-management.service';
@@ -73,7 +74,8 @@ export class AutomobileDiscoverComponent<TFilters = any, TData = any, TStatistic
     private cdr: ChangeDetectorRef,
     private messageService: MessageService,
     private urlStateService: UrlStateService,
-    private userPreferences: UserPreferencesService
+    private userPreferences: UserPreferencesService,
+    private filterOptionsService: FilterOptionsService
   ) {
     this.domainConfig = domainConfig as DomainConfig<TFilters, TData, TStatistics>;
   }
@@ -111,7 +113,9 @@ export class AutomobileDiscoverComponent<TFilters = any, TData = any, TStatistic
     this.resourceService.state$
       .pipe(takeUntil(this.destroy$))
       .subscribe(state => {
-        this.popOutManager.broadcastState(state);
+        // Include filter options cache for URL-First compliance in popouts
+        const filterOptionsCache = this.filterOptionsService.getCache();
+        this.popOutManager.broadcastState(state, filterOptionsCache);
       });
   }
 
