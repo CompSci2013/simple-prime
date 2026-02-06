@@ -41,6 +41,22 @@
       </div>
       <!-- Panel Content -->
       <div *ngIf="!isPanelCollapsed(panelId)">
+        <!-- Query Control -->
+        <ng-container *ngIf="panelId === 'query-control'">
+          <div *ngIf="!isPanelPoppedOut('query-control'); else queryControlPoppedOut">
+            <app-query-control
+              [domainConfig]="domainConfig"
+              (urlParamsChange)="onUrlParamsChange($event)"
+              (clearAllFilters)="onClearAllFilters()">
+            </app-query-control>
+          </div>
+          <ng-template #queryControlPoppedOut>
+            <div class="popout-placeholder">
+              <i class="pi pi-external-link"></i>
+              <span>Query Control is open in a separate window</span>
+            </div>
+          </ng-template>
+        </ng-container>
         <!-- Manufacturer-Model Picker -->
         <ng-container *ngIf="panelId === 'manufacturer-model-picker'">
           <div *ngIf="!isPanelPoppedOut('manufacturer-model-picker'); else pickerPoppedOut">

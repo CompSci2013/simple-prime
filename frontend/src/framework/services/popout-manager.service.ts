@@ -62,7 +62,8 @@ export class PopOutManagerService implements OnDestroy {
       return false;
     }
 
-    const url = `/panel/${this.gridId}/${panelId}/${panelType}?popout=${panelId}`;
+    // URL structure: /popout/:gridId/:componentId/:type
+    const url = `/popout/${this.gridId}/${panelId}/${panelType}`;
 
     const windowFeatures = buildWindowFeatures({
       width: 1200,

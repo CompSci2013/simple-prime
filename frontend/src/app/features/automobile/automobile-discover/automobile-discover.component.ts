@@ -27,6 +27,7 @@ import { DockviewStatisticsPanelComponent } from '../../../../framework/componen
 import { BasePickerComponent } from '../../../../framework/components/base-picker/base-picker.component';
 import { BaseChartComponent, ChartDataSource } from '../../../../framework/components/base-chart/base-chart.component';
 import { DynamicResultsTableComponent } from '../../../../framework/components/dynamic-results-table/dynamic-results-table.component';
+import { QueryControlComponent } from '../../../../framework/components/query-control/query-control.component';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 
@@ -48,14 +49,14 @@ import { ButtonModule } from 'primeng/button';
     styleUrls: ['./automobile-discover.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [ResourceManagementService, PopOutManagerService],
-    imports: [CommonModule, DragDropModule, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component, DockviewStatisticsPanelComponent, BaseChartComponent, DynamicResultsTableComponent]
+    imports: [CommonModule, DragDropModule, ButtonModule, TooltipModule, BasePickerComponent, StatisticsPanel2Component, DockviewStatisticsPanelComponent, BaseChartComponent, DynamicResultsTableComponent, QueryControlComponent]
 })
 export class AutomobileDiscoverComponent<TFilters = any, TData = any, TStatistics = any>
   implements OnInit, OnDestroy {
 
   domainConfig: DomainConfig<TFilters, TData, TStatistics>;
   collapsedPanels = new Map<string, boolean>([['manufacturer-model-picker', true]]);
-  panelOrder: string[] = ['statistics-1', 'dockview-statistics', 'chart-body-class', 'chart-year', 'manufacturer-model-picker', 'results-table'];
+  panelOrder: string[] = ['query-control', 'statistics-1', 'dockview-statistics', 'chart-body-class', 'chart-year', 'manufacturer-model-picker', 'results-table'];
 
   // Unique picker config ID for this page instance
   readonly pickerConfigId = 'automobile-discover-manufacturer-model-picker';
@@ -146,6 +147,7 @@ export class AutomobileDiscoverComponent<TFilters = any, TData = any, TStatistic
 
   getPanelTitle(panelId: string): string {
     const titleMap: { [key: string]: string } = {
+      'query-control': 'Query Control',
       'manufacturer-model-picker': 'Manufacturer-Model Picker',
       'statistics-1': 'Statistics',
       'dockview-statistics': 'Dockview Statistics',
@@ -158,6 +160,7 @@ export class AutomobileDiscoverComponent<TFilters = any, TData = any, TStatistic
 
   getPanelType(panelId: string): string {
     const typeMap: { [key: string]: string } = {
+      'query-control': 'query-control',
       'manufacturer-model-picker': 'picker',
       'statistics-1': 'statistics-2',
       'dockview-statistics': 'dockview-statistics',

@@ -47,7 +47,8 @@ export const routes: Routes = [
     loadChildren: () => import('./features/agriculture/agriculture.module').then(m => m.AgricultureModule)
   },
   {
-    path: 'panel/:gridId/:panelId/:type',
-    loadComponent: () => import('./features/panel-popout/panel-popout.component').then(m => m.PanelPopoutComponent)
+    path: 'popout/:gridId/:componentId',
+    loadComponent: () => import('./features/popout/popout.component').then(m => m.PopoutComponent),
+    loadChildren: () => import('./features/popout/popout.routes').then(m => m.POPOUT_ROUTES)
   }
 ];
