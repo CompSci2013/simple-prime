@@ -352,7 +352,16 @@ export class BaseChartComponent implements OnInit, AfterViewInit, OnDestroy, OnC
 
       console.log('[BaseChart] In popout, componentId:', componentId);
 
-      const chartId = componentId.replace('chart-', '');
+      // Extract chartId from componentId
+      // Handles both formats:
+      // - Regular charts: 'chart-year' -> 'year'
+      // - Dockview charts: 'dockview-chart-manufacturer' -> 'manufacturer'
+      let chartId = componentId;
+      if (chartId.startsWith('dockview-chart-')) {
+        chartId = chartId.replace('dockview-chart-', '');
+      } else if (chartId.startsWith('chart-')) {
+        chartId = chartId.replace('chart-', '');
+      }
       this.chartId = chartId; // Store for use in click handlers
       console.log('[BaseChart] chartId:', chartId);
 
