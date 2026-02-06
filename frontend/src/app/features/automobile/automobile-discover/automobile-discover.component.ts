@@ -117,6 +117,18 @@ export class AutomobileDiscoverComponent<TFilters = any, TData = any, TStatistic
         const filterOptionsCache = this.filterOptionsService.getCache();
         this.popOutManager.broadcastState(state, filterOptionsCache);
       });
+
+    // Subscribe to filter options cache changes to sync new cache entries to popouts
+    // This ensures popouts receive options cached AFTER they were opened
+    this.filterOptionsService.getCache$()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(cache => {
+        // Only broadcast if there are active popouts
+        if (this.popOutManager.getPoppedOutPanels().length > 0) {
+          const state = this.resourceService.getCurrentState();
+          this.popOutManager.broadcastState(state, cache);
+        }
+      });
   }
 
   isPanelPoppedOut(panelId: string): boolean {
@@ -209,7 +221,8 @@ export class AutomobileDiscoverComponent<TFilters = any, TData = any, TStatistic
     switch (message.type) {
       case PopOutMessageType.PANEL_READY:
         const currentState = this.resourceService.getCurrentState();
-        this.popOutManager.broadcastState(currentState);
+        const currentCache = this.filterOptionsService.getCache();
+        this.popOutManager.broadcastState(currentState, currentCache);
         break;
 
       case PopOutMessageType.URL_PARAMS_CHANGED:
