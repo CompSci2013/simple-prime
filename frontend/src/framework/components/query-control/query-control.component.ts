@@ -666,6 +666,37 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
   }
 
   /**
+   * Emit URL params change - handles both main window and popout modes
+   * In popout: sends URL_PARAMS_CHANGED message via BroadcastChannel
+   * In main: emits urlParamsChange event for parent to handle
+   */
+  private emitUrlParamsChange(params: { [key: string]: any }): void {
+    if (this.popOutContext.isInPopOut()) {
+      this.popOutContext.sendMessage({
+        type: PopOutMessageType.URL_PARAMS_CHANGED,
+        payload: { params },
+        timestamp: Date.now()
+      });
+    } else {
+      this.urlParamsChange.emit(params);
+    }
+  }
+
+  /**
+   * Emit clear all filters - handles both main window and popout modes
+   */
+  private emitClearAllFilters(): void {
+    if (this.popOutContext.isInPopOut()) {
+      this.popOutContext.sendMessage({
+        type: PopOutMessageType.CLEAR_ALL_FILTERS,
+        timestamp: Date.now()
+      });
+    } else {
+      this.clearAllFilters.emit();
+    }
+  }
+
+  /**
    * Apply multiselect filter
    */
   applyFilter(): void {
@@ -679,7 +710,7 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
     const paramName = this.currentFilterDef.urlParams as string;
     const paramValue = this.selectedOptions.join(',');
 
-    this.urlParamsChange.emit({
+    this.emitUrlParamsChange({
       [paramName]: paramValue,
       page: 1 // Reset to first page when filter changes (1-indexed)
     });
@@ -820,7 +851,7 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
     }
 
     // Emit URL params (page reset is always included)
-    this.urlParamsChange.emit(params);
+    this.emitUrlParamsChange(params);
 
     this.showRangeDialog = false;
     this.currentFilterDef = null;
@@ -879,17 +910,17 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
     if (filter.definition.type === 'range') {
       // For range filters, clear both min and max params and reset pagination
       const urlParamsConfig = filter.definition.urlParams as { min: string; max: string };
-      this.urlParamsChange.emit({
+      this.emitUrlParamsChange({
         [urlParamsConfig.min]: null,
         [urlParamsConfig.max]: null,
         page: 1 // Reset to first page when filter removed (1-indexed)
-      } as any);
+      });
     } else {
       const paramName = filter.definition.urlParams as string;
-      this.urlParamsChange.emit({
+      this.emitUrlParamsChange({
         [paramName]: null,
         page: 1 // Reset to first page when filter removed (1-indexed)
-      } as any);
+      });
     }
   }
 
@@ -984,17 +1015,17 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
     if (filter.definition.type === 'range') {
       // For range filters, clear both min and max params and reset pagination
       const urlParamsConfig = filter.definition.urlParams as { min: string; max: string };
-      this.urlParamsChange.emit({
+      this.emitUrlParamsChange({
         [urlParamsConfig.min]: null,
         [urlParamsConfig.max]: null,
         page: 1 // Reset to first page when filter removed (1-indexed)
-      } as any);
+      });
     } else {
       const paramName = filter.definition.urlParams as string;
-      this.urlParamsChange.emit({
+      this.emitUrlParamsChange({
         [paramName]: null,
         page: 1 // Reset to first page when filter removed (1-indexed)
-      } as any);
+      });
     }
   }
 
@@ -1020,7 +1051,7 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
       }
     }
 
-    this.urlParamsChange.emit(params);
+    this.emitUrlParamsChange(params);
   }
 
   /**
@@ -1029,7 +1060,7 @@ export class QueryControlComponent<TFilters = any, TData = any, TStatistics = an
    * Emits clearAllFilters event - parent component handles by calling urlState.clearParams()
    */
   clearAll(): void {
-    this.clearAllFilters.emit();
+    this.emitClearAllFilters();
   }
 
   /**
